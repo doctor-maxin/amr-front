@@ -47,7 +47,7 @@ const tabList = markRaw([{
 					<span class="font-semibold text-sm">Избранное</span>
 				</nuxt-link>
 				</div>
-				<div class="bg-white grid grid-cols-1 grid-rows-[auto_minmax(0,_1fr)] max-h-full w-full pt-4 px-4 pb-9 flex-1" ref="ref" v-bind="tabsApi.rootProps">
+				<div class="bg-white grid grid-cols-1 grid-rows-[auto_minmax(0,_1fr)] max-h-full w-full pt-4 px-4 pb-9 flex-1" v-bind="tabsApi.rootProps">
 					<div v-bind="tabsApi.tablistProps" class="bg-system-gray mb-5 rounded-[5rem] p-[0.315rem] overflow-hidden flex items-center">
 						<button
 							v-for="item in tabList"

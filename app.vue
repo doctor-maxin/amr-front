@@ -20,7 +20,7 @@ import TheFooter from "~/components/TheFooter.vue";
 import ToTopBtn from "./components/common/ToTopBtn.vue";
 import MapLoader from "./components/common/MapLoader.vue";
 import { useCartStore } from "./store/cart.store";
-import { useAsyncData, useDirectusItems } from "./.nuxt/imports";
+import { useAsyncData, useDirectusItems, useNuxtApp } from "./.nuxt/imports";
 import { useFavoritesStore } from "./store/favorites.store";
 import CustomPageLoader from "./components/common/CustomPageLoader.vue";
 
@@ -53,4 +53,5 @@ await Promise.all([
     })
   ),
 ]);
+
 </script>

@@ -2,7 +2,7 @@
 import PageHeader from '~/components/page/Header.vue';
 import {IBreadCrumb, ILink} from "~/types/common";
 import CartAside from "~/components/cart/CartAside.vue";
-import {markRaw, reactive, ref, useDirectusItems, useRouter, watchEffect} from "../.nuxt/imports";
+import {markRaw, reactive, ref, useDirectusItems, useForm, useRouter, watchEffect} from "../.nuxt/imports";
 import CartList from "../components/cart/CartList.vue";
 import {CartPopulatedItem} from "../types/cart";
 import {useCartStore} from "../store/cart.store";
@@ -48,6 +48,8 @@ const products = await getItems<IProduct>({
 	}
 })
 
+const {setFieldError} = useForm()
+
 watchEffect(() => {
 	for (const item of items.value) {
 		const product = products.find(p => p.id === item.id)
@@ -72,7 +74,7 @@ watchEffect(() => {
 		v-if="lines.size"
 		class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex  px-4 bg-white ">
 		<CartList :lines="lines" />
-		<CartAside :lines="lines" />
+		<CartAside :lines="lines" :set-field-error="setFieldError" />
 	</main>
 	<main v-else class="flex items-center justify-center flex-col gap-10">
 		<div class="text-system-black-900 font-semibold text-2xl text-opacity-40">В корзине ничего нет, давайте это исправим!</div>
