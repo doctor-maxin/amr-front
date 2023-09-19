@@ -1,0 +1,20 @@
+{
+    // https://nuxt.com/docs/guide/concepts/typescript
+    "compilerOptions": {
+        "target": "ESNext",
+        "lib": ["ES2022", "DOM"],
+        "resolveJsonModule": true,
+        "noImplicitAny": false
+    },
+    "include": [
+        "index.d.ts",
+        "./composables/*.ts",
+        "./types/*.ts",
+        "./components/*.vue",
+        "./pages/*.vue",
+        "./app.vue",
+        "./error.vue"
+    ],
+    "extends": "./.nuxt/tsconfig.json",
+    "exclude": ["node_modules", "cypress"]
+}
