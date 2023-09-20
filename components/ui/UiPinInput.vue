@@ -36,7 +36,7 @@ onMounted(() => {
 <template>
 	<label class="relative w-full">
 		<client-only>
-			<div ref="ref" v-bind="api.rootProps" class="flex flex-row items-center justify-center gap-[1.12rem]">
+			<div v-bind="api.rootProps" class="flex flex-row items-center justify-center gap-[1.12rem]">
 				<input v-bind="api.getInputProps({ index: 0 })"/>
 				<input v-bind="api.getInputProps({ index: 1 })"/>
 				<input v-bind="api.getInputProps({ index: 2 })"/>

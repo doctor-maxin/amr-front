@@ -1,77 +1,77 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-	<div class="wrapper">
-		<span class="circle circle-1"></span>
-		<span class="circle circle-2"></span>
-		<span class="circle circle-3"></span>
-		<span class="circle circle-4"></span>
-		<span class="circle circle-5"></span>
-		<span class="circle circle-6"></span>
-		<span class="circle circle-7"></span>
-		<span class="circle circle-8"></span>
+	<div class="absolute flex-1 items-center w-full h-full flex justify-center">
+		<div class="wrapper">
+			<span class="circle circle-1"></span>
+			<span class="circle circle-2"></span>
+			<span class="circle circle-3"></span>
+			<span class="circle circle-4"></span>
+			<span class="circle circle-5"></span>
+			<span class="circle circle-6"></span>
+			<span class="circle circle-7"></span>
+			<span class="circle circle-8"></span>
+		</div>
 	</div>
 </template>
 
-<style scoped>
-.wrapper{
-	background-color: white;
-	width: 100vw;
-	height: 100dvh;
-	z-index: 9999;
-	position:absolute;
-	top:50%;
-	left:50%;
-	transform:translate(-50%, -50%);
+<style>
+.nuxt-loading-indicator {
+	background: white !important;
 }
-.circle{
+</style>
+<style scoped>
+.wrapper {
+	display: flex;
+	height: 65px;
+	justify-content: center;
+}
+.circle {
 	display: inline-block;
 	width: 15px;
 	height: 15px;
-	background-color: #fcdc29;
+	background-color: hsl(273, 68%, 85%);
 	border-radius: 50%;
-	animation: loading 1.5s cubic-bezier(.8, .5, .2, 1.4) infinite;
+	animation: loading 1.5s cubic-bezier(0.8, 0.5, 0.2, 1.4) infinite;
 	transform-origin: bottom center;
 	position: relative;
 }
-@keyframes loading{
-	0%{
+@keyframes loading {
+	0% {
 		transform: translateY(0px);
-		background-color: #fcdc29;
+		background-color: hsl(273, 68%, 85%);
 	}
-	50%{
+	50% {
 		transform: translateY(50px);
-		background-color: #ef584a;
+		background-color: hsla(273, 66%, 56%, 1);
 	}
-	100%{
+	100% {
 		transform: translateY(0px);
-		background-color: #fcdc29;
+		background-color: hsl(273, 68%, 85%);
 	}
 }
-.circle-1{
+.circle-1 {
 	animation-delay: 0.1s;
 }
-.circle-2{
+.circle-2 {
 	animation-delay: 0.2s;
 }
-.circle-3{
+.circle-3 {
 	animation-delay: 0.3s;
 }
-.circle-4{
+.circle-4 {
 	animation-delay: 0.4s;
 }
-.circle-5{
+.circle-5 {
 	animation-delay: 0.5s;
 }
-.circle-6{
+.circle-6 {
 	animation-delay: 0.6s;
 }
-.circle-7{
+.circle-7 {
 	animation-delay: 0.7s;
 }
-.circle-8{
+.circle-8 {
 	animation-delay: 0.8s;
 }
 </style>

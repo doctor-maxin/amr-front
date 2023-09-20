@@ -1,4 +1,5 @@
 import {IProduct} from "./product";
+import { IPromoCode } from "~/types/common";
 
 export type CartItem = {
     id: string;
@@ -22,7 +23,7 @@ export type CartState = {
         amount: number;
         type: DeliveryTypes;
     }
-    discount: CartDiscount
+    discount: IPromoCode
 }
 
 export type CartPopulatedItem = CartItem & {

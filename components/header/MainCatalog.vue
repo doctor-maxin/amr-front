@@ -2,7 +2,7 @@
 import {PublicApi} from "@zag-js/popover";
 import {PropTypes} from "@zag-js/vue";
 import {ICategory} from "~/types/common";
-import {computed, onMounted, ref, useNuxtData, useRouter, onBeforeRouteUpdate} from "~/.nuxt/imports";
+import {computed, onMounted, ref, useNuxtData, useRouter} from "~/.nuxt/imports";
 
 const props = defineProps<{
 	api: PublicApi<PropTypes>;
@@ -37,11 +37,6 @@ const openLink = (item: ICategory) => {
 	} else selectedCategory.value = item;
 }
 
-onBeforeRouteUpdate((_to, _from, next) => {
-	props.api.close()
-	console.log('Update')
-	next();
-})
 </script>
 
 <template>

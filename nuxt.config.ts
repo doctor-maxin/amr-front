@@ -63,7 +63,8 @@ export default defineNuxtConfig({
             proxy: {
                 '/assets': 'http://109.195.74.198:8055',
                 // '/assets': 'http://127.0.0.1:8055',
-                '/api': 'http://109.195.74.198:8055',
+                '/api/favorites': 'http://109.195.74.198:8055',
+                '/api/cart': 'http://109.195.74.198:8055',
                 // '/api': 'http://127.0.0.1:8055',
             }
         }

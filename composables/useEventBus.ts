@@ -1,12 +1,13 @@
-import mitt from 'mitt'
+import mitt from "mitt";
 
 type ApplicationEvents = {
-    'on-filter': void;
-    'toFeedBack': void;
-    'open-map': void;
+	"on-filter": void;
+	toFeedBack: void;
+	"open-map": void;
+	"close-modals": void;
 };
 
-const emitter = mitt<ApplicationEvents>()
+const emitter = mitt<ApplicationEvents>();
 
-export const useEvent = emitter.emit
-export const useListen = emitter.on
+export const useEvent = emitter.emit;
+export const useListen = emitter.on;

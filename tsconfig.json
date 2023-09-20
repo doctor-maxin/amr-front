@@ -9,7 +9,7 @@
     "include": [
         "index.d.ts",
         "./composables/*.ts",
-        "./types/*.ts",
+        "~/types/*.ts",
         "./components/*.vue",
         "./pages/*.vue",
         "./app.vue",

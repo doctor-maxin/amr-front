@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import PageHeader from "~/components/page/Header.vue";
 import { IBreadCrumb, ILink } from "~/types/common";
-import CartAside from "~/components/cart/CartAside.vue";
+import CheckoutAside from "~/components/checkout/CheckoutAside.vue";
 import {
 	markRaw,
 	reactive,
@@ -20,6 +20,7 @@ import UiButton from "../components/ui/UiButton.vue";
 import CheckoutContacts from "~/components/checkout/CheckoutContacts.vue";
 import CheckoutDelivery from "~/components/checkout/CheckoutDelivery.vue";
 import CheckoutPaymentTypes from "~/components/checkout/CheckoutPaymentTypes.vue";
+import * as yup from 'yup';
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
@@ -42,6 +43,7 @@ const backLink = {
 	title: "Продолжить покупки",
 } satisfies ILink;
 const cartStore = useCartStore();
+const phoneRegExp = /^\+7 \d{3} \d{3} \d{2}-\d{2}$/;
 const { items } = storeToRefs(cartStore);
 const router = useRouter();
 
@@ -62,7 +64,28 @@ const products = await getItems<IProduct>({
 	},
 });
 
-const { setFieldError } = useForm();
+const { setFieldError, meta, values } = useForm({
+	validationSchema: yup.lazy(value => {
+		const payload = {
+			name: yup.string().required().min(4),
+			phone: yup.string().matches(phoneRegExp, 'Неверный номер телефона').required('Поле обязательно'),
+			email: yup.string().required().email(),
+			paymentType: yup.string().required(),
+		}
+
+		if (value.deliveryType === 'self') {
+
+		} else {
+			payload.city = yup.string().required()
+			payload.street = yup.string().required()
+			payload.house = yup.string().required()
+			payload.flat = yup.string().required()
+			payload.floor = yup.string().optional()
+			payload.entrance = yup.string().optional()
+		}
+		return yup.object().shape(payload)
+	})
+});
 
 watchEffect(() => {
 	for (const item of items.value) {
@@ -96,12 +119,12 @@ watchEffect(() => {
 			v-if="lines.size"
 			class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex px-4 bg-white"
 		>
-			<div class="flex flex-col gap-7">
-			<CheckoutContacts />
+			<div class="flex flex-1 w-full flex-col gap-7 w-full">
+				<CheckoutContacts />
 				<CheckoutDelivery />
 				<CheckoutPaymentTypes />
 			</div>
-			<CartAside :lines="lines" :set-field-error="setFieldError" />
+			<CheckoutAside :values="values" :is-valid="meta.valid" :lines="lines" :set-field-error="setFieldError" />
 		</main>
 		<main v-else class="flex items-center justify-center flex-col gap-10">
 			<div

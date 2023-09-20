@@ -1,5 +1,3 @@
-import AppConfig from "../app.config";
-
 export type DirectusUser = {
     auth_data?: unknown | null;
     description?: string | null;
@@ -219,4 +217,40 @@ export type IStore = {
     long: number;
     address: string;
     name: string;
+}
+
+export type IPaymentType = {
+    id: string;
+    title: string;
+    type: 'tinkoff' | 'self-cash' | 'self-card';
+    isActive: boolean;
+}
+
+export type IPromoCode = {
+    id: string;
+    code: string;
+    type: "percentage" | "fixed";
+    value: number;
+    expiration_date: string;
+}
+
+export type IOrder = IOrderPayload & {
+}
+
+export type IOrderPayload = {
+    phone: string;
+    email: string;
+    deliveryType: string;
+    city?: string;
+    street?: string;
+    house?: string;
+    flat?: string;
+    entrance?: string;
+    paymentType: string;
+    items: any[];
+    promocodes: string[];
+    deliveryPrice: number;
+    total: number;
+    number?: number;
+    trackNumber?: string;
 }

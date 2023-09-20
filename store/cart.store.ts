@@ -1,16 +1,14 @@
 import {defineStore} from "pinia";
 import {useAppConfig} from "~/.nuxt/imports";
-import {CartItem, CartState, DeliveryTypes} from "../types/cart";
+import {CartItem, CartState, DeliveryTypes} from "~/types/cart";
 import {toast} from "vue3-toastify";
 import {useFetch} from "@vueuse/core";
+import { IPromoCode } from "~/types/common";
 
 export const useCartStore = defineStore('cart', {
     state: (): CartState => ({
         items: [],
-        discount: {
-            promoCode: null,
-            amount: 0
-        },
+        discount: null,
         delivery: {
             calculated: false,
             amount: 0,
@@ -21,6 +19,9 @@ export const useCartStore = defineStore('cart', {
         cartTotalLength: (state) => state.items.length,
     },
     actions: {
+        setPromoCode(promocode: IPromoCode) {
+            this.discount = promocode
+        },
         async getCart() {
             const {data} = await useFetch<CartItem[]>('/api/cart').json()
             if (data.value?.length) this.items = data.value
