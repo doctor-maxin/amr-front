@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import PageHeader from "~/components/page/Header.vue";
-import { IBreadCrumb, ILink } from "~/types/common";
-import CheckoutAside from "~/components/checkout/CheckoutAside.vue";
+import PageHeader from "../../components/page/Header.vue";
+import { IBreadCrumb, ILink } from "../../types/common";
+import CheckoutAside from "../../components/checkout/CheckoutAside.vue";
 import {
 	markRaw,
 	reactive,
@@ -10,17 +10,17 @@ import {
 	useForm,
 	useRouter,
 	watchEffect,
-} from "../.nuxt/imports";
-import CartList from "../components/cart/CartList.vue";
-import { CartPopulatedItem } from "../types/cart";
-import { useCartStore } from "../store/cart.store";
-import { IProduct } from "../types/product";
+} from "../../.nuxt/imports";
+import CartList from "../../components/cart/CartList.vue";
+import { CartPopulatedItem } from "../../types/cart";
+import { useCartStore } from "../../store/cart.store";
+import { IProduct } from "../../types/product";
 import { storeToRefs } from "pinia";
-import UiButton from "../components/ui/UiButton.vue";
-import CheckoutContacts from "~/components/checkout/CheckoutContacts.vue";
-import CheckoutDelivery from "~/components/checkout/CheckoutDelivery.vue";
-import CheckoutPaymentTypes from "~/components/checkout/CheckoutPaymentTypes.vue";
-import * as yup from 'yup';
+import UiButton from "../../components/ui/UiButton.vue";
+import CheckoutContacts from "../../components/checkout/CheckoutContacts.vue";
+import CheckoutDelivery from "../../components/checkout/CheckoutDelivery.vue";
+import CheckoutPaymentTypes from "../../components/checkout/CheckoutPaymentTypes.vue";
+import * as yup from "yup";
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
@@ -65,26 +65,28 @@ const products = await getItems<IProduct>({
 });
 
 const { setFieldError, meta, values } = useForm({
-	validationSchema: yup.lazy(value => {
+	validationSchema: yup.lazy((value) => {
 		const payload = {
 			name: yup.string().required().min(4),
-			phone: yup.string().matches(phoneRegExp, 'Неверный номер телефона').required('Поле обязательно'),
+			phone: yup
+				.string()
+				.matches(phoneRegExp, "Неверный номер телефона")
+				.required("Поле обязательно"),
 			email: yup.string().required().email(),
 			paymentType: yup.string().required(),
-		}
+		};
 
-		if (value.deliveryType === 'self') {
-
+		if (value.deliveryType === "self") {
 		} else {
-			payload.city = yup.string().required()
-			payload.street = yup.string().required()
-			payload.house = yup.string().required()
-			payload.flat = yup.string().required()
-			payload.floor = yup.string().optional()
-			payload.entrance = yup.string().optional()
+			payload.city = yup.string().required();
+			payload.street = yup.string().required();
+			payload.house = yup.string().required();
+			payload.flat = yup.string().required();
+			payload.floor = yup.string().optional();
+			payload.entrance = yup.string().optional();
 		}
-		return yup.object().shape(payload)
-	})
+		return yup.object().shape(payload);
+	}),
 });
 
 watchEffect(() => {
@@ -124,7 +126,12 @@ watchEffect(() => {
 				<CheckoutDelivery />
 				<CheckoutPaymentTypes />
 			</div>
-			<CheckoutAside :values="values" :is-valid="meta.valid" :lines="lines" :set-field-error="setFieldError" />
+			<CheckoutAside
+				:values="values"
+				:is-valid="meta.valid"
+				:lines="lines"
+				:set-field-error="setFieldError"
+			/>
 		</main>
 		<main v-else class="flex items-center justify-center flex-col gap-10">
 			<div

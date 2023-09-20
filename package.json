@@ -24,6 +24,7 @@
     "@vueuse/core": "^10.4.1",
     "@vueuse/nuxt": "^10.4.1",
     "autoprefixer": "^10.4.14",
+    "eslint-plugin-prettier": "^5.0.0",
     "nuxt": "^3.6.5",
     "nuxt-svgo": "^3.4.0",
     "postcss": "^8.4.27",
@@ -31,6 +32,7 @@
     "typescript": "5.2.0-beta"
   },
   "dependencies": {
+    "@directus/sdk": "^12.0.0",
     "@pinia/nuxt": "^0.4.11",
     "@vee-validate/nuxt": "^4.11.2",
     "@vee-validate/yup": "^4.11.3",

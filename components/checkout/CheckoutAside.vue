@@ -7,19 +7,22 @@ import {
 	computed,
 	useAppConfig,
 	useRouter,
-	ref, useDirectusItems, useEvent
+	ref,
+	useDirectusItems,
+	useEvent,
 } from "../../.nuxt/imports";
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
 import { toast } from "vue3-toastify";
 import { useFetch } from "@vueuse/core";
+import { ICheckoutPayload } from "~/server/types/checkout.types";
 
 const cartStore = useCartStore();
-const { delivery, discount } = storeToRefs(cartStore);
+const { delivery, discount, items } = storeToRefs(cartStore);
 const appConfig = useAppConfig();
 const router = useRouter();
 const isLoading = ref<boolean>(false);
-const {createItems} = useDirectusItems()
+const { createItems } = useDirectusItems();
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
@@ -41,13 +44,13 @@ const sum = computed<number>(() => {
 const discountAmount = computed(() => {
 	if (!discount.value) return 0;
 
-	if (discount.value.type === 'fixed') {
-		return discount.value.value
-	} else if (discount.value.type === 'percentage') {
-		return sum * discount.value.value / 100
+	if (discount.value.type === "fixed") {
+		return discount.value.value;
+	} else if (discount.value.type === "percentage") {
+		return (sum.value * discount.value.value) / 100;
 	}
 	return 0;
-})
+});
 
 const total = computed(() => {
 	let amount = sum.value;
@@ -71,20 +74,31 @@ const createOrder = async () => {
 	if (!response.ok) {
 		const result = await response.json();
 		for (const id of result) {
-			const item = props.lines.get(id)
+			const item = props.lines.get(id);
+			if (!item) continue;
 
-			toast.error(`${item.product.name} доступно ${item.product.count}`)
+			toast.error(`${item.product.name} доступно ${item.product.count}`);
 		}
 	} else {
-		const result = useFetch('/api/checkout').post(props.values
-		).json()
-		console.log('result', result)
+		const data = {
+			...props.values,
+			items: items.value,
+			promocodes: [discount.value],
+		} satisfies ICheckoutPayload;
+
+		const { data: response } = await useFetch("/api/checkout")
+			.post(data)
+			.json<{
+				status: number;
+				location: string;
+			}>();
+		if (response.value?.status === 302)
+			window.location.href = response.value?.location;
 	}
 	isLoading.value = false;
 };
 
 const getItemImage = (item: any): string => {
-	console.log("item", item);
 	if (item.product?.images?.[0].directus_files_id)
 		return item.product.images[0].directus_files_id;
 	return appConfig.noImageId as string;
@@ -128,14 +142,11 @@ const getItemImage = (item: any): string => {
 				toMoney(delivery.amount)
 			}}</span>
 		</div>
-		<div
-			v-if="discount"
-			class="flex justify-between gap-2 lg:text-lg"
-		>
+		<div v-if="discount" class="flex justify-between gap-2 lg:text-lg">
 			<span class="font-medium">Скидка</span>
-			<span class="text-right font-bold whitespace-nowrap">-{{
-				toMoney(discountAmount)
-			}}</span>
+			<span class="text-right font-bold whitespace-nowrap"
+				>-{{ toMoney(discountAmount) }}</span
+			>
 		</div>
 		<div class="flex lg:mt-4 justify-between lg:text-xl gap-2">
 			<span class="font-bold">Итого</span>
