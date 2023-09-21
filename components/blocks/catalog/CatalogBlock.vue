@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import {Swiper, SwiperSlide} from 'swiper/vue'
 import {Autoplay, Pagination} from 'swiper/modules';
-import {shallowRef, markRaw} from '~/.nuxt/imports';
+import { shallowRef, markRaw, useAsyncData, useDirectusItems } from "~/.nuxt/imports";
 import 'swiper/css';
 import 'swiper/css/autoplay'
 import 'swiper/css/pagination'
 import CatalogBlockCard from "~/components/blocks/catalog/CatalogBlockCard.vue";
 import UiLink from "~/components/ui/UiLink.vue";
+import { computed, useNuxtData } from "#imports";
+import { ICategory } from "~/types/common";
 
 const autoPlayOptions = shallowRef({
 	delay: 7000
@@ -33,39 +35,18 @@ const breakpoints = shallowRef({
 		spaceBetween: 30
 	}
 })
+const {getItems} = useDirectusItems()
 
-const categories = markRaw([
-	{
-		id: 1,
-		title: 'Кабинет',
-		link: '#',
-		image: 'images/categories/slide1.png'
-	},
-	{
-		id: 2,
-		title: 'Гостиная',
-		link: '#',
-		image: 'images/categories/slide2.png'
-	},
-	{
-		id: 3,
-		title: 'Спальня',
-		link: '#',
-		image: 'images/categories/slide3.png'
-	},
-	{
-		id: 4,
-		title: 'Гардероб',
-		link: '#',
-		image: 'images/categories/slide4.png'
-	},
-	{
-		id: 5,
-		title: 'Кухня',
-		link: '#',
-		image: 'images/categories/slide5.png'
-	},
-])
+const { data: mainCategories } = await useAsyncData('mainCategories', () => getItems<ICategory>({
+	collection: 'category', params: {
+		filter: {
+			parentId: {
+				_null: true
+			}
+		},
+		fields: ['name', 'handle', 'id', 'image']
+	}
+}))
 
 const paginationOptions = shallowRef({
 	el: '.swiper-pagination',
@@ -81,11 +62,12 @@ const paginationOptions = shallowRef({
 			<UiLink title="Весь каталог" to="/catalog" variant="filled" class="hidden lg:flex"/>
 		</div>
 		<div>
+			<ClientOnly>
 			<Swiper :autoplay="autoPlayOptions" :breakpoints="breakpoints"
 			        :modules="[Pagination, Autoplay]"
 			        :pagination="paginationOptions"
 			>
-				<SwiperSlide v-for="item of categories" :key="item.id">
+				<SwiperSlide v-for="item of mainCategories" :key="item.id">
 					<CatalogBlockCard :item="item"/>
 				</SwiperSlide>
 				<template v-slot:container-end>
@@ -95,6 +77,7 @@ const paginationOptions = shallowRef({
 					</div>
 				</template>
 			</Swiper>
+			</ClientOnly>
 		</div>
 	</section>
 </template>

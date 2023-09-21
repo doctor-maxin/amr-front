@@ -12,7 +12,9 @@ import CheckoutOrderPayment from "~/components/checkout/order/CheckoutOrderPayme
 import CheckoutOrderDelivery from "~/components/checkout/order/CheckoutOrderDelivery.vue";
 import CheckoutOrderTotals from "~/components/checkout/order/CheckoutOrderTotals.vue";
 import CheckoutOrderInfo from "~/components/checkout/order/CheckoutOrderInfo.vue";
+import { useCartStore } from "../../store/cart.store";
 
+const cartStore = useCartStore()
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
 		title: "Корзина",
@@ -32,15 +34,21 @@ const backLink = {
 	path: "back",
 	title: "Продолжить покупки",
 } satisfies ILink;
-const params = useUrlSearchParams();
+const params = useUrlSearchParams("history", {
+	initialValue: {
+		orderId: "",
+		status: "fail",
+	},
+});
 const { getItemById } = useDirectusItems();
-const { data: order } = useAsyncData(() =>
+const { data: order } = await useAsyncData(() =>
 	getItemById<IOrder>({
 		collection: "orders",
 		id: params.orderId?.toString(),
-	}),
+	})
 );
-console.log(order.value);
+
+if (params.status === 'success') cartStore.clearCart()
 </script>
 
 <template>
@@ -57,11 +65,11 @@ console.log(order.value);
 			v-if="order"
 			class="lg:items-start max-w-[54rem] gap-7 w-screen gap-[2.75rem] lg:gap-[1.875rem] flex-col justify-center flex px-4 bg-white"
 		>
-			<CheckoutOrderInfo :order="order" />
-			<CheckoutOrderDate :date="order.date_created" />
-			<CheckoutOrderPayment :payment-type="order.paymentType" />
-			<CheckoutOrderDelivery :delivery-type="order.deliveryType" />
-			<CheckoutOrderTotals :order="order" />
+			<CheckoutOrderInfo :status="params.status" :order="order" />
+			<CheckoutOrderDate v-if="order.date_created" :date="order.date_created" />
+			<CheckoutOrderPayment v-if="order.paymentType" :payment-type="order.paymentType" />
+			<CheckoutOrderDelivery v-if="order.deliveryType" :delivery-type="order.deliveryType" />
+			<CheckoutOrderTotals v-if="order?.id" :order="order" />
 		</main>
 	</div>
 </template>

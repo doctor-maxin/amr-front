@@ -23,7 +23,7 @@ export type CartState = {
         amount: number;
         type: DeliveryTypes;
     }
-    discount: IPromoCode
+    discount: IPromoCode | null
 }
 
 export type CartPopulatedItem = CartItem & {

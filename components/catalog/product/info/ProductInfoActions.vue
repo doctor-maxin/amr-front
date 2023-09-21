@@ -25,15 +25,17 @@ const {toMoney} = useCurrency()
 				type="button">
 				<svgo-heart class="text-2xl" filled/>
 			</button>
-			<button class="px-[1.375rem] hidden rounded-full border border-system-black-950 lg:flex items-center justify-center h-[4rem]"
+			<button v-if="product.count > 0" :disabled="product.count <=0" class="px-[1.375rem] hidden rounded-full border border-system-black-950 lg:flex items-center justify-center h-[4rem]"
 			        type="button">
 				<span class="font-semibold">Покупка в 1 клик</span>
 			</button>
 			<button
-				class="rounded-full lg:gap-[0.88rem] border border-system-black-950 bg-system-black-950 flex items-center justify-center lg:w-auto lg:h-[4rem] w-[3.25rem] h-[3.25rem] text-white lg:px-6"
+				:disabled="product.count <=0"
+				class="rounded-full lg:gap-[0.88rem] disabled:bg-system-gray-600 disabled:border-system-gray-600 disabled:cursor-not-allowed border border-system-black-950 bg-system-black-950 flex items-center justify-center lg:w-auto lg:h-[4rem] w-[3.25rem] h-[3.25rem] text-white lg:px-6"
 				type="button">
 				<svgo-cart class="text-2xl" filled/>
-				<span class="hidden lg:block font-semibold text-white">В корзину</span>
+				<span class="hidden lg:block font-semibold text-white">
+					{{product.count <=0 ? 'Товар распродан' : 'В корзину'}}</span>
 			</button>
 		</div>
 	</div>

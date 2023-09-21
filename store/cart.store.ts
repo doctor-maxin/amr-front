@@ -22,6 +22,10 @@ export const useCartStore = defineStore('cart', {
         setPromoCode(promocode: IPromoCode) {
             this.discount = promocode
         },
+        async clearCart() {
+            await useFetch<CartItem[]>('/api/cart').delete()
+            this.items = []
+        },
         async getCart() {
             const {data} = await useFetch<CartItem[]>('/api/cart').json()
             if (data.value?.length) this.items = data.value

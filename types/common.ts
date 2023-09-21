@@ -1,3 +1,6 @@
+import { PaymentTypes } from "~/server/types/checkout.types";
+import { DeliveryTypes } from "~/types/cart";
+
 export type DirectusUser = {
 	auth_data?: unknown | null;
 	description?: string | null;
@@ -248,6 +251,8 @@ export type IOrder = IOrderPayload & {
 		id: string;
 		count: number;
 	}[];
+	paymentType: PaymentTypes;
+	deliveryType: DeliveryTypes;
 };
 
 export type IOrderPayload =
@@ -290,3 +295,17 @@ export type IOrderPayload =
 			deliveryPrice: number;
 			total: number;
 	  };
+
+export type IHeroBlock = {
+	title:string;
+	description:string;
+	linkHref?: string;
+	linkTitle?: string;
+}
+
+export type IAdvantage = {
+	id:string;
+	title:string;
+	description:string;
+	image: DirectusFile;
+}

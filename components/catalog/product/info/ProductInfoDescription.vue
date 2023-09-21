@@ -5,11 +5,6 @@ import ProductInfoVariants from "./ProductInfoVariants.vue";
 const props = defineProps<{
 	product: IProduct;
 }>()
-
-for (const prop in props.product) {
-	console.log(prop)
-
-}
 </script>
 
 <template>

@@ -4,6 +4,7 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
 	devtools: { enabled: false },
 	css: ["~/assets/css/fonts.css", "~/assets/css/main.css"],
+	// @ts-ignore
 	loading: "~/components/loader/Loader.vue",
 	ssr: false,
 	imports: {
@@ -11,16 +12,14 @@ export default defineNuxtConfig({
 	},
 	runtimeConfig: {
 		directus: {
-			url: "http://109.195.74.198:8055",
-			// url: 'http://127.0.0.1:8055',
+			url: process.env.DIRECTUS_URL,
 		},
 		public: {
-			apiSecret: "",
 			yandexKey: "",
 		},
 		tinkoff: {
-			terminalKey: "1693570153217DEMO",
-			key: "y9s03ap10uunqry4",
+			terminalKey: "",
+			key: "",
 		},
 	},
 	routeRules: {
@@ -35,8 +34,7 @@ export default defineNuxtConfig({
 			{
 				inject: true,
 				directus: {
-					baseURL: "http://109.195.74.198:8055/assets/",
-					// baseURL: 'http://127.0.0.1:8055/assets/'
+					baseURL: `${process.env.DIRECTUS_URL}/assets/`,
 				},
 			},
 		],
@@ -52,9 +50,8 @@ export default defineNuxtConfig({
 		[
 			"nuxt-directus",
 			{
-				url: "http://109.195.74.198:8055",
-				token: "RFgM_SPPCQr_L5RJfiSYoox0QunHYpbE",
-				// url: 'http://127.0.0.1:8055',
+				url: process.env.DIRECTUS_URL,
+				token: process.env.DIRECTUS_TOKEN,
 			},
 		],
 		[
@@ -73,13 +70,21 @@ export default defineNuxtConfig({
 	vite: {
 		server: {
 			proxy: {
-				"/assets": "http://109.195.74.198:8055",
+				"/assets": process.env.DIRECTUS_URL,
 				// '/assets': 'http://127.0.0.1:8055',
-				"/api/favorites": "http://109.195.74.198:8055",
-				"/api/cart": "http://109.195.74.198:8055",
+				"/api/favorites": process.env.DIRECTUS_URL,
+				"/api/cart": process.env.DIRECTUS_URL,
 				// '/api': 'http://127.0.0.1:8055',
 			},
+
 		},
+	},
+	nitro: {
+		routeRules: {
+			'/api/cart': {proxy: process.env.DIRECTUS_URL},
+			'/assets/*': {proxy: process.env.DIRECTUS_URL},
+			'/api/favorites': {proxy: process.env.DIRECTUS_URL},
+		}
 	},
 	postcss: {
 		plugins: {

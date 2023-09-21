@@ -5,73 +5,28 @@ import 'swiper/css';
 import 'swiper/css/autoplay'
 import 'swiper/css/pagination'
 import UiLink from "~/components/ui/UiLink.vue";
-import {markRaw, shallowRef} from "~/.nuxt/imports";
+import { markRaw, shallowRef, useAsyncData, useDirectusItems } from "~/.nuxt/imports";
+import { IHeroBlock } from "~/types/common";
 
 const AutoPlayDelay = shallowRef(7000)
-
-const slides = markRaw([
-	{
-		id: 1,
-		title: 'Авторская мебель, обладающая уникальным дизайном и неповторимым стилем',
-		description: 'Каждая деталь нашей мебели - это произведение искусства, которое привносит индивидуальность и неповторимость в Ваш дом',
-		link: {
-			title: 'Посмотреть решения',
-			href: '/catalog'
-		},
-		backgroundImage: 'images/main-banner.jpg'
-	},
-	{
-		id: 2,
-		title: 'Авторская мебель, обладающая уникальным дизайном и неповторимым стилем',
-		description: 'Каждая деталь нашей мебели - это произведение искусства, которое привносит индивидуальность и неповторимость в Ваш дом',
-		link: {
-			title: 'Посмотреть решения',
-			href: '/catalog'
-		},
-		backgroundImage: 'images/main-banner.jpg'
-	},
-	{
-		id: 3,
-		title: 'Авторская мебель, обладающая уникальным дизайном и неповторимым стилем',
-		description: 'Каждая деталь нашей мебели - это произведение искусства, которое привносит индивидуальность и неповторимость в Ваш дом',
-		link: {
-			title: 'Посмотреть решения',
-			href: '/catalog'
-		},
-		backgroundImage: 'images/main-banner.jpg'
-	},
-	{
-		id: 4,
-		title: 'Авторская мебель, обладающая уникальным дизайном и неповторимым стилем',
-		description: 'Каждая деталь нашей мебели - это произведение искусства, которое привносит индивидуальность и неповторимость в Ваш дом',
-		link: {
-			title: 'Посмотреть решения',
-			href: '/catalog'
-		},
-		backgroundImage: 'images/main-banner.jpg'
-	},
-	{
-		id: 5,
-		title: 'Авторская мебель, обладающая уникальным дизайном и неповторимым стилем',
-		description: 'Каждая деталь нашей мебели - это произведение искусства, которое привносит индивидуальность и неповторимость в Ваш дом',
-		link: {
-			title: 'Посмотреть решения',
-			href: '/catalog'
-		},
-		backgroundImage: 'images/main-banner.jpg'
-	},
-])
+const {getSingletonItem} = useDirectusItems()
+const {data} = useAsyncData<IHeroBlock>('main-hero-block', () => getSingletonItem<IHeroBlock>({
+	collection: 'heroBlock',
+	params: {fields: ['*', 'slider.directus_files_id']}
+}))
 </script>
 
 <template>
 	<div class="relative flex flex-col-reverse lg:flex-row">
+		<div class="left-0 h-full z-10 lg:max-w-[65vw] xl:max-w-[55vw] 2xl:max-w-[41vw] bg-system-gray lg:bg-white lg:bg-opacity-[0.67] backdrop-blur-xl">
 		<article
-			class="hero left-0 h-full lg:max-w-[65vw] xl:max-w-[55vw] 2xl:max-w-[41vw] pb-[4.44rem] lg:pb-[6.5rem] z-10 lg:pl-[4.37rem] pt-[2.25rem] lg:pt-[6.19rem] px-4 lg:pr-[1.88rem] bg-system-gray lg:bg-white lg:bg-opacity-[0.67] backdrop-blur-xl">
+			class="hero h-full pb-[4.44rem] lg:pb-[6.5rem]  lg:pl-[4.37rem] pt-[2.25rem] lg:pt-[6.19rem] px-4 lg:pr-[1.88rem] ">
 			<h1 class="text-2xl lg:text-[2.625rem] mb-[1.13rem] lg:mb-[0.87rem] font-bold text-[#26282D] leading-[140%]">
-				Авторская мебель, обладающая уникальным дизайном и неповторимым стилем</h1>
-			<p class="text-[0.875rem] lg:text-base font-medium">Каждая деталь нашей мебели - это произведение искусства, которое привносит индивидуальность и неповторимость в Ваш дом</p>
-			<UiLink title="Посмотреть решения" to="/catalog" class="mt-12 lg:mt-9"/>
+				{{data?.title }}</h1>
+			<p class="text-[0.875rem] lg:text-base font-medium">{{ data?.description }}</p>
+			<UiLink v-if="data?.linkHref" :title="data.linkTitle" :to="data.linkHref" class="mt-12 lg:mt-9"/>
 		</article>
+		</div>
 		<ClientOnly>
 			<Swiper
 				:autoplay="{
@@ -81,10 +36,10 @@ const slides = markRaw([
 				:pagination="true"
 				:slides-per-view="1"
 				class="max-h-screen lg:!absolute w-full h-full">
-				<template v-for="slide of slides">
+				<template v-for="slide of data?.slider">
 					<SwiperSlide class="relative">
 							<div class="static w-full h-full ">
-								<img class="w-full object-center h-full object-cover max-h-full" :src="slide.backgroundImage" format="avif,webp" />
+								<NuxtImg class="w-full object-center h-full object-cover max-h-full" :src="slide.directus_files_id" provider="directus" />
 							</div>
 					</SwiperSlide>
 				</template>

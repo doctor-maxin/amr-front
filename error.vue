@@ -58,7 +58,7 @@ const toProduct = () => {
 	</div>
 </template>
 
-<style>
+<style lang="scss">
 .error-page {
 	padding: 2.62rem 1rem 2.815rem;
 	min-height: 100dvh;

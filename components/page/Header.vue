@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {IBreadCrumb, ILink} from "~/types/common";
-import BreadCrumbs from "~/components/common/BreadCrumbs.vue";
+import UiBreadCrumbs from "~/components/common/BreadCrumbs.vue";
 import {useRouter} from "~/.nuxt/imports";
 
 defineProps<{
@@ -23,7 +23,7 @@ const router = useRouter()
     </button>
     <div id="filters-slot"
          class="font-semibold top-[2.6375rem] right-[4.375rem] absolute text-[1.125rem] gap-1.5 hidden lg:flex items-center"/>
-    <BreadCrumbs :list="breadCrumbs" :progress="progress"/>
+    <UiBreadCrumbs :list="breadCrumbs" :progress="progress"/>
   </div>
 </template>
 

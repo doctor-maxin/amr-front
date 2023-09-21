@@ -34,7 +34,6 @@ watch(value, (val: any) => {
 				  'hover:border-accent-300 bg-transparent': hideError,
 	          }]"
 	/>
-		{{error}}
 		<span v-if="meta.touched && errorMessage && !hideError" class="text-red-500 text-xs absolute bottom-1 left-6">
 			{{errorMessage}}
 		</span>

@@ -14,7 +14,6 @@ import {
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
 import { toast } from "vue3-toastify";
-import { useFetch } from "@vueuse/core";
 import { ICheckoutPayload } from "~/server/types/checkout.types";
 
 const cartStore = useCartStore();
@@ -83,17 +82,28 @@ const createOrder = async () => {
 		const data = {
 			...props.values,
 			items: items.value,
-			promocodes: [discount.value],
+			promocodes: discount.value ? discount.value : "",
 		} satisfies ICheckoutPayload;
 
-		const { data: response } = await useFetch("/api/checkout")
-			.post(data)
-			.json<{
-				status: number;
-				location: string;
-			}>();
-		if (response.value?.status === 302)
-			window.location.href = response.value?.location;
+		const response = await fetch("/api/checkout", {
+			method: "post",
+			body: JSON.stringify(data),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const responseData = await response.json();
+		if (response.status === 200) {
+			window.location.href = responseData.location;
+		} else if (response.status !== 200) {
+			console.error(responseData);
+			toast.error(responseData.message);
+		}
+		//
+		// if (response.value?.status === 302)
+		// 	window.location.href = response.value?.location;
+		// console.log(response.value, error.value);
+		// if (response.value.status !== 200) toast.error()
 	}
 	isLoading.value = false;
 };

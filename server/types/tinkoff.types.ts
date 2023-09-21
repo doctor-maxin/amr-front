@@ -54,6 +54,15 @@ export type ITinkoffReceipt = {
 		| "patent";
 };
 
+export type ITinkoffAuthorizePayload = {
+	PaymentId: string;
+	SendEmail?: boolean;
+	Source?: string;
+	InfoEmail?: string;
+	Amount?: number;
+	deviceChannel?: string
+	Route?: string;
+}
 export type ITinkoffInitPaymentPayload = {
 	amount: number;
 	orderId: string;
@@ -84,3 +93,36 @@ export type ITinkoffInitPaymentResult = {
 	Message?: string;
 	Details?: string;
 };
+export type ITinkoffPaymentStatuses = 'NEW' | 'CANCELED' | 'PREAUTHORIZING' | 'FORMSHOWED'
+
+export type PaymentsCheckOrder = {
+	PaymentId: string;
+	Amount?: number;
+	Status: ITinkoffPaymentStatuses;
+	RRN?: string;
+	Success: boolean;
+	ErrorCode: string;
+	Message: string;
+}
+
+export type ITinkoffOrderStatusResult = {
+	Success: boolean;
+	ErrorCode: string;
+	Message: string;
+	TerminalKey: string;
+	OrderId: string;
+	Payments: PaymentsCheckOrder[]
+}
+
+
+export type ITinkoffPaymentStatusResult = {
+	TerminalKey: string;
+	Amount: number;
+	Success: boolean;
+	OrderId: string;
+	Status: ITinkoffPaymentStatuses;
+	PaymentId: string;
+	ErrorCode: string;
+	Message?: string;
+	Details?: string;
+}

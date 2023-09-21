@@ -87,6 +87,19 @@ const { setFieldError, meta, values } = useForm({
 		}
 		return yup.object().shape(payload);
 	}),
+	initialValues: {
+		name: 'Мухриддин',
+		phone: '+7 929 357 13-79',
+		email: 'doctor-maxin@yandex.ru',
+		paymentType: 'tinkoff',
+		deliveryType: 'self',
+		city: 'Красноярск',
+		street: 'Весны',
+		house: '6',
+		flat: '21',
+		floor: 5,
+		entrance: 1
+	}
 });
 
 watchEffect(() => {
