@@ -9,7 +9,7 @@ import {
 	useRouter,
 	ref,
 	useDirectusItems,
-	useEvent,
+	useEvent, useRuntimeConfig
 } from "../../.nuxt/imports";
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
@@ -22,6 +22,9 @@ const appConfig = useAppConfig();
 const router = useRouter();
 const isLoading = ref<boolean>(false);
 const { createItems } = useDirectusItems();
+const runtimeConfig = useRuntimeConfig()
+//@ts-ignore
+const baseUrl = runtimeConfig.public?.directus?.url as string
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
@@ -67,7 +70,7 @@ const createOrder = async () => {
 			count: item.count + 1,
 		});
 	}
-	const response = await fetch("/api/cart/check", {
+	const response = await fetch(baseUrl + "/api/cart/check", {
 		method: "post",
 	});
 	if (!response.ok) {

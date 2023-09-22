@@ -62,7 +62,7 @@ export default defineEventHandler(async (event) => {
 	console.log("order", order);
 
 	if (body.paymentType === PaymentTypes.TINKOFF) {
-		await $fetch("/api/cart", {
+		await $fetch(process.env.DIRECTUS_URL + "/api/cart", {
 			method: "delete",
 		});
 		const paymentResult = await initPayment({
@@ -85,7 +85,7 @@ export default defineEventHandler(async (event) => {
 			data: paymentResult,
 		});
 	} else {
-		await $fetch("/api/cart", {
+		await $fetch(process.env.DIRECTUS_URL + "/api/cart", {
 			method: "delete",
 		});
 

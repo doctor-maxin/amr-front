@@ -1,8 +1,7 @@
 import {defineStore} from "pinia";
-import {useAppConfig} from "~/.nuxt/imports";
+import { useAppConfig, useCartFetch } from "~/.nuxt/imports";
 import {CartItem, CartState, DeliveryTypes} from "~/types/cart";
 import {toast} from "vue3-toastify";
-import {useFetch} from "@vueuse/core";
 import { IPromoCode } from "~/types/common";
 
 export const useCartStore = defineStore('cart', {
@@ -23,19 +22,27 @@ export const useCartStore = defineStore('cart', {
             this.discount = promocode
         },
         async clearCart() {
-            await useFetch<CartItem[]>('/api/cart').delete()
+            const {client} = useCartFetch()
+            await client<CartItem[]>('/', {
+
+            }).delete()
             this.items = []
         },
         async getCart() {
-            const {data} = await useFetch<CartItem[]>('/api/cart').json()
+            const {client} = useCartFetch()
+
+            const {data} = await client<CartItem[]>('/').json()
             if (data.value?.length) this.items = data.value
         },
         async removeItem(id: string) {
-            await useFetch<CartItem[]>('/api/cart/' + id).delete()
+            const {client} = useCartFetch()
+            await client<CartItem[]>('/' + id).delete()
             this.items = this.items.filter(item => item.id !== id)
         },
         async setLine(id: string, count: number) {
-            const {data} = await useFetch<CartItem[]>('/api/cart').post({
+            const {client} = useCartFetch()
+
+            const {data} = await client<CartItem[]>('/').post({
                 id,
                 count
             }).json()
@@ -48,9 +55,10 @@ export const useCartStore = defineStore('cart', {
             })
         },
         async addProduct(id: string, count = 1) {
+            const {client} = useCartFetch()
             const appConfig = useAppConfig()
 
-            const {data} = await useFetch<CartItem[]>('/api/cart').post({
+            const {data} = await client<CartItem[]>('/').post({
                 id,
                 count
             }).json()

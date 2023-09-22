@@ -7,16 +7,21 @@ import {
 	computed,
 	useAppConfig,
 	useRouter,
-	ref
+	ref, useCartFetch
 } from "../../.nuxt/imports";
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
+import { useRuntimeConfig } from "#imports";
 
 const cartStore = useCartStore();
 const { delivery, discount } = storeToRefs(cartStore);
 const appConfig = useAppConfig();
 const router = useRouter();
 const isLoading = ref<boolean>(false);
+const {client} = useCartFetch()
+const runtimeConfig = useRuntimeConfig()
+//@ts-ignore
+const baseUrl = runtimeConfig.public?.directus?.url as string
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
@@ -60,7 +65,7 @@ const toCheckout = async () => {
 			count: item.count + 1,
 		});
 	}
-	const response = await fetch("/api/cart/check", {
+	const response = await fetch(baseUrl + "/api/cart/check", {
 		method: "post",
 	});
 	if (!response.ok) {

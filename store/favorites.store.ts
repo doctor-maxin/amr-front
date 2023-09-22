@@ -4,6 +4,7 @@ import {useAppConfig} from "~/.nuxt/imports";
 import {toast} from "vue3-toastify";
 import { useFetch } from '@vueuse/core'
 import {AppConfigInput} from "../types/common";
+import { useFavoritesFetch } from "~/composables/useFavoritesFetch";
 
 export const useFavoritesStore = defineStore('favorites', {
     state: (): FavoritesStore => ({
@@ -17,20 +18,22 @@ export const useFavoritesStore = defineStore('favorites', {
           return this.items.includes(id)
         },
         async getList() {
-            const {data} = await useFetch('/api/favorites').json<string[]>()
+            const {client} = useFavoritesFetch()
+            const {data} = await client('/').json<string[]>()
             if (data.value?.length) this.items = data.value
         },
         async addProduct(id: string) {
+            const {client} = useFavoritesFetch()
             const appConfig: AppConfigInput = useAppConfig()
 
             if (this.items.includes(id)) {
-                const {data} = await useFetch('/api/favorites/' + id).delete().json<string[]>()
+                const {data} = await client('/' + id).delete().json<string[]>()
                 if (data.value?.length) {
                     this.items = data.value
                     toast.success(appConfig.messages?.productRemoved)
                 }
             } else {
-                const {data} = await useFetch('/api/favorites/' + id).post().json<string[]>()
+                const {data} = await client('/' + id).post().json<string[]>()
                 if (data.value?.length) {
                     this.items = data.value
                     toast.success(appConfig.messages?.productAdded)
