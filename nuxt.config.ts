@@ -71,9 +71,9 @@ export default defineNuxtConfig({
 	],
 	proxy: {
 		proxies: {
-			'/api/cart': {target: process.env.DIRECTUS_URL},
-			'/assets/*': {target: process.env.DIRECTUS_URL},
-			'/api/favorites': {target: process.env.DIRECTUS_URL},
+			'/api/cart': {target: process.env.DIRECTUS_URL, changeOrigin: true},
+			'/assets/*': {target: process.env.DIRECTUS_URL, changeOrigin: true},
+			'/api/favorites': {target: process.env.DIRECTUS_URL, changeOrigin: true},
 		}
 	},
 	// vite: {
