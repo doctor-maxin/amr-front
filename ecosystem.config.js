@@ -4,8 +4,8 @@ module.exports = {
             name: 'frontend',
             exec_mode: 'cluster',
             instances: 'max', // Or a number of instances
-            script: './node_modules/nuxi/bin/nuxi.mjs build && ./node_modules/nuxi/bin/nuxi.mjs start',
-            args: '',
+            script: './node_modules/nuxi/bin/nuxi.mjs',
+            args: 'start',
             env: {
                 NUXT_TINKOFF_TERMINAL_KEY: "1693470153217DEMO",
                 NUXT_TINKOFF_KEY: "lglvwe6mm4axaxz7",
