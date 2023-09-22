@@ -13,6 +13,8 @@ declare global {
 			// Other
 			NUXT_PUBLIC_FRONT_HOST: string;
 			NUXT_PUBLIC_YANDEX_KEY: string;
+			// 	 Bitrix
+			NUXT_BITRIX_URL: string;
 		}
 	}
 }

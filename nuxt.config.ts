@@ -67,18 +67,18 @@ export default defineNuxtConfig({
 			},
 		],
 	],
-	vite: {
-		server: {
-			proxy: {
-				"/assets": process.env.DIRECTUS_URL,
-				// '/assets': 'http://127.0.0.1:8055',
-				"/api/favorites": process.env.DIRECTUS_URL,
-				"/api/cart": process.env.DIRECTUS_URL,
-				// '/api': 'http://127.0.0.1:8055',
-			},
-
-		},
-	},
+	// vite: {
+	// 	server: {
+	// 		proxy: {
+	// 			"/assets": process.env.DIRECTUS_URL,
+	// 			// '/assets': 'http://127.0.0.1:8055',
+	// 			"/api/favorites": process.env.DIRECTUS_URL,
+	// 			"/api/cart": process.env.DIRECTUS_URL,
+	// 			// '/api': 'http://127.0.0.1:8055',
+	// 		},
+	//
+	// 	},
+	// },
 	nitro: {
 		routeRules: {
 			'/api/cart': {proxy: process.env.DIRECTUS_URL},
