@@ -13,6 +13,7 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		directus: {
 			url: process.env.DIRECTUS_URL,
+			token: process.env.DIRECTUS_TOKEN
 		},
 		public: {
 			yandexKey: "",
@@ -29,6 +30,7 @@ export default defineNuxtConfig({
 	},
 	components: false,
 	modules: [
+		'@nuxt-alt/proxy',
 		[
 			"@nuxt/image",
 			{
@@ -67,6 +69,13 @@ export default defineNuxtConfig({
 			},
 		],
 	],
+	proxy: {
+		proxies: {
+			'/api/cart': {target: process.env.DIRECTUS_URL},
+			'/assets/*': {target: process.env.DIRECTUS_URL},
+			'/api/favorites': {target: process.env.DIRECTUS_URL},
+		}
+	},
 	// vite: {
 	// 	server: {
 	// 		proxy: {
@@ -79,13 +88,6 @@ export default defineNuxtConfig({
 	//
 	// 	},
 	// },
-	nitro: {
-		routeRules: {
-			'/api/cart': {proxy: process.env.DIRECTUS_URL},
-			'/assets/*': {proxy: process.env.DIRECTUS_URL},
-			'/api/favorites': {proxy: process.env.DIRECTUS_URL},
-		}
-	},
 	postcss: {
 		plugins: {
 			tailwindcss: {},
