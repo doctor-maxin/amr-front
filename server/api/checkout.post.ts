@@ -9,8 +9,8 @@ export default defineEventHandler(async (event) => {
 	const client = createDirectus(process.env.DIRECTUS_URL)
 		.with(rest())
 		.with(staticToken(process.env.DIRECTUS_TOKEN));
-	console.log("token", process.env.DIRECTUS_TOKEN);
 	const body = await readBody<ICheckoutPayload>(event);
+	console.log("[createOrderBody]", body);
 	let payload = {
 		phone: body.phone,
 		email: body.email,
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
 				},
 			},
 			fields: ["price", "id"],
-		})
+		}),
 	)) as { price: number; id: string }[];
 	for (const item of body.items) {
 		payload.total += items?.find((i) => i.id === item.id)?.price ?? 0;
@@ -62,9 +62,6 @@ export default defineEventHandler(async (event) => {
 	console.log("order", order);
 
 	if (body.paymentType === PaymentTypes.TINKOFF) {
-		await $fetch(process.env.DIRECTUS_URL + "/api/cart", {
-			method: "delete",
-		});
 		const paymentResult = await initPayment({
 			orderId: order.id,
 			amount: payload.total,
@@ -85,10 +82,6 @@ export default defineEventHandler(async (event) => {
 			data: paymentResult,
 		});
 	} else {
-		await $fetch(process.env.DIRECTUS_URL + "/api/cart", {
-			method: "delete",
-		});
-
 		return {
 			location: "/checkout/result?orderId=" + order.id,
 			status: 302,

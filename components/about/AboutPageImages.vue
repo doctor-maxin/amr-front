@@ -17,7 +17,7 @@ const spaceBetween = computed(() => {
 <template>
 <div class="-mx-4">
 	<client-only>
-		<Swiper slides-per-view="auto" centered-slides loop :space-between="spaceBetween">
+		<Swiper slides-per-view="auto"  loop :space-between="spaceBetween">
 			<template v-for="item of list" :key="item.id">
 				<SwiperSlide class="!w-fit max-w-[17.5rem] lg:max-w-[35.875rem]">
 					<NuxtImg

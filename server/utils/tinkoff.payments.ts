@@ -3,7 +3,7 @@ import {
 	ITinkoffInitPaymentResult,
 	ITinkoffOrderStatusResult,
 	ITinkoffPaymentStatusResult,
-	ITinkoffAuthorizePayload
+	ITinkoffAuthorizePayload,
 } from "~/server/types/tinkoff.types";
 import useTinkoffClient from "~/server/utils/tinkoff.client";
 
@@ -11,7 +11,7 @@ export async function initPayment(
 	payload: Pick<
 		ITinkoffInitPaymentPayload,
 		"amount" | "orderId" | "email" | "phone"
-	>
+	>,
 ) {
 	const client = useTinkoffClient();
 
@@ -24,7 +24,7 @@ export async function initPayment(
 				Email: payload.email,
 				Phone: payload.phone,
 			},
-			PayType: "T",
+			PayType: "O",
 			NotificationURL: process.env.NUXT_TINKOFF_NOTIFICATION_URL,
 			SuccessURL: `${process.env.NUXT_PUBLIC_FRONT_HOST}/api/tinkoff/result?orderId=${payload.orderId}&status=success`,
 			FailURL: `${process.env.NUXT_PUBLIC_FRONT_HOST}/api/tinkoff/result?orderId=${payload.orderId}&status=fail`,
@@ -38,7 +38,7 @@ export async function statusPaymentOrder(orderId: string) {
 
 	return client<ITinkoffOrderStatusResult>("/CheckOrder", {
 		body: {
-			OrderId: orderId
+			OrderId: orderId,
 		},
 		method: "POST",
 	});
@@ -49,7 +49,7 @@ export async function statusPayment(paymentId: string) {
 
 	return client<ITinkoffPaymentStatusResult>("/GetState", {
 		body: {
-			PaymentId: paymentId
+			PaymentId: paymentId,
 		},
 		method: "POST",
 	});

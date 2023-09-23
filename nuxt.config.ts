@@ -10,6 +10,9 @@ export default defineNuxtConfig({
 	imports: {
 		autoImport: true,
 	},
+	typescript: {
+		includeWorkspace: true,
+	},
 	runtimeConfig: {
 		public: {
 			yandexKey: "",

@@ -114,7 +114,7 @@ useListen('toFeedBack', () => {
 			</div>
 			<UiButton class="w-full mb-2.5 lg:mb-3.5 lg:max-w-[26.375rem]" title="Отправить" type="submit" variant="dark"/>
 			<FormHelperLink class="text-center lg:max-w-[26.375rem] block w-full"/>
-		</form>
+		</form>s
 	</section>
 </template>
 

@@ -12,11 +12,13 @@ import CallBackForm from "../components/common/CallBackForm.vue";
 const {getSingletonItem} = useDirectusItems()
 const {data} = await useAsyncData(() => getSingletonItem<{
 	header: string;
-	pageImages: ICustomerPageFull;
-	partnersLogos: ICustomerPageFull;
-	ideasAndRealization: ICustomerPageFull;
+	pageImages: ICustomerPageFull['blocks'];
+	partnersLogos: ICustomerPageFull['blocks'];
+	ideasAndRealization: ICustomerPageFull['blocks'];
 	warrantyImage: IImageBlock['data']['file'];
 	warrantyText: string;
+	title:string;
+	textCloseTitle: string;
 }>({
 	collection: 'aboutPage'
 }))
@@ -26,7 +28,7 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => ([{
 	title: 'Главная'
 }, {
 	path: '/about',
-	title: data.value?.header
+	title: data.value?.header ?? ''
 }]))
 </script>
 

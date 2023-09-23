@@ -27,4 +27,4 @@ export type IProductWithCategory = IProduct & {
     }
 }
 
-export type IProductPicked = Pick<IProduct, 'handle' | 'id' | 'name' | 'price' | 'images'>
+export type IProductPicked = Pick<IProduct, 'handle' | 'id' | 'name' | 'price' | 'images' | 'count'>

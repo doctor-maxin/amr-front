@@ -1,26 +1,26 @@
 <script lang="ts" setup>
-import PageHeader from "../../components/page/Header.vue";
-import { IBreadCrumb, ILink } from "../../types/common";
-import CheckoutAside from "../../components/checkout/CheckoutAside.vue";
+import { storeToRefs } from "pinia";
+import * as yup from "yup";
 import {
+	computed,
 	markRaw,
-	reactive,
 	ref,
 	useDirectusItems,
 	useForm,
 	useRouter,
+	useUrlSearchParams,
 	watchEffect,
 } from "../../.nuxt/imports";
-import CartList from "../../components/cart/CartList.vue";
-import { CartPopulatedItem } from "../../types/cart";
-import { useCartStore } from "../../store/cart.store";
-import { IProduct } from "../../types/product";
-import { storeToRefs } from "pinia";
-import UiButton from "../../components/ui/UiButton.vue";
+import CheckoutAside from "../../components/checkout/CheckoutAside.vue";
 import CheckoutContacts from "../../components/checkout/CheckoutContacts.vue";
 import CheckoutDelivery from "../../components/checkout/CheckoutDelivery.vue";
 import CheckoutPaymentTypes from "../../components/checkout/CheckoutPaymentTypes.vue";
-import * as yup from "yup";
+import PageHeader from "../../components/page/Header.vue";
+import UiButton from "../../components/ui/UiButton.vue";
+import { useCartStore } from "../../store/cart.store";
+import { CartPopulatedItem } from "../../types/cart";
+import { IBreadCrumb, ILink } from "../../types/common";
+import { IProduct } from "../../types/product";
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
@@ -45,21 +45,30 @@ const backLink = {
 const cartStore = useCartStore();
 const phoneRegExp = /^\+7 \d{3} \d{3} \d{2}-\d{2}$/;
 const { items } = storeToRefs(cartStore);
+const { productId } = useUrlSearchParams("history");
+
 const router = useRouter();
 
 const { getItems } = useDirectusItems();
 const lines = ref<Map<string, CartPopulatedItem>>(new Map());
-let filters: any = {};
-if (items.value?.length) {
-	filters.id = {
-		_in: items.value.map((item) => item.id),
+const filters = computed(() => {
+	let payload = {
+		id: {
+			_in: "",
+		},
 	};
-}
+	if (typeof productId === "string") {
+		payload.id._in = productId;
+	} else if (items.value?.length) {
+		payload.id._in = items.value.map((item) => item.id);
+	}
+	return payload;
+});
 
 const products = await getItems<IProduct>({
 	collection: "products",
 	params: {
-		filter: filters,
+		filter: filters.value,
 		fields: ["images.directus_files_id", "*"],
 	},
 });
@@ -88,33 +97,43 @@ const { setFieldError, meta, values } = useForm({
 		return yup.object().shape(payload);
 	}),
 	initialValues: {
-		name: 'Мухриддин',
-		phone: '+7 929 357 13-79',
-		email: 'doctor-maxin@yandex.ru',
-		paymentType: 'tinkoff',
-		deliveryType: 'self',
-		city: 'Красноярск',
-		street: 'Весны',
-		house: '6',
-		flat: '21',
+		name: "Мухриддин",
+		phone: "+7 929 357 13-79",
+		email: "doctor-maxin@yandex.ru",
+		paymentType: "tinkoff",
+		deliveryType: "self",
+		city: "Красноярск",
+		street: "Весны",
+		house: "6",
+		flat: "21",
 		floor: 5,
-		entrance: 1
-	}
+		entrance: 1,
+	},
 });
 
 watchEffect(() => {
-	for (const item of items.value) {
-		const product = products.find((p) => p.id === item.id);
+	if (productId) {
+		const product = products.find((p) => p.id === productId);
 		if (product)
-			lines.value.set(item.id, {
+			lines.value.set(productId.toString(), {
 				product,
-				...item,
+				count: 1,
+				id: productId.toString(),
 			});
-	}
-	for (const id of lines.value.keys()) {
-		const hasId = items.value.find((p) => p.id === id);
-		if (!hasId) {
-			lines.value.delete(id);
+	} else {
+		for (const item of items.value) {
+			const product = products.find((p) => p.id === item.id);
+			if (product)
+				lines.value.set(item.id, {
+					product,
+					...item,
+				});
+		}
+		for (const id of lines.value.keys()) {
+			const hasId = items.value.find((p) => p.id === id);
+			if (!hasId) {
+				lines.value.delete(id);
+			}
 		}
 	}
 });
@@ -131,7 +150,7 @@ watchEffect(() => {
 		class="max-w-[92.375rem] lg:mx-auto pt-[2.375rem] pb-[1.56rem] lg:pb-[8.75rem] lg:pt-[4.62rem] flex-1"
 	>
 		<main
-			v-if="lines.size"
+			v-if="lines.size || productId"
 			class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex px-4 bg-white"
 		>
 			<div class="flex flex-1 w-full flex-col gap-7 w-full">

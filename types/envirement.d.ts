@@ -15,6 +15,9 @@ declare global {
 			NUXT_PUBLIC_YANDEX_KEY: string;
 			// 	 Bitrix
 			NUXT_BITRIX_URL: string;
+			// #Green
+			GREEN_SMS_USER: string;
+			GREEN_SMS_PASS: string;
 		}
 	}
 }

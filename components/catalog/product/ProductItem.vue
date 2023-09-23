@@ -3,7 +3,8 @@ import { IProductPicked } from "../../../types/product";
 import { useFavoritesStore } from "../../../store/favorites.store";
 import { useCartStore } from "../../../store/cart.store";
 import { useCurrency } from "../../../composables/useCurrency";
-import { useAppConfig } from "../../../.nuxt/imports";
+import { useAppConfig, computed } from "../../../.nuxt/imports";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
 	item: IProductPicked;
@@ -11,6 +12,7 @@ const props = defineProps<{
 
 const favoritesStore = useFavoritesStore();
 const cartStore = useCartStore();
+const { items } = storeToRefs(cartStore);
 const appConfig = useAppConfig();
 const { toMoney } = useCurrency();
 
@@ -22,6 +24,10 @@ const getItemImage = (item: IProductPicked): string => {
 const hasInFavorites = (id: string) => {
 	return favoritesStore.hasProduct(id);
 };
+const hasInCart = computed(() => {
+	console.log(items.value);
+	return items.value.find((item) => item.id === props.item.id);
+});
 
 const addProductToFavorites = (id: string) => {
 	favoritesStore.addProduct(id);
@@ -82,6 +88,12 @@ const addProductItem = (id: string) => {
 				<template v-if="item.count">
 					<svgo-cart filled class="text-2xl" />
 					<span
+						v-if="hasInCart"
+						class="text-sm hidden lg:block lg:text-base whitespace-nowrap"
+						>В корзине
+					</span>
+					<span
+						v-else
 						class="text-sm hidden lg:block lg:text-base whitespace-nowrap"
 						>В корзину</span
 					>

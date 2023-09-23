@@ -45,6 +45,7 @@
     "@zag-js/select": "^0.18.0",
     "@zag-js/tabs": "^0.16.0",
     "@zag-js/vue": "^0.20.0",
+    "greensms": "^1.9.1",
     "maska": "^2.1.10",
     "mitt": "^3.0.1",
     "nuxt-directus": "^5.5.0",
@@ -53,6 +54,7 @@
     "swiper": "^10.1.0",
     "vue-yandex-maps": "^1.1.0",
     "vue3-google-map": "^0.17.0",
+    "vue3-perfect-scrollbar": "^1.6.1",
     "vue3-toastify": "^0.1.12",
     "yup": "^1.2.0"
   }

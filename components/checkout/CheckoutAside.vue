@@ -9,7 +9,8 @@ import {
 	useRouter,
 	ref,
 	useDirectusItems,
-	useEvent, useRuntimeConfig
+	useEvent,
+	useRuntimeConfig,
 } from "../../.nuxt/imports";
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
@@ -17,14 +18,14 @@ import { toast } from "vue3-toastify";
 import { ICheckoutPayload } from "~/server/types/checkout.types";
 
 const cartStore = useCartStore();
-const { delivery, discount, items } = storeToRefs(cartStore);
+const { delivery, discount } = storeToRefs(cartStore);
 const appConfig = useAppConfig();
 const router = useRouter();
 const isLoading = ref<boolean>(false);
 const { createItems } = useDirectusItems();
-const runtimeConfig = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig();
 //@ts-ignore
-const baseUrl = runtimeConfig.public?.directus?.url as string
+const baseUrl = runtimeConfig.public?.directus?.url as string;
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
@@ -84,7 +85,7 @@ const createOrder = async () => {
 	} else {
 		const data = {
 			...props.values,
-			items: items.value,
+			items: payload,
 			promocodes: discount.value ? discount.value : "",
 		} satisfies ICheckoutPayload;
 

@@ -1,12 +1,12 @@
 import { useDirectusToken, useRuntimeConfig } from "#imports";
 import { createFetch } from "@vueuse/core";
 
-export const useCartFetch = () => {
+export const useAuthFetch = () => {
 	const runtimeConfig = useRuntimeConfig();
 	//@ts-ignore
 	const baseUrl = runtimeConfig.public?.directus?.url as string;
 	const client = createFetch({
-		baseUrl: `${baseUrl}/api/cart`,
+		baseUrl: `${baseUrl}/api`,
 		fetchOptions: {
 			credentials: "include",
 		},

@@ -12,9 +12,10 @@
         "~/types/*.ts",
         "./components/*.vue",
         "./pages/*.vue",
+        "./plugins/*.ts",
         "./app.vue",
         "./error.vue"
     ],
-    "extends": "./.nuxt/tsconfig.json",
-    "exclude": ["node_modules", "cypress"]
+    "exclude": ["node_modules", "cypress"],
+    "extends": "./.nuxt/tsconfig.json"
 }
