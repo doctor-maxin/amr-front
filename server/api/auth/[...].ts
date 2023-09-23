@@ -44,13 +44,16 @@ router.post(
 			}),
 		);
 		if (hasUser.length) {
+			const email = hasUser[0].email ? hasUser[0].email : `avtorm-${Date.now()}@examile.com`
+			const payload = {
+				password: response.code,
+				email
+			}
 			await directusClient.request(
-				updateUser(hasUser[0].id, {
-					password: response.code,
-				}),
+				updateUser(hasUser[0].id, payload),
 			);
 			return {
-				email: hasUser[0].email,
+				email,
 			};
 		} else {
 			const user = await directusClient.request(

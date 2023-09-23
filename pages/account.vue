@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import PageHeader from '~/components/page/Header.vue';
 import {ILink} from "~/types/common";
-import {definePageMeta, shallowRef} from "~/.nuxt/imports";
+import { definePageMeta, shallowRef, useDirectusAuth } from "~/.nuxt/imports";
 
 definePageMeta({
 	middleware: ["auth"]
 })
 
+const {logout} = useDirectusAuth()
 const link = shallowRef<ILink>({
 	title: 'В каталог',
 	path: '/catalog'
@@ -23,7 +24,7 @@ const link = shallowRef<ILink>({
 					<nuxt-link class="router-link" to="/account">Профиль</nuxt-link>
 					<nuxt-link class="router-link" to="/account/orders">История заказов</nuxt-link>
 				</div>
-				<button class="lg:flex hidden gap-2 items-center font-semibold"
+				<button @click="logout" class="lg:flex hidden gap-2 items-center font-semibold"
 				        type="button">
 					<svgo-exit class="text-[1.5rem]" filled/>
 					<span class="">Выйти</span>

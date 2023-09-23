@@ -2,20 +2,25 @@
 import UiInput from "~/components/ui/UiInput.vue";
 import UiButton from "~/components/ui/UiButton.vue";
 import {
-	ref,
+	nextTick,
+	ref, useDirectusAuth,
 	useDirectusUser,
 	useDirectusUsers,
-	useForm,
+	useForm
 } from "../../.nuxt/imports";
 import * as yup from "yup";
 import { DirectusUser } from "nuxt-directus/dist/runtime/types";
+import { toast } from "vue3-toastify";
 
 const isEditing = ref<boolean>(false);
 const user = useDirectusUser();
-console.log(user.value);
 const { updateUser } = useDirectusUsers();
+const firstNameRef = ref<{
+	input?: null | HTMLInputElement
+}>(null)
+const {setUser} = useDirectusAuth()
 
-const { handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
 	validationSchema: yup.object().shape({
 		firstName: yup.string().optional(),
 		lastName: yup.string().optional(),
@@ -32,8 +37,8 @@ const { handleSubmit } = useForm({
 
 const save = handleSubmit(async (values) => {
 	try {
-		await updateUser<DirectusUser>({
-			id: user.value?.id ?? "21",
+		const newUser = await updateUser<DirectusUser>({
+			id: user.value?.id ?? "",
 			user: {
 				first_name: values.firstName,
 				last_name: values.lastName,
@@ -41,10 +46,29 @@ const save = handleSubmit(async (values) => {
 				phone: values.phone,
 			},
 		});
+		setUser(newUser)
+		toast.success('Данные успешно обновлены')
+		isEditing.value = false
 	} catch (err: any) {
+		toast.error('Возникла ошибка при сохранении')
 		console.log("updatte ", err);
 	}
 });
+
+
+const startEdit = () => {
+	isEditing.value = true
+	nextTick(() => {
+		if (firstNameRef.value?.input) {
+			console.log(firstNameRef.value.input)
+			firstNameRef.value.input.focus()
+		}
+	})
+}
+const stopEdit = () => {
+	resetForm()
+	isEditing.value = false;
+}
 </script>
 
 <template>
@@ -52,6 +76,7 @@ const save = handleSubmit(async (values) => {
 		<h2 class="font-semibold lg:text-2xl">Мои данные</h2>
 		<div class="grid lg:grid-cols-2 gap-[1.125rem] lg:gap-[1.56rem]">
 			<UiInput
+				ref="firstNameRef"
 				class-name="w-full"
 				:readonly="!isEditing"
 				name="firstName"
@@ -84,9 +109,17 @@ const save = handleSubmit(async (values) => {
 		/>
 		<div class="ml-auto flex gap-1.5 lg:gap-[1.12rem] overflow-x-clip">
 			<UiButton
-				@click="isEditing = true"
+				v-if="!isEditing"
+				@click="startEdit"
 				variant="default"
 				title="Редактировать"
+				title-class="font-normal text-sm lg:text-base"
+			/>
+			<UiButton
+				v-else
+				@click="stopEdit"
+				variant="default"
+				title="Отменить"
 				title-class="font-normal text-sm lg:text-base"
 			/>
 			<UiButton
