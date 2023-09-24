@@ -11,6 +11,7 @@ import {
 	useDirectusItems,
 	useEvent,
 	useRuntimeConfig,
+	watch,
 } from "../../.nuxt/imports";
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
@@ -36,13 +37,21 @@ const props = defineProps<{
 
 const { toMoney } = useCurrency();
 
-const sum = computed<number>(() => {
-	let sum = 0;
-	for (const line of props.lines.values()) {
-		sum += line.product.price;
-	}
-	return sum;
-});
+const sum = ref<number>(0);
+watch(
+	() => props.lines,
+	() => {
+		let amount = 0;
+		for (const line of props.lines.values()) {
+			amount += line.product.price * line.count;
+		}
+		sum.value = amount;
+	},
+	{
+		immediate: true,
+		deep: true,
+	},
+);
 
 const discountAmount = computed(() => {
 	if (!discount.value) return 0;
@@ -103,11 +112,6 @@ const createOrder = async () => {
 			console.error(responseData);
 			toast.error(responseData.message);
 		}
-		//
-		// if (response.value?.status === 302)
-		// 	window.location.href = response.value?.location;
-		// console.log(response.value, error.value);
-		// if (response.value.status !== 200) toast.error()
 	}
 	isLoading.value = false;
 };
@@ -138,6 +142,7 @@ const getItemImage = (item: any): string => {
 			>
 				<span>{{ item[1].product.name }}</span>
 				<span>{{ toMoney(item[1].product.price) }}</span>
+				<span>{{ item[1].count }} шт.</span>
 			</div>
 		</div>
 		<PromocodeForm />

@@ -39,6 +39,8 @@ const addProductItem = (id: string) => {
 
 <template>
 	<div
+		itemscope
+		itemtype="http://schema.org/Product"
 		class="rounded-[1.25rem] overflow-hidden group border relative cursor-pointer"
 	>
 		<button
@@ -61,6 +63,7 @@ const addProductItem = (id: string) => {
 						'object-cover': item?.images?.length,
 					}"
 					:src="getItemImage(item)"
+					itemprop="image"
 					class="w-full object-contain h-full aspect-[21/14] lg:aspect-[574/398]"
 					provider="directus"
 				/>
@@ -76,14 +79,36 @@ const addProductItem = (id: string) => {
 			class="flex gap-3 absolute font-semibold items-center text-white px-3 lg:px-5 bottom-3 lg:bottom-5 w-full"
 		>
 			<div
+				itemprop="offers"
+				itemscope
+				itemtype="http://schema.org/Offer"
 				class="bg-system-black-600 gap-2 flex flex-1 items-center justify-between backdrop-blur-[10px] rounded-2xl text-sm lg:text-base lg:rounded-[1.25rem] p-4 lg:p-5"
 			>
-				<span>{{ item.name }}</span>
-				<span class="whitespace-nowrap">{{ toMoney(item.price) }}</span>
+				<span itemprop="name" :title="item.name" class="line-clamp-2">{{
+					item.name
+				}}</span>
+				<meta itemprop="priceCurrency" content="RUB" />
+				<span class="whitespace-nowrap" itemprop="price">{{
+					toMoney(item.price)
+				}}</span>
+				<link
+					v-if="item.count"
+					itemprop="availability"
+					href="http://schema.org/InStock"
+				/>
+				<link
+					v-else
+					itemprop="availability"
+					href="http://schema.org/OutOfStock"
+				/>
 			</div>
 			<button
 				@click="addProductItem(item.id)"
+				:disabled="item.count <= 0"
 				class="bg-system-black-600 gap-1 flex items-center justify-between backdrop-blur-[10px] rounded-2xl lg:rounded-[1.25rem] p-4 lg:p-5"
+				:class="{
+					'hidden lg:flex': item.count <= 0,
+				}"
 			>
 				<template v-if="item.count">
 					<svgo-cart filled class="text-2xl" />

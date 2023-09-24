@@ -5,6 +5,7 @@ import FormHelperLink from "../helpers/FormHelperLink.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import {
 	ref,
+	useAppConfig,
 	useField,
 	useForm,
 	useListen,
@@ -17,11 +18,13 @@ import UiFileInput from "~/components/ui/UiFileInput.vue";
 import { useEvent } from "~/composables/useEventBus";
 import * as yup from "yup";
 import { useFetch } from "@vueuse/core";
+import { toast } from "vue3-toastify";
 
 const container = ref<HTMLElement | null>(null);
 
 const phoneRegExp = /^\+7 \d{3} \d{3} \d{2}-\d{2}$/;
 const { data: settings } = useNuxtData<ISettings>("settings");
+const appConfig = useAppConfig();
 
 useListen("toFeedBack", () => {
 	if (container.value)
@@ -31,7 +34,7 @@ useListen("toFeedBack", () => {
 		});
 });
 
-const { handleSubmit, setFieldValue, values } = useForm({
+const { handleSubmit, setFieldValue, values, resetForm } = useForm({
 	validationSchema: yup.object().shape({
 		callBackName: yup.string().required(),
 		callBackPhone: yup
@@ -47,6 +50,7 @@ const { handleSubmit, setFieldValue, values } = useForm({
 		callBackName: "",
 		callBackPhone: "",
 		callBackText: "",
+		callBackFile: null,
 	},
 });
 
@@ -56,12 +60,20 @@ const sendForm = handleSubmit(async (values) => {
 	const form = new FormData();
 	form.append("name", values.callBackName);
 	form.append("phone", values.callBackPhone);
-	form.append("text", values.callBackText);
+	form.append("comment", values.callBackText);
 	form.append("type", values.callBackType);
-	form.append("file", values.callBackFile);
+	if (values.callBackFile) form.append("file", values.callBackFile);
 
-	const result = await useFetch("/api/callback").post(form);
-	console.log("values", values);
+	const { data } = await useFetch("/api/callback").post(form).json<{
+		id: string;
+		status: string;
+	}>();
+	if (data.value?.id) {
+		resetForm();
+		toast.success(appConfig.messages.requestSuccess);
+	} else {
+		toast.error(appConfig.messages.requestError);
+	}
 });
 const setCallBackType = (value: string) => setFieldValue("callBackType", value);
 </script>

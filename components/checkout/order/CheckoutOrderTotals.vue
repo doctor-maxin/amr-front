@@ -91,6 +91,7 @@ const sum = computed<number>(() => {
 			>
 				<span>{{ item[1].product.name }}</span>
 				<span>{{ toMoney(item[1].product.price) }}</span>
+				<span>{{ item[1].count }} шт.</span>
 			</div>
 		</div>
 		<div class="flex justify-between gap-2 lg:text-lg">

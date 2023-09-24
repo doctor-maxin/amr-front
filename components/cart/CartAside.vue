@@ -7,7 +7,9 @@ import {
 	computed,
 	useAppConfig,
 	useRouter,
-	ref, useCartFetch
+	ref,
+	useCartFetch,
+	watch,
 } from "../../.nuxt/imports";
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
@@ -18,10 +20,10 @@ const { delivery, discount } = storeToRefs(cartStore);
 const appConfig = useAppConfig();
 const router = useRouter();
 const isLoading = ref<boolean>(false);
-const {client} = useCartFetch()
-const runtimeConfig = useRuntimeConfig()
+const { client } = useCartFetch();
+const runtimeConfig = useRuntimeConfig();
 //@ts-ignore
-const baseUrl = runtimeConfig.public?.directus?.url as string
+const baseUrl = runtimeConfig.public?.directus?.url as string;
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
@@ -30,24 +32,32 @@ const props = defineProps<{
 
 const { toMoney } = useCurrency();
 
-const sum = computed<number>(() => {
-	let sum = 0;
-	for (const line of props.lines.values()) {
-		sum += line.product.price;
-	}
-	return sum;
-});
+const sum = ref<number>(0);
+watch(
+	() => props.lines,
+	() => {
+		let amount = 0;
+		for (const line of props.lines.values()) {
+			amount += line.product.price * line.count;
+		}
+		sum.value = amount;
+	},
+	{
+		immediate: true,
+		deep: true,
+	},
+);
 
 const discountAmount = computed(() => {
 	if (!discount.value) return 0;
 
-	if (discount.value.type === 'fixed') {
-		return discount.value.value
-	} else if (discount.value.type === 'percentage') {
-		return sum * discount.value.value / 100
+	if (discount.value.type === "fixed") {
+		return discount.value.value;
+	} else if (discount.value.type === "percentage") {
+		return (sum.value * discount.value.value) / 100;
 	}
 	return 0;
-})
+});
 
 const total = computed(() => {
 	let amount = sum.value;
@@ -73,7 +83,7 @@ const toCheckout = async () => {
 		for (const id of result) {
 			props.setFieldError(
 				`product-${id}`,
-				appConfig.messages.productSoldOut
+				appConfig.messages.productSoldOut,
 			);
 		}
 	} else {
@@ -102,10 +112,7 @@ const toCheckout = async () => {
 				toMoney(delivery.amount)
 			}}</span>
 		</div>
-		<div
-			v-if="discount"
-			class="flex justify-between gap-2 lg:text-lg"
-		>
+		<div v-if="discount" class="flex justify-between gap-2 lg:text-lg">
 			<span class="font-medium">Скидка</span>
 			<span class="text-right font-bold whitespace-nowrap">{{
 				toMoney(discountAmount)

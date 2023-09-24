@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@2bad/bitrix": "^2.5.1",
+    "@directus/errors": "^0.0.2",
     "@directus/sdk": "^12.0.0",
     "@nuxt-alt/proxy": "^2.3.2",
     "@pinia/nuxt": "^0.4.11",
