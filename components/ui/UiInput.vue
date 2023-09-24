@@ -13,7 +13,7 @@ interface UIInputProps {
 }
 
 const maskMaker = new Mask({ mask: "+7 ### ### ##-##" });
-const input = ref<HTMLInputElement | null>(null)
+const input = ref<HTMLInputElement | null>(null);
 const props = defineProps<UIInputProps>();
 const { value, handleChange, errorMessage, meta } = useField(() => props.name);
 
@@ -25,15 +25,17 @@ watch(value, (val: any) => {
 });
 
 defineExpose({
-	input
-})
+	input,
+});
 </script>
 
 <template>
-	<label class="relative w-full" :class="{
-				'cursor-not-allowed pointer-events-none':
-						readonly
-	}">
+	<label
+		class="relative w-full"
+		:class="{
+			'cursor-not-allowed pointer-events-none': readonly,
+		}"
+	>
 		<input
 			v-model="value"
 			:name="name"
@@ -42,18 +44,17 @@ defineExpose({
 			:readonly="readonly"
 			:type="type"
 			ref="input"
-			class="rounded-[2.38rem] px-6 py-4 bg-white font-semibold text-system-gray-800 placeholder:text-system-gray-800 border focus:outline-none ring-accent-100 focus:ring"
+			class="rounded-[2.38rem] px-6 py-4 bg-white font-semibold text-system-gray-800 placeholder:text-system-gray-800 placeholder:text-opacity-70 border focus:outline-none ring-accent-100 focus:ring"
 			:class="[
 				className,
 				{
 					'border-red-400': meta.touched && errorMessage,
 					'border-system-gray-800': !(meta.touched && errorMessage),
-					'hover:border-accent-300 bg-transparent': hideError,
+					'hover:border-accent-300 !bg-transparent': hideError,
 					'focus:ring-0 !cursor-not-allowed pointer-events-none':
 						readonly,
 				},
 			]"
-
 		/>
 		<span
 			v-if="meta.touched && errorMessage && !hideError"
