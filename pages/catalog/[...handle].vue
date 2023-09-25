@@ -8,7 +8,7 @@ import {
 	watch,
 	shallowRef,
 } from "~/.nuxt/imports";
-import { IBreadCrumb, ICategory } from "../../types/common";
+import { IBreadCrumb, ICategory, IFilters } from "../../types/common";
 import PageHeader from "../../components/page/Header.vue";
 import CatalogCategories from "../../components/catalog/CatalogCategories.vue";
 import UiPagination from "../../components/ui/UiPagination.vue";
@@ -18,7 +18,7 @@ import { IProduct } from "../../types/product";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
 
-const { getItems } = useDirectusItems();
+const { getItems, getItemById } = useDirectusItems();
 const { data: categories } = useNuxtData<ICategory[]>("categories");
 const route = useRoute();
 const isLoading = ref<boolean>(true);
@@ -30,6 +30,7 @@ const pageHandle = computed(() =>
 const activeCategory = computed<ICategory | undefined>(() =>
 	categories.value?.find((item) => item.handle.endsWith(pageHandle.value))
 );
+const filters = ref<IFilters["filters"]>([]);
 const items = ref<ICategory[]>([]);
 const products = ref<IProduct[]>([]);
 const params = useUrlSearchParams("history", {
@@ -62,7 +63,7 @@ const reFetchData = async () => {
 						_eq: activeCategory.value.id,
 					},
 				},
-				fields: ["id", "handle", "name", "image.*"],
+				fields: ["id", "handle", "name", "image.*", "filters"],
 			},
 		});
 	} else {
@@ -94,11 +95,29 @@ const reFetchData = async () => {
 
 	isLoading.value = false;
 };
+const getFilters = async () => {
+	console.log(activeCategory.value);
+	if (!activeCategory.value) return;
+	const response = await getItemById<IFilters>({
+		collection: "category",
+		id: activeCategory.value?.id,
+		params: {
+			fields: [
+				"filters.options_id.name",
+				"filters.options_id.id",
+				"filters.options_id.values.value",
+				"filters.options_id.values.id",
+			],
+		},
+	});
+	filters.value = response.filters;
+};
 
 watch(
 	activeCategory,
 	() => {
 		reFetchData();
+		getFilters();
 	},
 	{
 		deep: true,
@@ -156,7 +175,7 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 				<CatalogCategories :items="items" />
 			</template>
 			<template v-else-if="!isLoading">
-				<CatalogFilters />
+				<CatalogFilters :items="filters" />
 				<CatalogProducts :items="products" />
 				<UiPagination
 					:page="+params.page"

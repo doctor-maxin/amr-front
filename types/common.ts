@@ -297,15 +297,28 @@ export type IOrderPayload =
 	  };
 
 export type IHeroBlock = {
-	title:string;
-	description:string;
+	title: string;
+	description: string;
 	linkHref?: string;
 	linkTitle?: string;
-}
+};
 
 export type IAdvantage = {
-	id:string;
-	title:string;
-	description:string;
+	id: string;
+	title: string;
+	description: string;
 	image: DirectusFile;
-}
+};
+export type IFilter = {
+	options_id: {
+		name: string;
+		id: string;
+		values: {
+			value: string;
+			id: string;
+		};
+	};
+};
+export type IFilters = {
+	filters: IFilter[];
+};
