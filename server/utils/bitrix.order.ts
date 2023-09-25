@@ -8,7 +8,10 @@ import { DeliveryTypes } from "~/types/cart";
 
 export default async function createBitrixOrder(payload: any, query: any) {
 	const bitrix = useBitrixClient();
-	let contactId = await getBitrixContact(payload.phone, payload.email);
+	let contactId = await getBitrixContact(
+		payload.phone.replace(/[^\w\s]/gi, ""),
+		payload.email,
+	);
 	console.log("get contact", contactId);
 
 	if (!contactId) contactId = await createBitrixContact(payload);
@@ -47,7 +50,7 @@ export default async function createBitrixOrder(payload: any, query: any) {
 				? "Самовывоз"
 				: "Доставка",
 	});
-	Promise.all([
+	const result = await Promise.all([
 		bitrix.deals.update(orderId, {
 			TITLE: `Заказ №${orderId}`,
 		}),
@@ -60,5 +63,6 @@ export default async function createBitrixOrder(payload: any, query: any) {
 			})),
 		}),
 	]);
+	console.log("REsult", orderId);
 	return orderId;
 }

@@ -10,6 +10,7 @@ import {
 	useForm,
 	useListen,
 	useNuxtData,
+	useRoute,
 } from "../../.nuxt/imports";
 import { ISettings } from "../../types/common";
 import TelLink from "../helpers/TelLink.vue";
@@ -50,11 +51,12 @@ const { handleSubmit, setFieldValue, values, resetForm } = useForm({
 		callBackName: "",
 		callBackPhone: "",
 		callBackText: "",
-		callBackFile: null,
+		callBackFile: undefined,
 	},
 });
 
 const openMap = () => useEvent("open-map");
+const route = useRoute();
 
 const sendForm = handleSubmit(async (values) => {
 	const form = new FormData();
@@ -63,6 +65,7 @@ const sendForm = handleSubmit(async (values) => {
 	form.append("comment", values.callBackText);
 	form.append("type", values.callBackType);
 	if (values.callBackFile) form.append("file", values.callBackFile);
+	console.log(route.query);
 
 	const { data } = await useFetch("/api/callback").post(form).json<{
 		id: string;

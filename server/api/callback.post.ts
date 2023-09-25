@@ -7,6 +7,7 @@ import {
 	rest,
 } from "@directus/sdk";
 import { createError } from "@directus/errors";
+import { createBitrixLead } from "~/server/utils/bitrix.contacts";
 
 export default defineEventHandler(async (event) => {
 	const client = createDirectus(process.env.DIRECTUS_URL)
@@ -20,6 +21,7 @@ export default defineEventHandler(async (event) => {
 	);
 
 	const body = await readMultipartFormData(event);
+	const query = getQuery(event);
 	if (!body) throw createError("400", "Неверный формат данных");
 	const data: any = {};
 	const form = new FormData();
@@ -54,8 +56,12 @@ export default defineEventHandler(async (event) => {
 				name: data.name,
 				phone: data.phone,
 				type: data.type,
+				comment: data.comment,
+				file: data.file,
 			},
 		);
+
+		createBitrixLead(data, query);
 		if (req.create_requests_item.id) return req.create_requests_item;
 	} catch (err: any) {
 		if (err.errors) {
