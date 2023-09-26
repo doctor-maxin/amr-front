@@ -5,7 +5,7 @@ import * as tabs from "@zag-js/tabs";
 import { normalizeProps, useMachine } from "@zag-js/vue";
 import HeaderMobileCatalog from "~/components/header/mobile/HeaderMobileCatalog.vue";
 import HeaderMobileMenu from "~/components/header/mobile/HeaderMobileMenu.vue";
-import { computed, markRaw } from "~/.nuxt/imports";
+import { computed, markRaw, useForm } from "~/.nuxt/imports";
 
 defineProps<{
 	api: PublicApi<PropTypes>;
@@ -38,7 +38,6 @@ const tabList = markRaw([
 	>
 		<div
 			v-show="api.isOpen"
-			@click.native="api.close()"
 			:class="{}"
 			class="w-screen absolute mobile-menu overflow-hidden bg-system-gray-500 transition-opacity top-full bottom-auto z-20"
 		>

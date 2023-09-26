@@ -45,6 +45,11 @@ export default defineEventHandler(async (event) => {
 			entrance: body.entrance ? body.entrance : "",
 		} satisfies IOrderPayload;
 	} else if (body.deliveryType === DeliveryTypes.points) {
+		payload = {
+			...payload,
+			city: body.address,
+			deliveryPoint: body.deliveryPointId,
+		};
 	} else
 		throw createError({
 			statusCode: 400,
@@ -59,8 +64,9 @@ export default defineEventHandler(async (event) => {
 				},
 			},
 			fields: ["price", "id", "name"],
-		}),
+		})
 	)) as { price: number; id: string }[];
+
 	for (const item of body.items) {
 		payload.total += items?.find((i) => i.id === item.id)?.price ?? 0;
 		payload.items = payload.items.map((item) => {

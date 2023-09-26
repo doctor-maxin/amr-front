@@ -3,8 +3,10 @@ import { storeToRefs } from "pinia";
 import * as yup from "yup";
 import {
 	computed,
+	debouncedWatch,
 	markRaw,
 	ref,
+	useAppConfig,
 	useDirectusItems,
 	useForm,
 	useRouter,
@@ -18,7 +20,7 @@ import CheckoutPaymentTypes from "../../components/checkout/CheckoutPaymentTypes
 import PageHeader from "../../components/page/Header.vue";
 import UiButton from "../../components/ui/UiButton.vue";
 import { useCartStore } from "../../store/cart.store";
-import { CartPopulatedItem } from "../../types/cart";
+import { CartPopulatedItem, DeliveryTypes } from "../../types/cart";
 import { IBreadCrumb, ILink } from "../../types/common";
 import { IProduct } from "../../types/product";
 
@@ -51,6 +53,7 @@ const router = useRouter();
 
 const { getItems } = useDirectusItems();
 const lines = ref<Map<string, CartPopulatedItem>>(new Map());
+const appConfig = useAppConfig();
 const filters = computed(() => {
 	let payload = {
 		id: {
@@ -85,7 +88,9 @@ const { setFieldError, meta, values } = useForm({
 			paymentType: yup.string().required(),
 		};
 
-		if (value.deliveryType === "self") {
+		if (value.deliveryType === "points") {
+			payload.deliveryPointId = yup.string().required();
+			payload.address = yup.mixed().optional();
 		} else {
 			payload.city = yup.string().required();
 			payload.street = yup.string().required();
@@ -97,17 +102,19 @@ const { setFieldError, meta, values } = useForm({
 		return yup.object().shape(payload);
 	}),
 	initialValues: {
-		name: "Мухриддин",
-		phone: "+7 929 357 13-79",
-		email: "doctor-maxin@yandex.ru",
-		paymentType: "tinkoff",
-		deliveryType: "self",
-		city: "Красноярск",
-		street: "Весны",
-		house: "6",
-		flat: "21",
-		floor: 5,
-		entrance: 1,
+		name: "",
+		phone: "",
+		email: "",
+		paymentType: "",
+		deliveryType: "",
+		city: "",
+		street: "",
+		house: "",
+		flat: "",
+		floor: undefined,
+		entrance: undefined,
+		address: "",
+		deliveryPointId: "",
 	},
 });
 
@@ -137,6 +144,48 @@ watchEffect(() => {
 		}
 	}
 });
+
+debouncedWatch(
+	() => values.deliveryPointId,
+	async () => {
+		console.log("Calc started");
+		if (
+			values.deliveryType === DeliveryTypes.points &&
+			values.deliveryPointId
+		) {
+			return cartStore.setDelivery({
+				amount: 0,
+				calculated: true,
+				type: DeliveryTypes.points,
+			});
+		}
+	},
+	{
+		debounce: 500,
+	}
+);
+const calcDeliveryPrice = async () => {
+	console.log("Calc started");
+	if (!window.ymaps) return;
+	if (!values.city || !values.street || !values.house) return;
+	const fromAddress = `${values.city ?? ""} ,${values.street ?? ""}, ${
+		values.house ?? ""
+	}`;
+
+	const route = await ymaps.route([fromAddress, appConfig.stockCoords]);
+	const km = parseInt(route.getLength()) / 1000;
+
+	cartStore.setDelivery({
+		type: DeliveryTypes.delivery,
+		calculated: true,
+		//@ts-ignore
+		amount: (appConfig.priceTarriff * km).toFixed(0),
+	});
+};
+
+debouncedWatch(() => values.city, calcDeliveryPrice, { debounce: 500 });
+debouncedWatch(() => values.street, calcDeliveryPrice, { debounce: 500 });
+debouncedWatch(() => values.house, calcDeliveryPrice, { debounce: 500 });
 </script>
 
 <template>

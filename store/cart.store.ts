@@ -1,23 +1,35 @@
 import { defineStore } from "pinia";
-import { useAppConfig, useCartFetch } from "~/.nuxt/imports";
+import { useAppConfig, useCartFetch, useCookie } from "~/.nuxt/imports";
 import { CartItem, CartState, DeliveryTypes } from "~/types/cart";
 import { toast } from "vue3-toastify";
 import { IPromoCode } from "~/types/common";
 
 export const useCartStore = defineStore("cart", {
-	state: (): CartState => ({
-		items: [],
-		discount: null,
-		delivery: {
-			calculated: false,
-			amount: 0,
-			type: DeliveryTypes.delivery,
-		},
-	}),
+	state: (): CartState => {
+		// const cartState = useCookie("cart");
+		const items = [];
+		// if (cartState.value) {
+		// 	console.log(cartState.value);
+		// 	items.push(...JSON.parse(cartState.value));
+		// }
+
+		return {
+			items,
+			discount: null,
+			delivery: {
+				calculated: false,
+				amount: 0,
+				type: DeliveryTypes.delivery,
+			},
+		};
+	},
 	getters: {
 		cartTotalLength: (state) => state.items.length,
 	},
 	actions: {
+		setDelivery(data: CartState["delivery"]) {
+			this.delivery = data;
+		},
 		setPromoCode(promocode: IPromoCode) {
 			this.discount = promocode;
 		},
@@ -74,4 +86,5 @@ export const useCartStore = defineStore("cart", {
 			}
 		},
 	},
+	persist: true,
 });

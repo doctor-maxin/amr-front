@@ -2,7 +2,13 @@
 import { useDeviceWidth } from "../../composables/useDeviceWidth";
 import * as popover from "@zag-js/popover";
 import { normalizeProps, useMachine } from "@zag-js/vue";
-import { computed } from "~/.nuxt/imports";
+import {
+	computed,
+	ref,
+	useEvent,
+	useListen,
+	useUrlSearchParams,
+} from "~/.nuxt/imports";
 import CatalogFiltersSort from "./filters/CatalogFiltersSort.vue";
 import CatalogFiltersAll from "./filters/CatalogFiltersAll.vue";
 import { IFilter } from "../../types/common";
@@ -13,6 +19,8 @@ const [state, send] = useMachine(popover.machine({ id: "catalogSort" }));
 const sortApi = computed(() =>
 	popover.connect(state.value, send, normalizeProps)
 );
+const { filters } = useUrlSearchParams();
+const hasFilters = ref(!!filters);
 
 const [stateFilter, sendFilter] = useMachine(
 	popover.machine({ id: "catalogFilter" })
@@ -24,6 +32,15 @@ const filterApi = computed(() =>
 defineProps<{
 	items: IFilter[];
 }>();
+
+const resetFilters = () => {
+	useEvent("reset-filters");
+	hasFilters.value = false;
+};
+
+useListen("on-filter", (values) => {
+	if (values?.length) hasFilters.value = true;
+});
 </script>
 
 <template>
@@ -32,6 +49,17 @@ defineProps<{
 			<div
 				class="flex justify-between pb-8 lg:pb-0 lg:justify-start w-full items-center gap-7 relative"
 			>
+				<button
+					v-if="hasFilters"
+					class="hidden lg:flex gap-2 items-center"
+					@click="resetFilters"
+				>
+					<svgo-close filled class="text-2xl" />
+					<span
+						class="font-semibold lg:text-xl group-hover:lg:text-accent-300 transition-colors"
+						>Сбросить фильтры</span
+					>
+				</button>
 				<button
 					v-bind="filterApi.triggerProps"
 					class="flex px-3 py-2.5 lg:px-0 lg:py-0 lg:bg-transparent gap-2 bg-system-gray rounded-[5rem] lg:gap-1.5 group transition-colors items-center"

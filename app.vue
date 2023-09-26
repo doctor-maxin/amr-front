@@ -22,8 +22,10 @@ import MapLoader from "./components/common/MapLoader.vue";
 import { useCartStore } from "./store/cart.store";
 import {
 	useAsyncData,
+	useDirectusAuth,
 	useDirectusItems,
 	useDirectusToken,
+	useDirectusUser,
 } from "./.nuxt/imports";
 import { useFavoritesStore } from "./store/favorites.store";
 import CustomPageLoader from "./components/common/CustomPageLoader.vue";
@@ -31,9 +33,14 @@ import CustomPageLoader from "./components/common/CustomPageLoader.vue";
 const { getItems, getSingletonItem } = useDirectusItems();
 const cartStore = useCartStore();
 const favoritesStore = useFavoritesStore();
-const { refreshTokens, token } = useDirectusToken();
+const { refreshTokens, token, checkAutoRefresh } = useDirectusToken();
+const user = useDirectusUser();
 
-if (token.value) await refreshTokens();
+if (token.value) {
+	await checkAutoRefresh();
+
+	if (!user.value) token.value = "";
+}
 
 await Promise.all([
 	cartStore.getCart(),
@@ -44,12 +51,12 @@ await Promise.all([
 			params: {
 				fields: ["id", "name", "childrens", "handle", "parentId"],
 			},
-		}),
+		})
 	),
 	useAsyncData("settings", () =>
 		getSingletonItem({
 			collection: "settings",
-		}),
+		})
 	),
 	useAsyncData("customerPages", () =>
 		getSingletonItem({
@@ -62,7 +69,7 @@ await Promise.all([
 					"title",
 				],
 			},
-		}),
+		})
 	),
 ]);
 </script>

@@ -1,4 +1,4 @@
-import { useDirectusToken, useRuntimeConfig } from "#imports";
+import { useCookie, useDirectusToken, useRuntimeConfig } from "#imports";
 import { createFetch } from "@vueuse/core";
 
 export const useCartFetch = () => {

@@ -12,6 +12,7 @@ import {
 	useEvent,
 	useRuntimeConfig,
 	watch,
+	useDirectusToken,
 } from "../../.nuxt/imports";
 import UiButton from "../ui/UiButton.vue";
 import PromocodeForm from "~/components/forms/PromocodeForm.vue";
@@ -27,6 +28,7 @@ const { createItems } = useDirectusItems();
 const runtimeConfig = useRuntimeConfig();
 //@ts-ignore
 const baseUrl = runtimeConfig.public?.directus?.url as string;
+const { token } = useDirectusToken();
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
@@ -50,7 +52,7 @@ watch(
 	{
 		immediate: true,
 		deep: true,
-	},
+	}
 );
 
 const discountAmount = computed(() => {
@@ -65,8 +67,8 @@ const discountAmount = computed(() => {
 });
 
 const total = computed(() => {
-	let amount = sum.value;
-	if (delivery.value.calculated) amount += delivery.value.amount;
+	let amount = Number(sum.value);
+	if (delivery.value.calculated) amount += Number();
 	if (discountAmount.value) amount -= discountAmount.value;
 	return amount;
 });
@@ -96,14 +98,18 @@ const createOrder = async () => {
 			...props.values,
 			items: payload,
 			promocodes: discount.value ? discount.value : "",
+			deliveryPrice: delivery.value.amount,
+			deliveryType: delivery.value.type,
 		} satisfies ICheckoutPayload;
+		const headers = {
+			"Content-Type": "application/json",
+		};
+		if (token.value) headers["Authorization"] = `Bearer ${token.value}`;
 
 		const response = await fetch("/api/checkout", {
 			method: "post",
 			body: JSON.stringify(data),
-			headers: {
-				"Content-Type": "application/json",
-			},
+			headers,
 		});
 		const responseData = await response.json();
 		if (response.status === 200) {
@@ -180,7 +186,7 @@ const getItemImage = (item: any): string => {
 			variant="dark"
 			title="Оформить заказ"
 			title-class="!text-base"
-			:disabled="isLoading || !isValid"
+			:disabled="isLoading || !isValid || !delivery.calculated"
 			:class="{
 				'pulse cursor-progress': isLoading,
 			}"

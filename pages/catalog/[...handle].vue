@@ -1,5 +1,11 @@
 <script lang="ts" setup>
-import { useNuxtData, useRoute } from "~/.nuxt/imports";
+import {
+	nextTick,
+	useFiltersHelpers,
+	useListen,
+	useNuxtData,
+	useRoute,
+} from "~/.nuxt/imports";
 import {
 	computed,
 	ref,
@@ -17,6 +23,7 @@ import CatalogProducts from "../../components/catalog/CatalogProducts.vue";
 import { IProduct } from "../../types/product";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
+import { IFilterPayload } from "../../composables/useEventBus";
 
 const { getItems, getItemById } = useDirectusItems();
 const { data: categories } = useNuxtData<ICategory[]>("categories");
@@ -32,10 +39,17 @@ const activeCategory = computed<ICategory | undefined>(() =>
 );
 const filters = ref<IFilters["filters"]>([]);
 const items = ref<ICategory[]>([]);
+const { getFiltersFromQuery } = useFiltersHelpers();
 const products = ref<IProduct[]>([]);
-const params = useUrlSearchParams("history", {
+const params = useUrlSearchParams<{
+	page: number;
+	sort?: string;
+	filters: string;
+}>("history", {
 	initialValue: {
 		page: 1,
+		filters: "",
+		sort: "popular",
 	},
 });
 const totalCount = ref(0);
@@ -51,9 +65,37 @@ watch(
 		immediate: true,
 	}
 );
-const reFetchData = async () => {
+const reFetchData = async (withFilterCheck = true) => {
 	if (!activeCategory.value) return;
 	isLoading.value = true;
+
+	let sort = "";
+	if (params.sort === "popular") sort = "ordersCount";
+	else if (params.sort === "date_created") sort = "date_created";
+	else sort = params.sort;
+
+	const filter = {
+		categoryId: {
+			_eq: activeCategory.value.id,
+		},
+	};
+	const queryFilters = getFiltersFromQuery();
+	console.log("queryFilters", queryFilters);
+	if (withFilterCheck && queryFilters?.length) {
+		filter["_and"] = [];
+
+		for (const item of queryFilters) {
+			filter["_and"].push({
+				optionsValues: {
+					optionValues_id: {
+						id: {
+							_in: item.values,
+						},
+					},
+				},
+			});
+		}
+	}
 	if (activeCategory.value.childrens.length) {
 		items.value = await getItems({
 			collection: "category",
@@ -67,16 +109,14 @@ const reFetchData = async () => {
 			},
 		});
 	} else {
+		console.log("Fetch Catalog Products with", filter);
 		const result = await getItems<IProduct>({
 			collection: "products",
 			params: {
-				filter: {
-					categoryId: {
-						_eq: activeCategory.value.id,
-					},
-				},
+				filter,
 				meta: "filter_count",
 				page: params.page,
+				sort,
 				limit: limit.value,
 				fields: [
 					"id",
@@ -88,13 +128,14 @@ const reFetchData = async () => {
 				],
 			},
 		});
-		if (result.meta?.filter_count)
+		if (typeof result.meta?.filter_count !== "undefined")
 			totalCount.value = result.meta.filter_count;
-		if (result.data?.length) products.value = result.data;
+		if (Array.isArray(result.data)) products.value = result.data;
 	}
 
 	isLoading.value = false;
 };
+
 const getFilters = async () => {
 	console.log(activeCategory.value);
 	if (!activeCategory.value) return;
@@ -155,6 +196,32 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 		}
 	}
 	return array;
+});
+
+useListen("on-filter", (activeFilters: IFilterPayload[]) => {
+	const query = new URLSearchParams();
+	for (const item of activeFilters) {
+		query.append(
+			item.id,
+			Array.isArray(item.values) ? item.values.join(",") : item.values
+		);
+	}
+	console.log(activeFilters);
+	params.filters = query.toString();
+	console.log("[on-filter] fire");
+	nextTick(() => {
+		reFetchData(true);
+	});
+});
+useListen("reset-filters", () => {
+	params.filters = "";
+	console.log("[reset-filters] fire");
+	reFetchData(false);
+});
+useListen("on-sort", (sort) => {
+	console.log("[on-sort] fire");
+	params.sort = sort;
+	reFetchData();
 });
 </script>
 

@@ -45,7 +45,7 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 			>
 				<div
 					v-if="api.isOpen"
-					class="main-menu-content flex flex-col justify-between animate-menu-down transition ml-auto bg-system-gray-500 max-w-[40.1875rem] px-[5.87rem]"
+					class="main-menu-content gap-6 flex flex-col justify-between animate-menu-down transition ml-auto bg-system-gray-500 max-w-[40.1875rem] px-[5.87rem]"
 				>
 					<nav
 						class="main-nav text-system-black-900"

@@ -1,7 +1,13 @@
 import mitt from "mitt";
 
+export type IFilterPayload = {
+	id: string;
+	values: string[];
+};
+
 type ApplicationEvents = {
-	"on-filter": void;
+	"on-filter": IFilterPayload[];
+	"on-sort": void;
 	toFeedBack: void;
 	"open-map": void;
 	"close-modals": void;

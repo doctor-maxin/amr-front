@@ -17,4 +17,6 @@ export default defineAppConfig({
 		emptyList: "Тут появятся статьи",
 	},
 	mapCenter: [56.0184, 92.8672],
+	stockCoords: [55.9900249, 92.9576721],
+	priceTarriff: 50,
 });

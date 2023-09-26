@@ -25,7 +25,6 @@ const hasInFavorites = (id: string) => {
 	return favoritesStore.hasProduct(id);
 };
 const hasInCart = computed(() => {
-	console.log(items.value);
 	return items.value.find((item) => item.id === props.item.id);
 });
 
