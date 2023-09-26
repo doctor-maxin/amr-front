@@ -42,7 +42,11 @@ export const useCartStore = defineStore("cart", {
 			const { client } = useCartFetch();
 
 			const { data } = await client<CartItem[]>("/").json();
-			if (data.value?.length) this.items = data.value;
+			if (Array.isArray(data.value)) {
+				this.items = data.value;
+			} else if (typeof data.value === "string") {
+				this.items = JSON.parse(data.value);
+			}
 		},
 		async removeItem(id: string) {
 			const { client } = useCartFetch();
