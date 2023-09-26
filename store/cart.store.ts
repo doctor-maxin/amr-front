@@ -39,14 +39,14 @@ export const useCartStore = defineStore("cart", {
 			this.items = [];
 		},
 		async getCart() {
-			const { client } = useCartFetch();
-
-			const { data } = await client<CartItem[]>("/").json();
-			if (Array.isArray(data.value)) {
-				this.items = data.value;
-			} else if (typeof data.value === "string") {
-				this.items = JSON.parse(data.value);
-			}
+			// const { client } = useCartFetch();
+			//
+			// const { data } = await client<CartItem[]>("/").json();
+			// if (Array.isArray(data.value)) {
+			// 	this.items = data.value;
+			// } else if (typeof data.value === "string") {
+			// 	this.items = JSON.parse(data.value);
+			// }
 		},
 		async removeItem(id: string) {
 			const { client } = useCartFetch();
