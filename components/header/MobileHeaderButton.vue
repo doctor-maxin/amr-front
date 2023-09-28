@@ -3,7 +3,8 @@ import { normalizeProps, useMachine } from "@zag-js/vue";
 import * as popover from "@zag-js/popover";
 import { Teleport } from "vue";
 import MainMenuMobile from "~/components/header/MainMenuMobile.vue";
-import { computed, useListen } from "../../.nuxt/imports";
+import { computed, useEvent, useListen } from "../../.nuxt/imports";
+import { watch } from "#imports";
 
 const [state, send] = useMachine(
 	popover.machine({
@@ -14,6 +15,15 @@ const [state, send] = useMachine(
 const api = computed(() => popover.connect(state.value, send, normalizeProps));
 
 useListen("close-modals", () => api.value.close());
+useListen("open:menu", (id: string) => {
+	if (id !== state.value.context.id) api.value.close();
+});
+watch(
+	() => api.value.isOpen,
+	() => {
+		if (api.value.isOpen) useEvent("open:menu", state.value.context.id);
+	}
+);
 </script>
 
 <template>

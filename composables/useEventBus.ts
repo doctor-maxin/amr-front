@@ -1,4 +1,5 @@
 import mitt from "mitt";
+import { IProduct } from "~/types/product";
 
 export type IFilterPayload = {
 	id: string;
@@ -10,6 +11,7 @@ type ApplicationEvents = {
 	"on-sort": void;
 	toFeedBack: void;
 	"open-map": void;
+	"open:product-form": IProduct;
 	"close-modals": void;
 };
 

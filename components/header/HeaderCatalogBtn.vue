@@ -3,7 +3,7 @@ import CatalogIcon from "~/assets/icons/catalog.svg";
 import { normalizeProps, useMachine } from "@zag-js/vue";
 import * as popover from "@zag-js/popover";
 import MainCatalog from "~/components/header/MainCatalog.vue";
-import { computed, ref } from "~/.nuxt/imports";
+import { computed, ref, useEvent, useListen, watch } from "~/.nuxt/imports";
 
 const [state, send] = useMachine(
 	popover.machine({
@@ -18,6 +18,15 @@ const catalogBtn = ref(null);
 useListen("close-modals", () => {
 	api.value.close();
 });
+useListen("open:menu", (id: string) => {
+	if (id !== state.value.context.id) api.value.close();
+});
+watch(
+	() => api.value.isOpen,
+	() => {
+		if (api.value.isOpen) useEvent("open:menu", state.value.context.id);
+	}
+);
 
 defineExpose({ catalogBtn });
 </script>

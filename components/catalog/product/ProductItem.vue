@@ -55,7 +55,7 @@ const addProductItem = (id: string) => {
 				}"
 			/>
 		</button>
-		<nuxt-link :to="`/catalog${item.handle.toLowerCase()}`">
+		<nuxt-link :to="`/catalog${item?.handle ?? ''}`">
 			<client-only>
 				<NuxtImg
 					:class="{
@@ -69,7 +69,7 @@ const addProductItem = (id: string) => {
 			</client-only>
 		</nuxt-link>
 		<nuxt-link
-			:to="`/catalog${item.handle.toLowerCase()}`"
+			:to="`/catalog${item?.handle ?? ''}`"
 			class="font-semibold group-hover:opacity-100 z-10 lg:block hidden lg:opacity-0 transition-opacity absolute text-white left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-system-black-600 backdrop-blur-[10px] py-3 px-[1.135rem] rounded-[0.63rem]"
 		>
 			Посмотреть
@@ -87,9 +87,10 @@ const addProductItem = (id: string) => {
 					item.name
 				}}</span>
 				<meta itemprop="priceCurrency" content="RUB" />
-				<span class="whitespace-nowrap" itemprop="price">{{
-					toMoney(item.price)
-				}}</span>
+				<span class="whitespace-nowrap" itemprop="price"
+					>{{ item.canNotBye ? "от " : ""
+					}}{{ toMoney(item.price) }}</span
+				>
 				<link
 					v-if="item.count"
 					itemprop="availability"
@@ -102,6 +103,7 @@ const addProductItem = (id: string) => {
 				/>
 			</div>
 			<button
+				v-if="!item.canNotBye"
 				@click="addProductItem(item.id)"
 				:disabled="item.count <= 0"
 				class="bg-system-black-600 gap-1 flex items-center justify-between backdrop-blur-[10px] rounded-2xl lg:rounded-[1.25rem] p-4 lg:p-5"

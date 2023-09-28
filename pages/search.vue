@@ -82,7 +82,7 @@ onMounted(() => {
 			>
 				<template v-for="product of list" :key="product.id">
 					<nuxt-link
-						:to="`/catalog${product.handle}`"
+						:to="`/catalog${product.handle ?? ''}`"
 						class="w-full p-[1.125rem] lg:p-[0.875rem] bg-system-gray-500 rounded-[1.25rem] grid grid-cols-[4.375rem_auto] items-center lg:grid-cols-[6.25rem_auto] gap-[1.31rem] lg:gap-[1.44rem]"
 					>
 						<NuxtImg

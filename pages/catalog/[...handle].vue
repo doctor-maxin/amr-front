@@ -34,8 +34,9 @@ const pageHandle = computed(() =>
 		? "/" + route.params.handle.join("/")
 		: route.params.handle
 );
+console.log("pageHandle.value", pageHandle.value);
 const activeCategory = computed<ICategory | undefined>(() =>
-	categories.value?.find((item) => item.handle.endsWith(pageHandle.value))
+	categories.value?.find((item) => item.handle?.endsWith(pageHandle.value))
 );
 const filters = ref<IFilters["filters"]>([]);
 const items = ref<ICategory[]>([]);
@@ -124,6 +125,7 @@ const reFetchData = async (withFilterCheck = true) => {
 					"name",
 					"images.directus_files_id",
 					"price",
+					"canNotBye",
 					"count",
 				],
 			},
@@ -186,7 +188,7 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 			if (!path) continue;
 
 			const category = categories.value.find((item) =>
-				item.handle.endsWith(path)
+				item.handle?.endsWith(path)
 			);
 			if (!category) continue;
 			array.push({
@@ -242,15 +244,23 @@ useListen("on-sort", (sort) => {
 				<CatalogCategories :items="items" />
 			</template>
 			<template v-else-if="!isLoading">
-				<CatalogFilters :items="filters" />
-				<CatalogProducts :items="products" />
-				<UiPagination
-					:page="+params.page"
-					@onPage="params.page = $event"
-					:total="totalCount"
-					:limit="limit"
-					class="mt-6"
-				/>
+				<template v-if="products?.length">
+					<CatalogFilters :items="filters" />
+					<CatalogProducts :items="products" />
+					<UiPagination
+						:page="+params.page"
+						@onPage="params.page = $event"
+						:total="totalCount"
+						:limit="limit"
+						class="mt-6"
+					/>
+				</template>
+				<h2
+					v-else
+					class="text-2xl text-center text-system-gray-900 font-semibold text-opacity-40"
+				>
+					В этой категории пока нет товаров
+				</h2>
 			</template>
 			<UiSpinner v-else />
 		</main>

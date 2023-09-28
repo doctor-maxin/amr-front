@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDirectusItems } from "../../.nuxt/imports";
+import { useAppConfig, useDirectusItems } from "../../.nuxt/imports";
 import { ref, computed } from "../../.nuxt/imports";
 import { useListen } from "../../composables/useEventBus";
 import { IStore } from "~/types/common";
@@ -8,7 +8,6 @@ import { normalizeProps, useMachine } from "@zag-js/vue";
 import UiSpinner from "../ui/UiSpinner.vue";
 
 const { getItems } = useDirectusItems();
-const bounds = ref<any[]>([]);
 const points = ref<IStore[]>([]);
 const { mapCenter } = useAppConfig();
 const [state, send] = useMachine(dialog.machine({ id: "map" }));
@@ -20,8 +19,8 @@ useListen("open-map", async () => {
 	const stores = await getItems<IStore>({
 		collection: "stores",
 	});
-	if (stores.length >= 2)
-		bounds.value = stores.map((item) => [item.lat, item.long]);
+	// if (stores.length >= 2)
+	// 	bounds.value = stores.map((item) => [item.lat, item.long]);
 	points.value = stores;
 });
 </script>
@@ -40,7 +39,7 @@ useListen("open-map", async () => {
 					<Transition name="fade">
 						<yandex-map
 							class="w-full h-full overflow-hidden"
-							v-if="bounds.length"
+							v-if="points.length"
 							:coordinates="mapCenter"
 							ref="map"
 						>
@@ -55,7 +54,7 @@ useListen("open-map", async () => {
 						</yandex-map>
 					</Transition>
 					<div
-						v-if="!bounds || !bounds.length"
+						v-if="!points || !points.length"
 						class="absolute top-0 left-0 rounded-[2rem] h-full flex items-center justify-center bg-white w-full"
 					>
 						<UiSpinner />

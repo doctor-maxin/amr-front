@@ -12,6 +12,7 @@
 		<TheFooter />
 		<ToTopBtn />
 		<MapLoader />
+		<ProductForm />
 	</div>
 </template>
 <script lang="ts" setup>
@@ -19,6 +20,7 @@ import TheHeader from "~/components/TheHeader.vue";
 import TheFooter from "~/components/TheFooter.vue";
 import ToTopBtn from "./components/common/ToTopBtn.vue";
 import MapLoader from "./components/common/MapLoader.vue";
+import ProductForm from "./components/forms/ProductForm.vue";
 import { useCartStore } from "./store/cart.store";
 import {
 	useAsyncData,

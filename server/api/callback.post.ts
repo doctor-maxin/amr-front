@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 	const userClient = createDirectus(process.env.DIRECTUS_URL).with(
 		graphql({
 			credentials: "include",
-		}),
+		})
 	);
 
 	const body = await readMultipartFormData(event);
@@ -33,7 +33,11 @@ export default defineEventHandler(async (event) => {
 			});
 			form.append("file", blob);
 			hasFile = true;
-		} else if (item.name) data[item.name] = item.data.toString("utf8");
+		} else if (item.name) {
+			if (item.name === "product")
+				data[item.name] = JSON.parse(item.data.toString("utf8"));
+			else data[item.name] = item.data.toString("utf8");
+		}
 	}
 
 	try {
@@ -58,7 +62,7 @@ export default defineEventHandler(async (event) => {
 				type: data.type,
 				comment: data.comment,
 				file: data.file,
-			},
+			}
 		);
 
 		createBitrixLead(data, query);

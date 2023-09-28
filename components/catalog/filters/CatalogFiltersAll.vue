@@ -22,7 +22,7 @@ const props = defineProps<{
 	api: PublicApi<PropTypes>;
 	items: IFilter[];
 }>();
-
+console.log("otem", props.items);
 const [state, send] = useMachine(
 	accordion.machine({ id: "filtersList", multiple: true })
 );
@@ -34,7 +34,7 @@ const schema = computed(() => {
 	let sch = {};
 
 	for (const filter of props.items) {
-		sch[filter.options_id.id] = yup.array().of(yup.string());
+		sch[filter?.options_id?.id] = yup.array().of(yup.string());
 	}
 	return yup.object().shape(sch);
 });
@@ -61,10 +61,13 @@ const route = useRoute();
 useListen("reset-filters", () => {
 	resetForm();
 	for (const item of props.items) {
-		resetField(item.options_id.id, []);
+		resetField(item.options_id?.id, []);
 	}
 });
 const { getFiltersFromQuery } = useFiltersHelpers();
+const filteredItems = computed(() =>
+	props.items.filter((item) => !!item.options_id)
+);
 
 onMounted(() => {
 	const filters = getFiltersFromQuery();
@@ -99,29 +102,29 @@ onMounted(() => {
 					v-bind="accardionApi.rootProps"
 				>
 					<div
-						v-for="item of items"
-						:key="item.options_id.id"
+						v-for="item of filteredItems"
+						:key="item.options_id?.id"
 						class="bg-system-gray-600 rounded-xl"
 						v-bind="
 							accardionApi.getItemProps({
-								value: item.options_id.id,
+								value: item.options_id?.id,
 							})
 						"
 					>
 						<button
 							v-bind="
 								accardionApi.getItemTriggerProps({
-									value: item.options_id.id,
+									value: item.options_id?.id,
 								})
 							"
 							class="flex justify-between w-full px-6 py-6 items-center"
 						>
-							<span>{{ item.options_id.name }}</span>
+							<span>{{ item.options_id?.name }}</span>
 							<svg
 								:class="{
 									'rotate-180':
 										!accardionApi.getItemContentProps({
-											value: item.options_id.id,
+											value: item.options_id?.id,
 										})?.hidden,
 								}"
 								xmlns="http://www.w3.org/2000/svg"
@@ -144,25 +147,25 @@ onMounted(() => {
 							<div
 								v-if="
 									!accardionApi.getItemContentProps({
-										value: item.options_id.id,
+										value: item.options_id?.id,
 									})?.hidden
 								"
 								v-bind="
 									accardionApi.getItemContentProps({
-										value: item.options_id.id,
+										value: item.options_id?.id,
 									})
 								"
 								class="flex flex-col gap-2 pb-[1.375rem]"
 							>
 								<label
-									v-for="val of item.options_id.values"
+									v-for="val of item.options_id?.values"
 									:key="val.id"
 									class="flex gap-3 items-center px-5 cursor-pointer"
 								>
 									<vee-field
 										type="checkbox"
 										class="filter-input"
-										:name="item.options_id.id"
+										:name="item.options_id?.id"
 										:value="val.id"
 									/>
 									<span class="">{{ val.value }}</span>

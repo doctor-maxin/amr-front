@@ -137,13 +137,13 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 								>
 									<nuxt-link
 										@click.native="api.close()"
-										:to="page.handle"
+										:to="page?.handle"
 										itemprop="url"
 									>
 										<span>{{ page.title }}</span>
 									</nuxt-link>
 									<meta
-										:content="page.title"
+										:content="page?.title"
 										itemprop="name"
 									/>
 								</li>

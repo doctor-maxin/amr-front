@@ -74,7 +74,7 @@ const selectCategory = (item: ICategory) => {
 				<div class="flex flex-col gap-[1.135rem]">
 					<template v-for="item of subCategories" :key="item.id">
 						<nuxt-link
-							:to="`/catalog${item.handle}`"
+							:to="`/catalog${item.handle ?? ''}`"
 							class="cursor-pointer hover:underline"
 							@click.native="api.close()"
 							><span class="text-system-black-900 font-medium">{{

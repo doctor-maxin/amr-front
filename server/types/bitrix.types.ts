@@ -1,8 +1,11 @@
+import { IProduct } from "~/types/product";
+
 export type ILeadCreatePayload = {
 	name: string;
 	phone: string;
 	comment?: string;
 	type?: string;
+	product?: IProduct;
 };
 
 export type IUTMPayload = {
