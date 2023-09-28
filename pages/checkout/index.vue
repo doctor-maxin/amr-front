@@ -8,6 +8,7 @@ import {
 	ref,
 	useAppConfig,
 	useDirectusItems,
+	useDirectusUser,
 	useForm,
 	useRouter,
 	useUrlSearchParams,
@@ -23,6 +24,8 @@ import { useCartStore } from "../../store/cart.store";
 import { CartPopulatedItem, DeliveryTypes } from "../../types/cart";
 import { IBreadCrumb, ILink } from "../../types/common";
 import { IProduct } from "../../types/product";
+import { Mask } from "maska"
+
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
@@ -48,11 +51,13 @@ const cartStore = useCartStore();
 const phoneRegExp = /^\+7 \d{3} \d{3} \d{2}-\d{2}$/;
 const { items } = storeToRefs(cartStore);
 const { productId } = useUrlSearchParams("history");
+const mask = new Mask({ mask: "+7 ### ### ##-##" })
 
 const router = useRouter();
 
 const { getItems } = useDirectusItems();
 const lines = ref<Map<string, CartPopulatedItem>>(new Map());
+const user = useDirectusUser()
 const appConfig = useAppConfig();
 const filters = computed(() => {
 	let payload = {
@@ -75,6 +80,7 @@ const products = await getItems<IProduct>({
 		fields: ["images.directus_files_id", "*"],
 	},
 });
+
 
 const { setFieldError, meta, values } = useForm({
 	validationSchema: yup.lazy((value) => {
@@ -102,9 +108,9 @@ const { setFieldError, meta, values } = useForm({
 		return yup.object().shape(payload);
 	}),
 	initialValues: {
-		name: "",
-		phone: "",
-		email: "",
+		name: user.value ? `${user.value.first_name} ${user.value.last_name}` : '',
+		phone: user.value?.phone ? mask.masked(user.value.phone) : '',
+		email: user.value?.email ? user.value.email : '',
 		paymentType: "",
 		deliveryType: "",
 		city: "",
@@ -183,9 +189,9 @@ const calcDeliveryPrice = async () => {
 	});
 };
 
-debouncedWatch(() => values.city, calcDeliveryPrice, { debounce: 500 });
-debouncedWatch(() => values.street, calcDeliveryPrice, { debounce: 500 });
-debouncedWatch(() => values.house, calcDeliveryPrice, { debounce: 500 });
+// debouncedWatch(() => values.city, calcDeliveryPrice, { debounce: 500 });
+// debouncedWatch(() => values.street, calcDeliveryPrice, { debounce: 500 });
+// debouncedWatch(() => values.house, calcDeliveryPrice, { debounce: 500 });
 </script>
 
 <template>
@@ -202,7 +208,7 @@ debouncedWatch(() => values.house, calcDeliveryPrice, { debounce: 500 });
 			v-if="lines.size || productId"
 			class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex px-4 bg-white"
 		>
-			<div class="flex flex-1 w-full flex-col gap-7 w-full">
+			<div class="flex flex-1 w-screen max-w-full flex-col gap-7">
 				<CheckoutContacts />
 				<CheckoutDelivery />
 				<CheckoutPaymentTypes />
@@ -216,7 +222,7 @@ debouncedWatch(() => values.house, calcDeliveryPrice, { debounce: 500 });
 		</main>
 		<main v-else class="flex items-center justify-center flex-col gap-10">
 			<div
-				class="text-system-black-900 font-semibold text-2xl text-opacity-40"
+				class="text-system-black-900 text-center px-4 font-semibold text-2xl text-opacity-40"
 			>
 				В корзине ничего нет, давайте это исправим!
 			</div>

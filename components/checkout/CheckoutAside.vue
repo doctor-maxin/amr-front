@@ -52,7 +52,7 @@ watch(
 	{
 		immediate: true,
 		deep: true,
-	}
+	},
 );
 
 const discountAmount = computed(() => {
@@ -158,7 +158,7 @@ const getItemImage = (item: any): string => {
 				toMoney(sum)
 			}}</span>
 		</div>
-		<div
+		<!-- <div
 			v-if="delivery.calculated"
 			class="flex justify-between gap-2 lg:text-lg"
 		>
@@ -166,7 +166,7 @@ const getItemImage = (item: any): string => {
 			<span class="text-right font-bold whitespace-nowrap">{{
 				toMoney(delivery.amount)
 			}}</span>
-		</div>
+		</div> -->
 		<div v-if="discount" class="flex justify-between gap-2 lg:text-lg">
 			<span class="font-medium">Скидка</span>
 			<span class="text-right font-bold whitespace-nowrap"

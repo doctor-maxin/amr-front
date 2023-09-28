@@ -3,12 +3,14 @@ import {
 	ref,
 	useAppConfig,
 	useAsyncData,
+	useDeviceWidth,
 	useDirectusItems,
 	useField,
 	useListen,
 	watch,
 } from "../../../.nuxt/imports";
 import { IStore } from "../../../types/common";
+import UiButton from '../../ui/UiButton.vue'
 import CheckoutSelfDeliveryBalloon from "./CheckoutSelfDeliveryBalloon.vue";
 
 const { mapCenter } = useAppConfig();
@@ -48,46 +50,53 @@ const loadItems = async (map) => {
 	// }
 	// map.geoObjects.events.add("click", clicked);
 };
+const isOpen = ref(false)
 
 const { value: deliveryPointId, handleChange } = useField("deliveryPointId");
 const { value: address, handleChange: handleChangeAddress } =
 	useField("deliveryPointId");
 useListen("setDeliveryPoint", (store: IStore) => {
 	handleChange(store.id);
+	isOpen.value = false;
 	handleChangeAddress(store.address);
 });
+
+const { isTablet } = useDeviceWidth()
 </script>
 
 <template>
-	<div class="w-screen max-w-full aspect-video">
+	<div class="w-screen max-w-full lg:aspect-video">
 		<vee-field name="deliveryPointId" v-model="deliveryPointId" hidden />
 		<vee-field name="address" v-model="address" hidden />
 
-		<client-only>
-			<yandex-map
-				class="w-full h-full overflow-hidden rounded-[1.125rem]"
-				v-if="bounds.length"
-				:zoom="12"
-				:coordinates="mapCenter"
-				ref="map"
-				@created="loadItems"
-			>
-				<yandex-marker
-					v-for="point of points"
-					:key="point.id"
-					:marker-id="point.id"
-					type="Point"
-					:properties="{
-						hintContent: point.name,
-					}"
-					:coordinates="[point.lat, point.long]"
-				>
-					<template #component>
-						<CheckoutSelfDeliveryBalloon :point="point" />
-					</template>
-				</yandex-marker>
-			</yandex-map>
-		</client-only>
+		<UiButton v-if="isTablet" class="w-full" title-class="text-center w-full block" title="Выбрать пункт"
+			@click="isOpen = true" />
+
+		<Transition name="fade">
+
+			<div v-if="isTablet ? isOpen : true"
+				class="fixed lg:static overscroll-contain lg:w-auto top-0 h-[100dvh] lg:h-auto lg:aspect-video w-screen items-end flex lg:items-center justify-center left-0 z-30 lg:backdrop-brightness-100 backdrop-brightness-50">
+				<div
+					class="bg-white lg:w-full lg:h-full lg:p-0 lg:bg-transparent w-screen relative h-screen max-h-[90dvh] max-w-[68.75rem] lg:max-h-[34.375rem] rounded-t-[1rem] lg:rounded-[2rem]">
+					<client-only>
+						<yandex-map class="w-full h-full overflow-hidden rounded-[1.125rem]" v-if="bounds.length" :zoom="12"
+							:coordinates="mapCenter" ref="map" @created="loadItems">
+							<yandex-marker v-for="point of points" :key="point.id" :marker-id="point.id" type="Point"
+								:properties="{
+									hintContent: point.name,
+								}" :coordinates="[point.lat, point.long]">
+								<template #component>
+									<CheckoutSelfDeliveryBalloon :point="point" />
+								</template>
+							</yandex-marker>
+						</yandex-map>
+					</client-only>
+					<button class="text-white lg:hidden absolute xl:-right-8 -top-10 xl:-top-8 right-3 z-10" @click="isOpen = false">
+						<svgo-close filled class="text-4xl" />
+					</button>
+				</div>
+			</div>
+		</Transition>
 		<div v-if="address" class="mt-5 font-semibold">
 			Точка самовывоза: <span class="font-medium">{{ address }}</span>
 		</div>
@@ -100,10 +109,12 @@ useListen("setDeliveryPoint", (store: IStore) => {
 	height: auto;
 	width: 200px;
 }
+
 .ymaps-2-1-79-balloon__content {
 	height: auto !important;
 }
-.ymaps-2-1-79-balloon__content > ymaps {
+
+.ymaps-2-1-79-balloon__content>ymaps {
 	height: auto !important;
 }
 </style>

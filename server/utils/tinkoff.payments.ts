@@ -24,7 +24,7 @@ export async function initPayment(
 				Email: payload.email,
 				Phone: payload.phone,
 			},
-			PayType: "O",
+			PayType: "T",
 			NotificationURL: process.env.NUXT_TINKOFF_NOTIFICATION_URL,
 			SuccessURL: `${process.env.NUXT_PUBLIC_FRONT_HOST}/api/tinkoff/result?orderId=${payload.orderId}&status=success`,
 			FailURL: `${process.env.NUXT_PUBLIC_FRONT_HOST}/api/tinkoff/result?orderId=${payload.orderId}&status=fail`,

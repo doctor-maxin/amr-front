@@ -27,7 +27,7 @@ const { data } = useAsyncData<IHeroBlock>("main-hero-block", () =>
 <template>
 	<div class="relative hero-banner flex flex-col-reverse lg:flex-row">
 		<div
-			class="left-0 h-full z-10 lg:max-w-[65vw] xl:max-w-[55vw] 2xl:max-w-[41vw] bg-system-gray lg:bg-white lg:bg-opacity-[0.67] backdrop-blur-xl"
+			class="left-0 h-full z-10 lg:max-w-[41vw] bg-system-gray lg:bg-white lg:bg-opacity-[0.67] backdrop-blur-xl"
 		>
 			<article
 				class="hero h-full pb-[4.44rem] lg:pb-[6.5rem] lg:pl-[4.37rem] pt-[2.25rem] lg:pt-[6.19rem] px-4 lg:pr-[1.88rem]"

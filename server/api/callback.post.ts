@@ -46,11 +46,19 @@ export default defineEventHandler(async (event) => {
 			data.file = file.id;
 		}
 		console.log(data);
+		const productsPayload = []
+		if (data.product) productsPayload.push({
+			products_id: data.product.id
+		})
+		const variantPayload = []
+		if (data.variant) variantPayload.push({
+			variants_id: data.variant
+		})
 		const req = await userClient.query(
 			`
 				
-			mutation CreateReqItem($name: String, $phone: String, $type: String, $comment: String, $file: String) {
-				create_requests_item(data: {name: $name, phone: $phone, type: $type, comment: $comment, file: $file}) {
+			mutation CreateReqItem($name: String, $phone: String, $type: String, $comment: String, $file: String, $products: [create_requests_products_input], $variant: [create_requests_variants_input]) {
+				create_requests_item(data: {name: $name, phone: $phone, type: $type, comment: $comment, file: $file, variant: $variant, products: $products}) {
 					id
 					status
 				}
@@ -62,6 +70,8 @@ export default defineEventHandler(async (event) => {
 				type: data.type,
 				comment: data.comment,
 				file: data.file,
+				variant: variantPayload,
+				products: productsPayload
 			}
 		);
 

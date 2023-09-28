@@ -77,7 +77,7 @@ watchEffect(() => {
 		<CartAside :lines="lines" :set-field-error="setFieldError" />
 	</main>
 	<main v-else class="flex items-center justify-center flex-col gap-10">
-		<div class="text-system-black-900 font-semibold text-2xl text-opacity-40">В корзине ничего нет, давайте это исправим!</div>
+		<div class="text-system-black-900 font-semibold text-2xl text-center px-4 text-opacity-40">В корзине ничего нет, давайте это исправим!</div>
 		<UiButton @click="router.push('/catalog')" variant="dark" title="Перейти в каталог" class="w-full max-w-[22rem]" title-class="!text-base" />
 	</main>
 	</div>

@@ -103,11 +103,12 @@ const hasInCart = computed(() => {
 				>
 			</button>
 			<button
+				v-if="product.canNotBye"
 				type="button"
 				@click="useEvent('open:product-form', product)"
-				class="rounded-full lg:gap-[0.88rem] disabled:bg-system-gray-600 disabled:border-system-gray-600 disabled:cursor-not-allowed border border-system-black-950 bg-system-black-950 flex items-center justify-center lg:w-auto lg:h-[4rem] w-[3.25rem] h-[3.25rem] text-white lg:px-6"
+				class="rounded-full lg:gap-[0.88rem]  border border-system-black-950 bg-system-black-950 flex items-center justify-center lg:w-auto lg:h-[4rem] h-[3.25rem] text-white lg:px-6"
 			>
-				<span class="hidden lg:block font-semibold text-white">
+				<span class="block font-medium lg:font-semibold text-white">
 					Оформить заказ
 				</span>
 			</button>

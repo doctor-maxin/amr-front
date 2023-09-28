@@ -1,5 +1,12 @@
 <template>
 	<div class="grid grid-cols-1 gap-7" v-bind="api.rootProps">
+		<div class="hidden lg:grid grid-cols-5 pt-[0.875rem] pb-2 text-system-black-950 text-opacity-50 font-semibold">
+			<div class="pl-[5.125rem]">Номер заказа</div>
+			<div class="">Дата заказа</div>
+			<div class="">Позиций</div>
+			<div class="">Сумма</div>
+			<div>Статус</div>
+		</div>
 		<AccountOrderItem
 			v-for="item of list"
 			:key="item.id"

@@ -1,5 +1,5 @@
 import mitt from "mitt";
-import { IProduct } from "~/types/product";
+import { IProduct, IVariant } from "~/types/product";
 
 export type IFilterPayload = {
 	id: string;
@@ -13,6 +13,7 @@ type ApplicationEvents = {
 	"open-map": void;
 	"open:product-form": IProduct;
 	"close-modals": void;
+	"select:variant": IVariant;
 };
 
 const emitter = mitt<ApplicationEvents>();

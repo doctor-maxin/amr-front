@@ -7,17 +7,23 @@ import {
 	rest,
 	readItems,
 	createItem,
+	staticToken
 } from "@directus/sdk";
 import { initPayment } from "~/server/utils/tinkoff.payments";
 import createBitrixOrder from "~/server/utils/bitrix.order";
+import jwt from 'jsonwebtoken'
 
 export default defineEventHandler(async (event) => {
+	const query = getQuery(event);
+	const bearerToken = event.headers.get('authorization')
+	const body = await readBody<ICheckoutPayload>(event);
 	const client = createDirectus(process.env.DIRECTUS_URL)
 		.with(rest())
-		.with(authentication());
-	const query = getQuery(event);
-	const body = await readBody<ICheckoutPayload>(event);
-	console.log("[createOrderBody]", body);
+		.with(staticToken(bearerToken?.slice(7)));
+
+	const data = jwt.decode(bearerToken?.slice(7)) 
+
+	console.log("[createOrderBody]", body, data, bearerToken);
 	let payload = {
 		phone: body.phone,
 		email: body.email,
@@ -33,7 +39,8 @@ export default defineEventHandler(async (event) => {
 		house: "",
 		flat: "",
 		entrance: "",
-	} satisfies IOrderPayload;
+		customerId: [{directus_users_id: data.id}]
+	}
 
 	if (body.deliveryType === DeliveryTypes.delivery) {
 		payload = {
@@ -65,24 +72,25 @@ export default defineEventHandler(async (event) => {
 			},
 			fields: ["price", "id", "name"],
 		})
-	)) as { price: number; id: string }[];
+	)) as { price: number; id: string; name: string; }[];
 
-	for (const item of body.items) {
-		payload.total += items?.find((i) => i.id === item.id)?.price ?? 0;
-		payload.items = payload.items.map((item) => {
-			const product = items.find((item) => item.id === item.id);
-			return {
-				...item,
-				name: product?.name,
-				price: product?.price,
-			};
-		});
-	}
+	payload.items = payload.items.map((item) => {
+		const product = items.find((item) => item.id === item.id);
+		if (!product) return item;
+		payload.total += product.price * item.count
+
+		return {
+			...item,
+			name: product.name,
+			price: product?.price,
+		};
+	});
 
 	try {
 		const bitrixOrder = await createBitrixOrder(payload, query);
-
-		payload.number = bitrixOrder;
+		payload.paymentType = body.paymentType
+		payload['number'] = bitrixOrder;
+		console.log('Payload', payload)
 		const order = await client.request(createItem("orders", payload));
 		console.log("order", order);
 		if (body.paymentType === PaymentTypes.TINKOFF) {

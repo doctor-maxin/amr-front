@@ -22,8 +22,7 @@ const tbodyRows = computed(() => props.block.data.withHeadings ? props.block.dat
 			</thead>
 			<tbody>
 			<tr v-for="(row, index) of tbodyRows" :key="'row-' + index">
-				<td v-for="(col, index) of row" :key="'col-' + col">
-					{{ col }}
+				<td v-for="(col, index) of row" :key="'col-' + col" v-html="col">
 				</td>
 			</tr>
 			</tbody>

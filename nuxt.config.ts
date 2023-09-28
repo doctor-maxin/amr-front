@@ -13,6 +13,15 @@ export default defineNuxtConfig({
 	typescript: {
 		includeWorkspace: true,
 	},
+	vite: {
+		server: {
+			hmr: {
+				protocol: "wss",
+				clientPort: 443,
+				path: "hmr/",
+			},
+		},
+	},
 	runtimeConfig: {
 		public: {
 			yandexKey: "",

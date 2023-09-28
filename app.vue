@@ -35,13 +35,14 @@ import CustomPageLoader from "./components/common/CustomPageLoader.vue";
 const { getItems, getSingletonItem } = useDirectusItems();
 const cartStore = useCartStore();
 const favoritesStore = useFavoritesStore();
-const { refreshTokens, token, checkAutoRefresh } = useDirectusToken();
+const { refreshTokens, token, checkAutoRefresh, token_expires_in } = useDirectusToken();
 const user = useDirectusUser();
 
+console.log('Token', token.value, token_expires_in.value)
 if (token.value) {
 	await checkAutoRefresh();
 
-	if (!user.value) token.value = "";
+	if (token_expires_in.value === 0) await refreshTokens()
 }
 
 await Promise.all([

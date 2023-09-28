@@ -39,8 +39,8 @@ const processForm = handleSubmit(async (values) => {
 </script>
 <template>
 	<div class="relative">
-		<form @submit.prevent="processForm" class="mb-2 p-[5px] border border-black flex items-center justify-between rounded-[2.1875rem]">
-			<input name="promocode" v-model="value" type="text" placeholder="Промокод" class="pl-7 pr-4 font-semibold focus:outline-none placeholder:text-system-gray-800 bg-transparent" />
+		<form @submit.prevent="processForm" class="mb-2 p-[5px] border border-black flex max-w-full items-center justify-between rounded-[2.1875rem]">
+			<input name="promocode" v-model="value" type="text" placeholder="Промокод" class="pl-7 w-full pr-4 font-semibold focus:outline-none placeholder:text-system-gray-800 bg-transparent" />
 			<button :disabled="isSubmitting" type="submit" class="rounded-[2.1875rem] disabled:pulse disabled:bg-opacity-60 hover:bg-accent-300 transition-colors bg-system-black-900 px-5 py-3 text-white font-medium">Применить</button>
 		</form>
 		<div v-if="errorMessage" class="text-[#F33] font-medium">{{errorMessage}}</div>

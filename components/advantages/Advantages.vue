@@ -15,7 +15,6 @@ const { data: list } = useAsyncData("advantages", () =>
 );
 
 const getItemImage = (item: any): string => {
-	console.log("item?.image?.id", item?.image?.id);
 	if (item?.image?.id) return item?.image?.id;
 	return appConfig.noImageId as string;
 };

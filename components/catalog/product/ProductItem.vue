@@ -77,7 +77,8 @@ const addProductItem = (id: string) => {
 		<div
 			class="flex gap-3 absolute font-semibold items-center text-white px-3 lg:px-5 bottom-3 lg:bottom-5 w-full"
 		>
-			<div
+			<nuxt-link
+				:to="`/catalog${item?.handle ?? ''}`"
 				itemprop="offers"
 				itemscope
 				itemtype="http://schema.org/Offer"
@@ -101,7 +102,7 @@ const addProductItem = (id: string) => {
 					itemprop="availability"
 					href="http://schema.org/OutOfStock"
 				/>
-			</div>
+			</nuxt-link>
 			<button
 				v-if="!item.canNotBye"
 				@click="addProductItem(item.id)"

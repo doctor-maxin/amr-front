@@ -244,6 +244,7 @@ export type IPromoCode = {
 
 export type IOrder = IOrderPayload & {
 	date_created: string;
+	status: string;
 	id: string;
 	discountedPrice: number;
 	number: string;

@@ -8,9 +8,11 @@ import {
 	useAsyncData,
 	useDirectusItems,
 	useRoute,
+	ref,
 	useNuxtData,
+useListen,
 } from "../../.nuxt/imports";
-import { IProductWithCategory } from "../../types/product";
+import { IProductWithCategory, IVariant } from "../../types/product";
 import { IBreadCrumb, ICategory } from "../../types/common";
 
 const route = useRoute();
@@ -31,6 +33,7 @@ const { data } = useAsyncData(() =>
 				"images.directus_files_id",
 				"categoryId.handle",
 				"categoryId.id",
+				"variants.*",
 				"optionsValues.optionValues_id.value",
 				"optionsValues.optionValues_id.parentId.name",
 			],
@@ -41,6 +44,7 @@ const product = computed<IProductWithCategory | null>(() =>
 	data.value?.length ? data.value[0] : null
 );
 const { data: categories } = useNuxtData<ICategory[]>("categories");
+const activeVariants = ref<IVariant | null>(null)
 
 const breadCrumbs = computed<IBreadCrumb[]>(() => {
 	const array = [
@@ -66,10 +70,14 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 	}
 	return array;
 });
+
+useListen('select:variant', (variant: IVariant) => {
+	activeVariants.value = variant;
+})
 </script>
 
 <template>
-	<div class="flex-1" itemscope="" itemtype="http://schema.org/Product">
+	<div class="flex-1" itemscope itemtype="http://schema.org/Product">
 		<div
 			v-if="product"
 			class="grid w-full pb-[2.38rem] lg:pb-[6.25rem] grid-cols-1 lg:grid-cols-[minmax(0,_1fr)_2fr] xl:grid-cols-[minmax(0,_1fr)_1.5fr] 2xl:grid-cols-[minmax(0,_1fr)_1fr]"

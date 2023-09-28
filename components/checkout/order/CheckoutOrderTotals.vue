@@ -100,12 +100,12 @@ const sum = computed<number>(() => {
 				toMoney(sum)
 			}}</span>
 		</div>
-		<div class="flex justify-between gap-2 lg:text-lg">
+		<!-- <div class="flex justify-between gap-2 lg:text-lg">
 			<span class="font-medium">Доставка</span>
 			<span class="text-right font-bold whitespace-nowrap">{{
 				toMoney(order.deliveryPrice)
 			}}</span>
-		</div>
+		</div> -->
 		<div
 			v-if="order.discountedPrice"
 			class="flex justify-between gap-2 lg:text-lg"

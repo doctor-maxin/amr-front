@@ -1,6 +1,7 @@
 <template>
 	<div v-for="item of lines" :key="item.id">
-		<div class="flex gap-5">
+		<div class="lg:grid grid-cols-5">
+		<nuxt-link :to="`/catalog${item.product?.handle ?? ''}`" class="flex gap-5 lg:gap-7	lg:col-span-3">
 			<NuxtImg
 				:src="getItemImage(item)"
 				provider="directus"
@@ -9,17 +10,21 @@
 				class="w-[70px] min-w-[70px] h-[70px] object-contain rounded-[10px] bg-white"
 			/>
 			<div
-				class="flex font-semibold flex-col text-system-black-950 gap-[2px]"
+				class="flex font-semibold flex-col text-base text-system-black-950 gap-[2px]"
 			>
-				<span>{{ item.product.name }}</span>
-				<span>{{ toMoney(item.product.price) }}</span>
-				<span>{{ item.count }} шт.</span>
+				<span class="lg:text-lg">{{ item.product?.name }}</span>
+				<span class="lg:hidden">{{ toMoney(item.product?.price ? item.product.price * item.count : 0) }}</span>
+				<span class="lg:hidden">{{ item.count }} шт.</span>
 			</div>
-		</div>
+		</nuxt-link>
+		<div class="hidden font-semibold text-lg lg:block pl-5">{{ item.count }} шт.</div>
+		<div class="hidden font-semibold text-lg lg:block pl-14">{{ toMoney(item.product?.price ? item.product.price * item.count : 0) }}</div>
+	</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { IProduct, IProductPicked } from "~/types/product";
 import {
 	computed,
 	useAppConfig,
@@ -43,7 +48,7 @@ const getItemImage = (item: any): string => {
 	return appConfig.noImageId as string;
 };
 
-const products = await getItems({
+const products = await getItems<IProductPicked>({
 	collection: "products",
 	params: {
 		filter: {
