@@ -79,7 +79,7 @@ const createOrder = async () => {
 	for (const item of Array.from(props.lines.values())) {
 		payload.push({
 			id: item.id,
-			count: item.count + 1,
+			count: item.count,
 		});
 	}
 	const response = await fetch(baseUrl + "/api/cart/check", {
@@ -186,7 +186,7 @@ const getItemImage = (item: any): string => {
 			variant="dark"
 			title="Оформить заказ"
 			title-class="!text-base"
-			:disabled="isLoading || !isValid || !delivery.calculated"
+			:disabled="isLoading || !isValid"
 			:class="{
 				'pulse cursor-progress': isLoading,
 			}"

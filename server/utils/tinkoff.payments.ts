@@ -17,8 +17,8 @@ export async function initPayment(
 
 	return client<ITinkoffInitPaymentResult>("/Init", {
 		body: {
-			// Amount: payload.amount * 100,
-			Amount: 100,
+			Amount: payload.amount * 100,
+			// Amount: 100,
 			OrderId: payload.orderId,
 			DATA: {
 				Email: payload.email,

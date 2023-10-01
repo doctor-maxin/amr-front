@@ -3,10 +3,16 @@ import {
 	useAsyncData,
 	useDirectusItems,
 	useDirectusUser,
+	useHead
 } from "../../.nuxt/imports";
 import { IOrder } from "../../types/common";
 import AccountOrderList from "~/components/account/AccountOrderList.vue";
 import UiSpinner from "../../components/ui/UiSpinner.vue";
+
+
+useHead({
+	title: 'Заказы'
+})
 
 const { getItems } = useDirectusItems();
 const user = useDirectusUser();

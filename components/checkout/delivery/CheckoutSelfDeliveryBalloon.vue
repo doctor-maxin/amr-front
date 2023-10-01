@@ -3,8 +3,9 @@
 		<h4 class="text-2xl">{{ point.name }}</h4>
 		<span class="mb-2 text-base">{{ point.address }}</span>
 		<UiButton
-			@click="useEvent('setDeliveryPoint', point)"
+			@click="selectPoint(point)"
 			variant="empty"
+			type="button"
 			title="Выбрать"
 			title-class="text-lg"
 		/>
@@ -22,6 +23,11 @@ export default {
 			type: Object,
 		},
 	},
+	methods: {
+		selectPoint(point) {
+			useEvent('setDeliveryPoint', point)
+		}
+	}
 };
 </script>
 

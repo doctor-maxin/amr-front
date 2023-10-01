@@ -5,10 +5,14 @@ import Banner from "~/components/banner/Banner.vue";
 import Advantages from "~/components/advantages/Advantages.vue";
 import LazyBlocksIdeasIdeiasBlock from '~/components/blocks/ideas/IdeiasBlock.vue'
 import CallBackForm from "../components/common/CallBackForm.vue";
-import {computed, useDirectusItems} from "../.nuxt/imports";
+import {computed, useDirectusItems, useHead} from "../.nuxt/imports";
 import {IIdeaItem} from "../types/ideas";
 
 const {getItems} = useDirectusItems()
+
+useHead({
+  title: 'Автор мебельных решений'
+})
 
 const IdeaList = await Promise.all([getItems<IIdeaItem>({
   collection: 'projects',

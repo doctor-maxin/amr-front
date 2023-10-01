@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import SignInForm from "~/components/forms/SignInForm.vue";
 import ConfirmForm from "~/components/forms/ConfirmForm.vue";
-import { ref, nextTick } from "~/.nuxt/imports";
+import { ref, nextTick, useHead } from "~/.nuxt/imports";
 import { useFetch } from "@vueuse/core";
 import { useRouter } from "nuxt/app";
+
+useHead({
+  title: 'Вход'
+})
 
 const firstScreen = ref(true);
 const phone = ref("");

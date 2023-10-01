@@ -55,6 +55,7 @@ const isOpen = ref(false)
 const { value: deliveryPointId, handleChange } = useField("deliveryPointId");
 const { value: address, handleChange: handleChangeAddress } =
 	useField("deliveryPointId");
+	
 useListen("setDeliveryPoint", (store: IStore) => {
 	handleChange(store.id);
 	isOpen.value = false;

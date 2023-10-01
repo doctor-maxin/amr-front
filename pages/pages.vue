@@ -3,7 +3,7 @@ import {IBreadCrumb, ICustomerPage, ICustomerPages} from "../types/common";
 import HeaderPage from '../components/page/Header.vue'
 import {Swiper, SwiperSlide} from "swiper/vue";
 import 'swiper/css';
-import {computed, ref, useAsyncData, useDirectusItems, useRoute, useRouter} from "../.nuxt/imports";
+import {computed, ref, useAsyncData, useDirectusItems, useRoute, useRouter, useHead} from "../.nuxt/imports";
 
 const {getSingletonItem} = useDirectusItems()
 
@@ -29,6 +29,10 @@ const breadCrumbs = computed<IBreadCrumb[]>( () => [{
 	path: activePage.value?.handle,
 	title: activePage.value?.title
 }])
+
+useHead({
+  title: activePage.value?.title ?? ''
+})
 
 const swiper = ref<any>(null);
 

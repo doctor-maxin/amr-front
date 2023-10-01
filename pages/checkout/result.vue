@@ -4,6 +4,7 @@ import {
 	useAsyncData,
 	useDirectusItems,
 	useUrlSearchParams,
+	useHead
 } from "../../.nuxt/imports";
 import { IBreadCrumb, ILink, IOrder } from "../../types/common";
 import PageHeader from "../../components/page/Header.vue";
@@ -13,6 +14,10 @@ import CheckoutOrderDelivery from "~/components/checkout/order/CheckoutOrderDeli
 import CheckoutOrderTotals from "~/components/checkout/order/CheckoutOrderTotals.vue";
 import CheckoutOrderInfo from "~/components/checkout/order/CheckoutOrderInfo.vue";
 import { useCartStore } from "../../store/cart.store";
+
+useHead({
+  title: 'Результат оформления заказа'
+})
 
 const cartStore = useCartStore()
 const breadCrumbs = markRaw<IBreadCrumb[]>([

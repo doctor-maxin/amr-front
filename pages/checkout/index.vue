@@ -13,6 +13,7 @@ import {
 	useRouter,
 	useUrlSearchParams,
 	watchEffect,
+	useHead,
 } from "../../.nuxt/imports";
 import CheckoutAside from "../../components/checkout/CheckoutAside.vue";
 import CheckoutContacts from "../../components/checkout/CheckoutContacts.vue";
@@ -24,8 +25,12 @@ import { useCartStore } from "../../store/cart.store";
 import { CartPopulatedItem, DeliveryTypes } from "../../types/cart";
 import { IBreadCrumb, ILink } from "../../types/common";
 import { IProduct } from "../../types/product";
-import { Mask } from "maska"
+import { Mask } from "maska";
+import { PaymentTypes } from "~/server/types/checkout.types";
 
+useHead({
+	title: "Оформление заказа",
+});
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
@@ -51,13 +56,13 @@ const cartStore = useCartStore();
 const phoneRegExp = /^\+7 \d{3} \d{3} \d{2}-\d{2}$/;
 const { items } = storeToRefs(cartStore);
 const { productId } = useUrlSearchParams("history");
-const mask = new Mask({ mask: "+7 ### ### ##-##" })
+const mask = new Mask({ mask: "+7 ### ### ##-##" });
 
 const router = useRouter();
 
 const { getItems } = useDirectusItems();
 const lines = ref<Map<string, CartPopulatedItem>>(new Map());
-const user = useDirectusUser()
+const user = useDirectusUser();
 const appConfig = useAppConfig();
 const filters = computed(() => {
 	let payload = {
@@ -80,7 +85,6 @@ const products = await getItems<IProduct>({
 		fields: ["images.directus_files_id", "*"],
 	},
 });
-
 
 const { setFieldError, meta, values } = useForm({
 	validationSchema: yup.lazy((value) => {
@@ -108,11 +112,13 @@ const { setFieldError, meta, values } = useForm({
 		return yup.object().shape(payload);
 	}),
 	initialValues: {
-		name: user.value ? `${user.value.first_name} ${user.value.last_name}` : '',
-		phone: user.value?.phone ? mask.masked(user.value.phone) : '',
-		email: user.value?.email ? user.value.email : '',
-		paymentType: "",
-		deliveryType: "",
+		name: user.value
+			? `${user.value.first_name} ${user.value.last_name}`
+			: "",
+		phone: user.value?.phone ? mask.masked(user.value.phone) : "",
+		email: user.value?.email ? user.value.email : "",
+		paymentType: PaymentTypes.TINKOFF,
+		deliveryType: DeliveryTypes.delivery,
 		city: "",
 		street: "",
 		house: "",
@@ -168,7 +174,7 @@ debouncedWatch(
 	},
 	{
 		debounce: 500,
-	}
+	},
 );
 const calcDeliveryPrice = async () => {
 	console.log("Calc started");

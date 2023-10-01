@@ -6,12 +6,16 @@ import {
 	ref, useDirectusAuth,
 	useDirectusUser,
 	useDirectusUsers,
-	useForm
+	useForm,
+useHead
 } from "../../.nuxt/imports";
 import * as yup from "yup";
 import { DirectusUser } from "nuxt-directus/dist/runtime/types";
 import { toast } from "vue3-toastify";
 
+useHead({
+	title: 'Личный кабинет'
+})
 const isEditing = ref<boolean>(false);
 const user = useDirectusUser();
 const { updateUser } = useDirectusUsers();

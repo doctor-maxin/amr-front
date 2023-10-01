@@ -8,10 +8,14 @@ import TelLink from "~/components/helpers/TelLink.vue";
 import EmailLink from "~/components/helpers/EmailLink.vue";
 import CompanyMapHelper from "~/components/helpers/CompanyMap.vue";
 import { markRaw, useEvent } from "../.nuxt/imports";
-import { useAppConfig, useForm, useNuxtData } from "#imports";
+import { useAppConfig, useForm, useNuxtData, useHead } from "#imports";
 import * as yup from "yup";
 import { useFetch } from "@vueuse/core/index";
 import { toast } from "vue3-toastify";
+
+useHead({
+  title: 'Контакты'
+})
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{

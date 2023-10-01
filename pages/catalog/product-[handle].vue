@@ -10,7 +10,8 @@ import {
 	useRoute,
 	ref,
 	useNuxtData,
-useListen,
+	useListen,
+	useHead,
 } from "../../.nuxt/imports";
 import { IProductWithCategory, IVariant } from "../../types/product";
 import { IBreadCrumb, ICategory } from "../../types/common";
@@ -70,6 +71,10 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 	}
 	return array;
 });
+
+useHead({
+	title: product.value?.name ?? 'Детальная карточка товара'
+})
 
 useListen('select:variant', (variant: IVariant) => {
 	activeVariants.value = variant;

@@ -6,6 +6,7 @@ import {
 	useAppConfig,
 	useDirectusItems,
 	watchEffect,
+	useHead
 } from "../.nuxt/imports";
 import { IBreadCrumb } from "../types/common";
 import { useFavoritesStore } from "../store/favorites.store";
@@ -15,6 +16,10 @@ import UiSpinner from "../components/ui/UiSpinner.vue";
 import ProductItem from "../components/catalog/product/ProductItem.vue";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiPagination from "../components/ui/UiPagination.vue";
+
+useHead({
+  title: 'Избранное'
+})
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{

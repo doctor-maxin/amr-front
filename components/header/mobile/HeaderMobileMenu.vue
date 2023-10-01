@@ -22,7 +22,7 @@ const { data: pages } = await useAsyncData<{
 		params: {
 			fields: ["navBars.title", "navBars.id", "navBars.handle"],
 		},
-	})
+	}),
 );
 const { data: settings } = useNuxtData<ISettings>("settings");
 </script>
@@ -112,9 +112,7 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 					>
 				</div>
 				<div class="flex flex-col gap-3">
-					<span class="text-system-gray-900 text-base"
-						>Поддержка</span
-					>
+					<span class="text-system-gray-900 text-base">Контакты</span>
 					<EmailLink :email="settings?.Email" class="text-lg" />
 					<TelLink :tel="settings?.phone" class="-mt-2 text-lg" />
 				</div>

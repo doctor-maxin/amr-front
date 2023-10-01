@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageHeader from '~/components/page/Header.vue'
-import {computed, useAsyncData, useDirectusItems} from "../.nuxt/imports";
+import {computed, useAsyncData, useDirectusItems, useHead} from "../.nuxt/imports";
 import {IBlock, IBreadCrumb, ICustomerPageFull, IImageBlock} from "../types/common";
 import AboutHeroBlock from "../components/about/AboutHeroBlock.vue";
 import AboutPageImages from "../components/about/AboutPageImages.vue";
@@ -22,6 +22,10 @@ const {data} = await useAsyncData(() => getSingletonItem<{
 }>({
 	collection: 'aboutPage'
 }))
+
+useHead({
+  title: data.value?.header ?? ''
+})
 
 const breadCrumbs = computed<IBreadCrumb[]>(() => ([{
 	path: '/',

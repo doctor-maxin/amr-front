@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import PageHeader from '~/components/page/ImageHeader.vue'
-import {computed, ref, useAsyncData, useDirectusItems, useRoute, useRouter, watchEffect} from "../../.nuxt/imports";
+import {computed, useHead, useAsyncData, useDirectusItems, useRoute, useRouter, watchEffect} from "../../.nuxt/imports";
 import {IIdeaItem} from "../../types/ideas";
 import {IBreadCrumb, ILink} from "../../types/common";
 import {useBlogStore} from "../../store/blog.store";
@@ -52,6 +52,10 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
     })
   }
   return arr
+})
+
+useHead({
+  title: article.value?.name ?? 'Идеи и тренды'
 })
 
 const nextArticle = computed<ILink | null>(() => {

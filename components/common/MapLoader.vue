@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { useAppConfig, useDirectusItems, useNuxtData } from "../../.nuxt/imports";
+import {
+	useAppConfig,
+	useDirectusItems,
+	useNuxtData,
+} from "../../.nuxt/imports";
 import { ref, computed } from "../../.nuxt/imports";
 import { useListen } from "../../composables/useEventBus";
 import { ISettings, IStore } from "~/types/common";
@@ -54,17 +58,25 @@ useListen("open-map", async () => {
 								}"
 								:coordinates="[point.lat, point.long]"
 							>
-							<template #component>
-								<div class="flex flex-col gap-2">
-									<h4 class="text-2xl">{{ point.name }}</h4>
-									<span class="mb-2 text-base">{{ point.address }}</span>
-									<div class="flex flex-col gap-1">
-									<span class="address-header">Поддержка</span>
-									<EmailLink :email="settings?.Email" />
-									<TelLink :tel="settings?.phone" />
-								</div>
-								</div>
-							</template>
+								<template #component>
+									<div class="flex flex-col gap-2">
+										<h4 class="text-2xl">
+											{{ point.name }}
+										</h4>
+										<span class="mb-2 text-base">{{
+											point.address
+										}}</span>
+										<div class="flex flex-col gap-1">
+											<span class="address-header"
+												>Контакты</span
+											>
+											<EmailLink
+												:email="settings?.Email"
+											/>
+											<TelLink :tel="settings?.phone" />
+										</div>
+									</div>
+								</template>
 							</yandex-marker>
 						</yandex-map>
 					</Transition>

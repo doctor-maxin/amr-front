@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import PageHeader from "~/components/page/Header.vue";
-import { markRaw, useAsyncData, useDirectusItems } from "#imports";
+import { markRaw, useAsyncData, useDirectusItems, useHead } from "#imports";
 import { IBreadCrumb } from "~/types/common";
 import ParagraphBlock from "~/components/blocks/ParagraphBlock.vue";
 import AttachesBlock from "~/components/blocks/AttachesBlock.vue";
@@ -56,6 +56,10 @@ import QuoteBlock from "~/components/blocks/QuoteBlock.vue";
 import TableBlock from "~/components/blocks/TableBlock.vue";
 import HeaderBlock from "~/components/blocks/HeaderBlock.vue";
 import ListBlock from "~/components/blocks/ListBlock.vue";
+
+useHead({
+  title: 'Политика конфиденциальности'
+})
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{

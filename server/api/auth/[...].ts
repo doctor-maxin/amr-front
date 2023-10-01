@@ -15,7 +15,7 @@ const client = new GreenSMS({
 });
 
 const router = createRouter();
-const directusClient = createDirectus(process.env.DIRECTUS_URL)
+const directusClient = createDirectus("http://localhost:8055")
 	.with(rest())
 	.with(staticToken(process.env.DIRECTUS_TOKEN));
 
@@ -44,14 +44,14 @@ router.post(
 			}),
 		);
 		if (hasUser.length) {
-			const email = hasUser[0].email ? hasUser[0].email : `avtorm-${Date.now()}@examile.com`
+			const email = hasUser[0].email
+				? hasUser[0].email
+				: `avtorm-${Date.now()}@examile.com`;
 			const payload = {
 				password: response.code,
-				email
-			}
-			await directusClient.request(
-				updateUser(hasUser[0].id, payload),
-			);
+				email,
+			};
+			await directusClient.request(updateUser(hasUser[0].id, payload));
 			return {
 				email,
 			};

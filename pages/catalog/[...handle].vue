@@ -10,7 +10,7 @@ import {
 	computed,
 	ref,
 	useDirectusItems,
-	watchEffect,
+	useHead,
 	watch,
 	shallowRef,
 } from "~/.nuxt/imports";
@@ -38,6 +38,10 @@ console.log("pageHandle.value", pageHandle.value);
 const activeCategory = computed<ICategory | undefined>(() =>
 	categories.value?.find((item) => item.handle?.endsWith(pageHandle.value))
 );
+useHead({
+  title: activeCategory.value ? activeCategory.value.name : 'Каталог'
+})
+
 const filters = ref<IFilters["filters"]>([]);
 const items = ref<ICategory[]>([]);
 const { getFiltersFromQuery } = useFiltersHelpers();

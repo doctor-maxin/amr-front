@@ -2,13 +2,17 @@
 import UiButton from "~/components/ui/UiButton.vue";
 import { useUrlSearchParams } from "@vueuse/core";
 import { IProduct } from "~/types/product";
-import { onMounted, ref, useDirectusItems, watch } from "../.nuxt/imports";
+import { onMounted, ref, useDirectusItems, watch, useHead } from "../.nuxt/imports";
 
 const params = useUrlSearchParams("history");
 const search = ref(params?.search?.toString() ?? "");
 const { getItems } = useDirectusItems();
 const isLoading = ref(false);
 const list = ref<IProduct[]>([]);
+
+useHead({
+  title: 'Поиск'
+})
 
 watch(search, (val) => {
 	params.search = val;

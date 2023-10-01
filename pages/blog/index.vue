@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import PageHeader from '~/components/page/Header.vue'
-import {markRaw, ref, useAppConfig, useDirectusItems, watchEffect} from "../../.nuxt/imports";
+import {markRaw, ref, useAppConfig, useDirectusItems, watchEffect, useHead} from "../../.nuxt/imports";
 import {IBreadCrumb} from "../types/common";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
 import {IIdeaItem} from "../types/ideas";
@@ -9,6 +9,9 @@ import UiPagination from "~/components/ui/UiPagination.vue";
 import IdeasBlockCard from "~/components/blocks/ideas/IdeasBlockCard.vue";
 import {useBlogStore} from "../../store/blog.store";
 
+useHead({
+  title: 'Идеи и тренды'
+})
 const breadCrumbs = markRaw<IBreadCrumb[]>([{
   title: 'Главная',
   path: '/'

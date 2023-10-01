@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {useDirectusItems} from "../../.nuxt/imports";
+import {useDirectusItems, useHead} from "../../.nuxt/imports";
 import {useAsyncData} from "~/.nuxt/imports";
 import HeaderBlock from "../../components/blocks/HeaderBlock.vue";
 import {ICustomerPageFull} from "../../types/common";
@@ -19,6 +19,10 @@ const {data: page} = await useAsyncData(() => props.id ? getItemById<ICustomerPa
 	collection: 'navBarCustomerPage',
 	id: props.id
 }) : null)
+
+useHead({
+	title: page.value?.title ?? ''
+})
 </script>
 
 <template>

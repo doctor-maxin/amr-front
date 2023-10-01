@@ -10,14 +10,14 @@ import { createError } from "@directus/errors";
 import { createBitrixLead } from "~/server/utils/bitrix.contacts";
 
 export default defineEventHandler(async (event) => {
-	const client = createDirectus(process.env.DIRECTUS_URL)
+	const client = createDirectus("http://localhost:8055")
 		.with(rest())
 		.with(staticToken(process.env.DIRECTUS_TOKEN));
 
-	const userClient = createDirectus(process.env.DIRECTUS_URL).with(
+	const userClient = createDirectus("http://localhost:8055").with(
 		graphql({
 			credentials: "include",
-		})
+		}),
 	);
 
 	const body = await readMultipartFormData(event);
@@ -46,14 +46,16 @@ export default defineEventHandler(async (event) => {
 			data.file = file.id;
 		}
 		console.log(data);
-		const productsPayload = []
-		if (data.product) productsPayload.push({
-			products_id: data.product.id
-		})
-		const variantPayload = []
-		if (data.variant) variantPayload.push({
-			variants_id: data.variant
-		})
+		const productsPayload = [];
+		if (data.product)
+			productsPayload.push({
+				products_id: data.product.id,
+			});
+		const variantPayload = [];
+		if (data.variant)
+			variantPayload.push({
+				variants_id: data.variant,
+			});
 		const req = await userClient.query(
 			`
 				
@@ -71,10 +73,10 @@ export default defineEventHandler(async (event) => {
 				comment: data.comment,
 				file: data.file,
 				variant: variantPayload,
-				products: productsPayload
-			}
+				products: productsPayload,
+			},
 		);
-
+		console.log(req);
 		createBitrixLead(data, query);
 		if (req.create_requests_item.id) return req.create_requests_item;
 	} catch (err: any) {

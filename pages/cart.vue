@@ -2,13 +2,17 @@
 import PageHeader from '~/components/page/Header.vue';
 import {IBreadCrumb, ILink} from "~/types/common";
 import CartAside from "~/components/cart/CartAside.vue";
-import {markRaw, reactive, ref, useDirectusItems, useForm, useRouter, watchEffect} from "../.nuxt/imports";
+import {markRaw, useHead, ref, useDirectusItems, useForm, useRouter, watchEffect} from "../.nuxt/imports";
 import CartList from "../components/cart/CartList.vue";
 import {CartPopulatedItem} from "../types/cart";
 import {useCartStore} from "../store/cart.store";
 import {IProduct} from "../types/product";
 import {storeToRefs} from "pinia";
 import UiButton from "../components/ui/UiButton.vue";
+
+useHead({
+  title: 'Корзина'
+})
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([{
 	title: 'Корзина',
