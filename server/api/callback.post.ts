@@ -42,8 +42,12 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		if (hasFile) {
-			const file = await client.request(uploadFiles(form));
-			data.file = file.id;
+			const fileUploadResult = await client.request(uploadFiles(form));
+			if (fileUploadResult?.id) {
+				data.file = fileUploadResult.id;
+				data.fileName = fileUploadResult.filename_download;
+			}
+			console.log(data.fileName);
 		}
 		console.log(data);
 		const productsPayload = [];
@@ -56,17 +60,8 @@ export default defineEventHandler(async (event) => {
 			variantPayload.push({
 				variants_id: data.variant,
 			});
-		const req = await userClient.query(
-			`
-				
-			mutation CreateReqItem($name: String, $phone: String, $type: String, $comment: String, $file: String, $products: [create_requests_products_input], $variant: [create_requests_variants_input]) {
-				create_requests_item(data: {name: $name, phone: $phone, type: $type, comment: $comment, file: $file, variant: $variant, products: $products}) {
-					id
-					status
-				}
-			}
-		`,
-			{
+		const req = await client.request(
+			createItem("requests", {
 				name: data.name,
 				phone: data.phone,
 				type: data.type,
@@ -74,11 +69,15 @@ export default defineEventHandler(async (event) => {
 				file: data.file,
 				variant: variantPayload,
 				products: productsPayload,
-			},
+			}),
 		);
-		console.log(req);
+		console.log("[directusCreaterequest]", req);
 		createBitrixLead(data, query);
-		if (req.create_requests_item.id) return req.create_requests_item;
+
+		return {
+			id: req.id,
+			status: req.status,
+		};
 	} catch (err: any) {
 		if (err.errors) {
 			console.dir(err.errors, {

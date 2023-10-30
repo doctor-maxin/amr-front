@@ -29,7 +29,7 @@ body {
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1025px) {
     html {
         font-size: 18px;
     }
@@ -62,6 +62,9 @@ body {
 
     .card {
         @apply lg:px-[2.75rem] lg:py-[2.125rem] p-6 rounded-[1.125rem] bg-system-gray-500;
+    }
+    .container {
+        @apply mx-auto max-w-[110rem];
     }
 }
 

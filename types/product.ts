@@ -3,14 +3,26 @@ export type IVariant = {
 	color: string;
 	id: string;
 	type: IVariantType;
+	name: string;
 	image: undefined;
-	productId: [number];
+	images: {
+		directus_files_id: string;
+		id?: number;
+		products_id?: string;
+	}[];
+	productId: number;
 } | {
 	id: string;
+	name: string;
 	color: undefined;
+	images: {
+		directus_files_id: string;
+		id?: number;
+		products_id?: string;
+	}[];
 	type: IVariantType;
 	image: string;
-	productId: [number];
+	productId: number;
 }
 export type IProduct = {
 	catalogId: string;
@@ -47,3 +59,5 @@ export type IProductPicked = Pick<
 	IProduct,
 	"handle" | "id" | "name" | "price" | "images" | "count" | "canNotBye"
 >;
+
+export type ICatalogProduct = Pick<IProduct, 'id' | 'handle' | 'name' | 'images' | 'price' | 'canNotBye' | 'count' | 'variants'>

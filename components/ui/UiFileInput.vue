@@ -15,7 +15,7 @@ const [state, send] = useMachine(
 	fileUpload.machine({
 		id: "uiFileInput",
 		maxFiles: 1,
-		maxFileSize: 1024 * 1024 * 10,
+		maxFileSize: 1025 * 1025 * 10,
 		name: props.name,
 		onFilesChange: (details) => {
 			if (details.acceptedFiles?.length)
@@ -30,40 +30,26 @@ const api = computed(() =>
 );
 </script>
 <template>
-	<label
-		class="relative file-input w-full ring-accent-100"
-		v-bind="api.rootProps"
-		:class="{
-			ring: api.isDragging,
-		}"
-	>
-		<span
-			v-bind="api.dropzoneProps"
-			v-if="api.files.length === 0"
-			class="flex justify-between items-center cursor-pointer"
-		>
+	<label class="relative file-input w-full ring-accent-100" v-bind="api.rootProps" :class="{
+		ring: api.isDragging,
+	}">
+		<span v-bind="api.dropzoneProps" v-if="api.files.length === 0"
+			class="flex justify-between items-center cursor-pointer">
 			<input v-bind="api.hiddenInputProps" />
-			<button
-				class="font-semibold text-system-gray-900"
-				v-bind="api.triggerProps"
-			>
+			<button class="font-semibold text-system-gray-900" v-bind="api.triggerProps">
 				{{ api.isDragging ? "Отпустите файл" : placeholder }}
 			</button>
 			<svgo-file-upload filled class="text-2xl" />
 		</span>
-		<li
-			v-if="api.files.length"
-			v-for="file in api.files"
-			:key="file.name"
-			class="flex justify-between items-center"
-		>
+		<li v-if="api.files.length" v-for="file in api.files" :key="file.name" class="flex justify-between items-center">
 			<span class="font-semibold line-clamp-1 text-system-gray-900">{{
 				file.name
 			}}</span>
 			<button v-bind="api.getDeleteTriggerProps({ file })">
 				<svgo-close class="text-2xl" filled />
-			</button></li
-	></label>
+			</button>
+		</li>
+	</label>
 </template>
 <style scoped lang="scss">
 .file-input {

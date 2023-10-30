@@ -214,7 +214,7 @@ export type IBlock =
 export type ICustomerPageFull = ICustomerPage & {
 	blocks: {
 		time: string;
-		blocks: IBlock[];
+		blocks: IImageBlock[];
 		version: string;
 	};
 };

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import {Swiper, SwiperSlide} from 'swiper/vue'
-import {shallowRef} from '~/.nuxt/imports';
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { shallowRef } from '~/.nuxt/imports';
 import 'swiper/css';
 import IdeasBlockCard from "~/components/blocks/ideas/IdeasBlockCard.vue";
 import UiLink from "~/components/ui/UiLink.vue";
-import {IIdeaItem} from "~/types/ideas";
+import { IIdeaItem } from "~/types/ideas";
 
 
 defineProps<{
@@ -27,7 +27,7 @@ const breakpoints = shallowRef({
     slidesPerView: 2.5,
     spaceBetween: 20
   },
-  1024: {
+  1025: {
     slidesPerView: 3,
     spaceBetween: 30
   },
@@ -36,21 +36,19 @@ const breakpoints = shallowRef({
 </script>
 
 <template>
-  <section class="px-4 lg:px-[4.37rem]" v-if="list?.length">
+  <section class="px-4 container lg:px-[4.37rem]" v-if="list?.length">
     <h4 v-if="subheader" class="subhead text-center lg:text-left">{{ subheader }}</h4>
     <div class="flex items-end mb-7 lg:mb-[2.5rem] lg:justify-between justify-center">
       <h2 class="head xl:flex lg:px-0 max-w-[28rem] lg:text-left">{{ title }}</h2>
-      <UiLink v-if="!hideBlog" class="hidden lg:flex" title="Блог" to="/blog" variant="filled"/>
+      <UiLink v-if="!hideBlog" class="hidden lg:flex" title="Блог" to="/blog" variant="filled" />
     </div>
     <div>
-      <Swiper :breakpoints="breakpoints"
-      >
+      <Swiper :breakpoints="breakpoints">
         <SwiperSlide v-for="item of list" :key="item.id">
-          <IdeasBlockCard :item="item"/>
+          <IdeasBlockCard :item="item" />
         </SwiperSlide>
       </Swiper>
     </div>
   </section>
 </template>
-<style scoped>
-</style>
+<style scoped></style>

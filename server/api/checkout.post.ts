@@ -125,6 +125,9 @@ export default defineEventHandler(async (event) => {
 			};
 		}
 	} catch (err: any) {
-		console.log("Error on bitrix", err.errors);
+		if (err.errors) console.log("Error on bitrix", err.errors);
+		else console.dir(err, {
+			depth: 10
+		})
 	}
 });

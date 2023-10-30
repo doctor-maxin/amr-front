@@ -42,6 +42,7 @@ export default defineNuxtConfig({
 			"@nuxt/image",
 			{
 				inject: true,
+				format: ['webp', 'png'],
 				directus: {
 					baseURL: `${process.env.DIRECTUS_URL}/assets/`,
 				},

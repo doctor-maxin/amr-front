@@ -65,65 +65,28 @@ const sendForm = handleSubmit(async (values) => {
 <template>
 	<ClientOnly>
 		<Transition name="fade">
-			<div
-				v-if="api.isOpen"
-				v-bind="api.backdropProps"
-				class="fixed overscroll-contain top-0 h-[100dvh] w-screen items-end flex lg:items-center justify-center left-0 z-30 backdrop-brightness-50"
-			>
-				<div
-					v-bind="api.containerProps"
-					class="bg-white w-screen relative lg:h-screen max-h-[90vh] max-w-[36rem] lg:max-h-[34.375rem] rounded-t-[1rem] lg:rounded-[2rem] px-4 py-7 lg:p-9"
-				>
-					<form
-						v-if="product"
-						class="flex flex-col gap-5"
-						@submit.prevent="sendForm"
-					>
-						<h2
-							class="text-[1.375rem] lg:text-2xl text-system-black-950 font-semibold mb-3 text-center"
-						>
-							Купить {{ product.name }}
+			<div v-if="api.isOpen" v-bind="api.backdropProps"
+				class="fixed overscroll-contain top-0 h-[100dvh] w-screen items-end flex lg:items-center justify-center left-0 z-30 backdrop-brightness-50">
+				<div v-bind="api.containerProps"
+					class="bg-white w-screen relative lg:h-screen max-h-[90vh] max-w-[36rem] lg:max-h-[34.375rem] rounded-t-[1rem] lg:rounded-[2rem] px-4 py-7 lg:p-9">
+					<form v-if="product" class="flex flex-col gap-5" @submit.prevent="sendForm">
+						<h2 class="text-[1.375rem] lg:text-2xl text-system-black-950 font-semibold mb-3 text-center">
+							Заказть расчет {{ product.name }}
 						</h2>
-						<UiInput
-							name="name"
-							autocomplete="name"
-							hide-error
-							placeholder="Имя"
-							class-name="w-full"
-						/>
+						<UiInput name="name" autocomplete="name" hide-error placeholder="Имя" class-name="w-full" />
 						<input type="text" hidden name="variant">
-						<UiInput
-							autocomplete="tel"
-							hide-error
-							name="phone"
-							placeholder="Телефон"
-							class-name="w-full"
-							type="tel"
-						/>
-						<UiInput
-							hide-error
-							name="comment"
-							placeholder="Комментарий"
-							class-name="w-full"
-						/>
+						<UiInput autocomplete="tel" hide-error name="phone" placeholder="Телефон" class-name="w-full"
+							type="tel" />
+						<UiInput hide-error name="comment" placeholder="Комментарий" class-name="w-full" />
 						<div class="w-full">
-							<UiButton
-								type="submit"
-								:disabled="isSubmitting"
-								title="Отправить"
-								variant="dark"
-								class="w-full"
-							/>
-							<FormHelperLink
-								class="mt-[0.6rem] block w-full lg:mt-[0.8rem]"
-							/>
+							<UiButton type="submit" :disabled="isSubmitting" title="Отправить" variant="dark"
+								class="w-full" />
+							<FormHelperLink class="mt-[0.6rem] block w-full lg:mt-[0.8rem]" />
 						</div>
 					</form>
 
-					<button
-						class="text-white absolute xl:-right-8 -top-10 xl:-top-8 right-3 z-10"
-						v-bind="api.closeTriggerProps"
-					>
+					<button class="text-white absolute xl:-right-8 -top-10 xl:-top-8 right-3 z-10"
+						v-bind="api.closeTriggerProps">
 						<svgo-close filled class="text-4xl" />
 					</button>
 				</div>

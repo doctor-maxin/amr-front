@@ -31,7 +31,8 @@ router.post(
 				statusMessage: "Не указан номер телефона",
 			});
 		console.log("sign_in resuest");
-		const response = await client.call.send({ to: phoneNumber });
+		const code = Date.now().toString().slice(-4)
+		const response = await client.sms.send({ to: phoneNumber, txt: 'Ваш код: ' + code });
 		console.log("response", response);
 		const hasUser = await directusClient.request(
 			readUsers({
@@ -43,12 +44,13 @@ router.post(
 				fields: ["id", "email"],
 			}),
 		);
+		console.log('hasUser', hasUser)
 		if (hasUser.length) {
 			const email = hasUser[0].email
 				? hasUser[0].email
 				: `avtorm-${Date.now()}@examile.com`;
 			const payload = {
-				password: response.code,
+				password: code,
 				email,
 			};
 			await directusClient.request(updateUser(hasUser[0].id, payload));
@@ -58,7 +60,7 @@ router.post(
 		} else {
 			const user = await directusClient.request(
 				createUser({
-					password: response.code,
+					password: code,
 					phone: phoneNumber,
 					email: `avtorm-${Date.now()}@examile.com`,
 				}),

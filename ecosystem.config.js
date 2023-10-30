@@ -19,6 +19,8 @@ module.exports = {
 					"https://obraztsovo.bitrix24.ru/rest/657/pqm67mkyiob30tg8",
 				NITRO_HOST: '127.0.0.1',
 				NITRO_PRESET: 'node_cluster',
+				GREEN_SMS_USER: 'avtor',
+				GREEN_SMS_PASS: 'avtor2023'
 				// NITRO_SSL_CERT: '/var/www/httpd-cert/avtorm.ru_2023-07-29-22-43_32.crt',
 				// NITRO_SSL_KEY: '/var/www/httpd-cert/avtorm.ru_2023-07-29-22-43_32.key',
 			},

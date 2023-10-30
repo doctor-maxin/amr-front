@@ -162,7 +162,7 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 							>
 						</div>
 						<div class="address-block">
-							<span class="address-header">Поддержка</span>
+							<span class="address-header">Контакты</span>
 							<EmailLink
 								:email="settings?.Email"
 								class="!font-medium text-[1.125rem]"

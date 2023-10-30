@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {ITableBlock} from "../../types/common";
-import {computed} from "../../.nuxt/imports";
+import { ITableBlock } from "../../types/common";
+import { computed } from "../../.nuxt/imports";
 
 const props = defineProps<{
 	block: ITableBlock
@@ -12,19 +12,20 @@ const tbodyRows = computed(() => props.block.data.withHeadings ? props.block.dat
 <template>
 	<div class=" mb-4 lg:mb-[2.635rem] overflow-x-hidden">
 		<table :class="{
-		'with-heading': block.data.withHeadings}" class="text-system-black-900">
+			'with-heading': block.data.withHeadings
+		}" class="text-system-black-900">
 			<thead>
-			<tr v-if="block.data.withHeadings">
-				<th v-for="item of block.data.content[0]">
-					{{ item }}
-				</th>
-			</tr>
+				<tr v-if="block.data.withHeadings">
+					<th v-for="item of block.data.content[0]">
+						{{ item }}
+					</th>
+				</tr>
 			</thead>
 			<tbody>
-			<tr v-for="(row, index) of tbodyRows" :key="'row-' + index">
-				<td v-for="(col, index) of row" :key="'col-' + col" v-html="col">
-				</td>
-			</tr>
+				<tr v-for="(row, index) of tbodyRows" :key="'row-' + index">
+					<td v-for="(col, index) of row" :key="'col-' + col" v-html="col">
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -70,10 +71,11 @@ table {
 	}
 }
 
-table th, table td {
+table th,
+table td {
 	padding: 0.75rem 1.5rem;
 
-	@media (min-width: 1024px) {
+	@media (min-width: 1025px) {
 		padding: 1.25rem 2.75rem 1.195rem;
 	}
 }

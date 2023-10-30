@@ -33,6 +33,7 @@ watchEffect(async () => {
 					"name",
 					"handle",
 					"price",
+					'canNotBye',
 					"images.directus_files_id",
 					"id",
 					"count",

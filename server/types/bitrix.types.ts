@@ -4,8 +4,10 @@ export type ILeadCreatePayload = {
 	name: string;
 	phone: string;
 	comment?: string;
+	variant?: string;
 	type?: string;
 	product?: IProduct;
+	file?: Buffer;
 };
 
 export type IUTMPayload = {

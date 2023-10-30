@@ -1,6 +1,6 @@
 import resolveConfig from 'tailwindcss/resolveConfig';
 import * as tailwindConfig from '~/tailwind.config.js';
-import {computed, onMounted, onUnmounted, ref} from '~/.nuxt/imports'
+import { computed, onMounted, onUnmounted, ref } from '~/.nuxt/imports'
 
 export function useDeviceWidth() {
     let w = typeof window !== 'undefined' ? window : undefined;
@@ -27,10 +27,10 @@ export function useDeviceWidth() {
         let tablet = Number(
             fullConfig.theme?.screens
                 ? fullConfig.theme.screens['lg'].replace('px', '')
-                : 1024
+                : 1025
         );
         return windowWidth.value >= 0 && windowWidth.value < tablet;
     });
 
-    return {isMobile, isTablet};
+    return { isMobile, isTablet };
 }

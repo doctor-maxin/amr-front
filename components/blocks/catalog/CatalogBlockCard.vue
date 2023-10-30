@@ -17,9 +17,13 @@ const getItemImage = (item: any): string => {
 	<div class="rounded-[1.25rem] overflow-hidden">
 		<nuxt-link :to="`/catalog${item.handle ?? ''}`">
 			<NuxtImg
+				placeholder
+				loading="lazy"
+				format="webp"
+				sizes="100vw sm:350px lg:670px"
 				provider="directus"
 				:src="getItemImage(item)"
-				class="aspect-[422/648] w-full grayscale-[50%] object-cover"
+				class="aspect-[422/648] w-full object-cover"
 			/>
 		</nuxt-link>
 		<div class="absolute bottom-3 lg:bottom-5 w-full px-3 lg:px-5">

@@ -41,7 +41,7 @@ const hasInCart = computed(() => {
 
 <template>
 	<div
-		class="fixed z-10 w-full left-0 bottom-4 px-4 lg:static lg:px-0"
+		class="fixed z-10 w-full left-0 bottom-4 px-4 lg:static lg:px-0 lg:sticky lg:bottom-[4rem]"
 		itemprop="offers"
 		itemscope
 		itemtype="http://schema.org/Offer"
@@ -106,9 +106,10 @@ const hasInCart = computed(() => {
 				v-if="product.canNotBye"
 				type="button"
 				@click="useEvent('open:product-form', product)"
-				class="rounded-full lg:gap-[0.88rem]  border border-system-black-950 bg-system-black-950 flex items-center justify-center lg:w-auto lg:h-[4rem] h-[3.25rem] text-white lg:px-6"
+				class="rounded-full px-5 lg:gap-[0.88rem] border border-system-black-950 bg-system-black-950 flex items-center justify-center lg:w-auto lg:h-[4rem] h-[3.25rem] text-white lg:px-6"
 			>
-				<span class="block font-medium lg:font-semibold text-white">
+				<svgo-cart class="text-2xl" filled />
+				<span class="block hidden lg:block font-medium lg:font-semibold text-white">
 					Оформить заказ
 				</span>
 			</button>

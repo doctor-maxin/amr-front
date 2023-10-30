@@ -20,7 +20,7 @@ const route = useRoute();
 const handle = computed(() => route.params.handle);
 const { getItems } = useDirectusItems();
 
-const { data } = useAsyncData(() =>
+const { data } = await useAsyncData(() =>
 	getItems<IProductWithCategory>({
 		collection: "products",
 		params: {
@@ -35,17 +35,18 @@ const { data } = useAsyncData(() =>
 				"categoryId.handle",
 				"categoryId.id",
 				"variants.*",
+				"variants.images.directus_files_id",
 				"optionsValues.optionValues_id.value",
 				"optionsValues.optionValues_id.parentId.name",
 			],
 		},
-	})
+	}),
 );
 const product = computed<IProductWithCategory | null>(() =>
-	data.value?.length ? data.value[0] : null
+	data.value?.length ? data.value[0] : null,
 );
 const { data: categories } = useNuxtData<ICategory[]>("categories");
-const activeVariants = ref<IVariant | null>(null)
+const activeVariants = ref<IVariant | null>(null);
 
 const breadCrumbs = computed<IBreadCrumb[]>(() => {
 	const array = [
@@ -59,8 +60,8 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 		for (const path of paths) {
 			if (!path) continue;
 
-			const category = categories.value.find((item) =>
-				item.handle?.endsWith(path)
+			const category = categories.value.find(
+				(item) => item.handle?.endsWith(path),
 			);
 			if (!category) continue;
 			array.push({
@@ -73,22 +74,37 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 });
 
 useHead({
-	title: product.value?.name ?? 'Детальная карточка товара'
-})
+	title: product.value?.name ?? "Детальная карточка товара",
+});
 
-useListen('select:variant', (variant: IVariant) => {
+useListen("select:variant", (variant: IVariant) => {
 	activeVariants.value = variant;
-})
+
+	useHead({
+		title: variant.name,
+	});
+});
+
+const productImages = computed(() => {
+	if (activeVariants.value?.images?.length) {
+		return activeVariants.value.images;
+	}
+	return product.value?.images ? product.value.images : [];
+});
 </script>
 
 <template>
 	<div class="flex-1" itemscope itemtype="http://schema.org/Product">
 		<div
 			v-if="product"
-			class="grid w-full pb-[2.38rem] lg:pb-[6.25rem] grid-cols-1 lg:grid-cols-[minmax(0,_1fr)_2fr] xl:grid-cols-[minmax(0,_1fr)_1.5fr] 2xl:grid-cols-[minmax(0,_1fr)_1fr]"
+			class="grid w-full pb-[2.38rem] lg:pb-[6.25rem] grid-cols-1 lg:grid-cols-2"
 		>
-			<ProductSlider :list="product.images" />
-			<ProductInfo :bread-crumbs="breadCrumbs" :product="product" />
+			<ProductSlider :list="productImages" />
+			<ProductInfo
+				:variant="activeVariants"
+				:bread-crumbs="breadCrumbs"
+				:product="product"
+			/>
 		</div>
 		<div>
 			<ProductProjects :product-id="product?.id" />

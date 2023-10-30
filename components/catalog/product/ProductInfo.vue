@@ -2,13 +2,14 @@
 import { ref } from "../../../.nuxt/imports";
 import BreadCrumbs from "../../common/BreadCrumbs.vue";
 import { IBreadCrumb } from "../../../types/common";
-import { IProduct } from "../../../types/product";
+import { IProduct, IVariant } from "../../../types/product";
 import ProductInfoDescription from "./info/ProductInfoDescription.vue";
 import ProductInfoProperties from "./info/ProductInfoProperties.vue";
 import ProductInfoActions from "./info/ProductInfoActions.vue";
 
 const props = defineProps<{
 	product: IProduct;
+	variant?: IVariant | null;
 	breadCrumbs: IBreadCrumb[];
 }>();
 
@@ -22,7 +23,7 @@ const activeTab = ref<Tabs>(Tabs.DESC);
 
 <template>
 	<div
-		class="bg-system-gray-500 flex flex-col lg:pl-[1.87rem] lg:pr-[4.375rem] lg:pb-[4rem] lg:pt-[1.81rem] px-4 pt-[1.635rem] pb-[3.25rem]"
+		class="h-full bg-system-gray-500 flex flex-col lg:pl-[1.87rem] lg:pr-[4.375rem] lg:pb-[4rem] lg:pt-[1.81rem] px-4 pt-[1.635rem] pb-[3.25rem]"
 	>
 		<div class="flex justify-between max-w-[54rem] gap-2 items-center">
 			<div
@@ -58,9 +59,14 @@ const activeTab = ref<Tabs>(Tabs.DESC);
 		<main class="flex flex-1 flex-col max-w-[54rem]">
 			<ProductInfoDescription
 				:product="product"
+				:variant="variant"
 				v-if="activeTab === Tabs.DESC"
 			/>
-			<ProductInfoProperties :product="product" v-else />
+			<ProductInfoProperties
+				:variant="variant"
+				:product="product"
+				v-else
+			/>
 			<ProductInfoActions :product="product" class="mt-auto" />
 		</main>
 	</div>

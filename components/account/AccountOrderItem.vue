@@ -17,9 +17,15 @@
 				<span>#{{ order?.number }}</span>
 			</div>
 			<div>{{ new Date(order.date_created).toLocaleDateString() }}</div>
-			<div class="hidden lg:block font-semibold text-lg">{{ order.items.reduce((acc, item) => acc += item.count, 0) }}</div>
-			<div class="hidden lg:block font-semibold text-lg">{{ toMoney(order.total) }}</div>
-			<div class="hidden lg:block font-semibold text-lg">{{ status }}</div>
+			<div class="hidden lg:block font-semibold text-lg">
+				{{ order.items.reduce((acc, item) => (acc += item.count), 0) }}
+			</div>
+			<div class="hidden lg:block font-semibold text-lg">
+				{{ toMoney(order.total) }}
+			</div>
+			<div class="hidden lg:block font-semibold text-lg">
+				{{ status }}
+			</div>
 		</div>
 		<div
 			v-if="!api.getItemContentProps({ value: order.id })?.hidden"
@@ -29,7 +35,9 @@
 			<div
 				class="rounded-[1.25rem] mt-7 lg:mt-12 bg-system-gray p-6 lg:px-14 flex flex-col gap-4 lg:grid lg:grid-cols-5"
 			>
-				<div class="text-sm lg:text-base font-semibold flex flex-col gap-2 lg:gap-8 lg:col-span-2 lg:pr-4">
+				<div
+					class="text-sm lg:text-base font-semibold flex flex-col gap-2 lg:gap-8 lg:col-span-2 lg:pr-4"
+				>
 					<span class="text-system-black-950 text-opacity-50"
 						>Адрес доставки</span
 					>
@@ -37,7 +45,9 @@
 						{{ getOrderAddress }}
 					</span>
 				</div>
-				<div class="text-sm font-semibold flex flex-col gap-2 lg:-ml-6 lg:gap-8 lg:text-base">
+				<div
+					class="text-sm font-semibold flex flex-col gap-2 lg:-ml-6 lg:gap-8 lg:text-base"
+				>
 					<span class="text-system-black-950 text-opacity-50"
 						>Способ доставки</span
 					>
@@ -49,8 +59,11 @@
 						}}
 					</span>
 				</div>
-				<div class="text-sm font-semibold flex flex-col gap-2 lg:gap-8 lg:pl-2 ">
-					<span class="text-system-black-950 text-opacity-50 lg:text-base"
+				<div
+					class="text-sm font-semibold flex flex-col gap-2 lg:gap-8 lg:pl-2"
+				>
+					<span
+						class="text-system-black-950 text-opacity-50 lg:text-base"
 						>Способ оплаты</span
 					>
 					<span class="lg:text-lg">
@@ -58,22 +71,29 @@
 					</span>
 				</div>
 			</div>
-			<div class="rounded-[1.25rem] bg-system-gray p-6 lg:pb-14 lg:px-14 flex flex-col gap-4 lg:gap-8">
-				<div class="text-sm font-semibold flex flex-col gap-4 lg:text-base lg:grid lg:grid-cols-5">
-					<span class="text-system-black-950 text-opacity-50 lg:col-span-3"
+			<div
+				class="rounded-[1.25rem] bg-system-gray p-6 lg:pb-14 lg:px-14 flex flex-col gap-4 lg:gap-8"
+			>
+				<div
+					class="text-sm font-semibold flex flex-col gap-4 lg:text-base lg:grid lg:grid-cols-5"
+				>
+					<span
+						class="text-system-black-950 text-opacity-50 lg:col-span-3"
 						>Товар</span
 					>
-					<span class="text-system-black-950 hidden lg:pl-2 lg:block text-opacity-50"
+					<span
+						class="text-system-black-950 hidden lg:pl-2 lg:block text-opacity-50"
 						>Количество</span
 					>
-					<span class="text-system-black-950 hidden lg:pl-9 lg:block text-opacity-50"
+					<span
+						class="text-system-black-950 hidden lg:pl-9 lg:block text-opacity-50"
 						>Сумма</span
 					>
 				</div>
 				<AccountOrderItemProducts :list="order.items" />
 			</div>
 			<div
-				class="bg-system-gray  lg:text-lg lg:grid grid-cols-2 rounded-[1.25rem] -mx-6 px-4 py-8 mt-7 -mb-7 lg:bg-transparent lg:mt-3.5 lg:mx-0 lg:pb-12 lg:px-14 lg:pt-0"
+				class="bg-system-gray lg:text-lg lg:grid grid-cols-2 rounded-[1.25rem] -mx-6 px-4 py-8 mt-7 -mb-7 lg:bg-transparent lg:mt-3.5 lg:mx-0 lg:pb-12 lg:px-14 lg:pt-0"
 			>
 				<div class="gap-3 flex flex-col lg:max-w-[29rem]">
 					<div class="flex justify-between">
@@ -82,7 +102,7 @@
 							toMoney(
 								order.total -
 									Number(order.deliveryPrice ?? 0) -
-									Number(order.discountedPrice ?? 0)
+									Number(order.discountedPrice ?? 0),
 							)
 						}}</span>
 					</div>
@@ -92,7 +112,7 @@
 							toMoney(order.deliveryPrice ?? 0)
 						}}</span>
 					</div>
-					<div class="flex justify-between ">
+					<div class="flex justify-between">
 						<span class="font-medium">Скидка</span>
 						<span class="font-semibold">{{
 							toMoney(order.discountedPrice ?? 0)
@@ -106,12 +126,12 @@
 					</div>
 				</div>
 				<div class="lg:grid grid-cols-2 hidden justify-between">
-						<span class="font-bold text-right">Итого</span>
-						<span class="font-semibold text-center">{{
-							toMoney(order.total)
-						}}</span>
-					</div>
+					<span class="font-bold text-right">Итого</span>
+					<span class="font-semibold text-center">{{
+						toMoney(order.total)
+					}}</span>
 				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -140,13 +160,18 @@ const openItem = () => {
 };
 
 const status = computed(() => {
-	if (props.order.status.toLowerCase() === 'draft') return 'Черновик'
-	if (props.order.status.toLowerCase() === 'waiting') return 'Ожидание оплаты'
-	if (props.order.status.toLowerCase() === 'confirmed') return 'Подтверждено'
-	if (props.order.status.toLowerCase() === 'authorized') return 'В обработке'
-	if (props.order.status.toLowerCase() === 'completed') return 'Завершено'
-	return 'Неизвестно'
-})
+	if (props.order.status.toLowerCase() === "new") return "Новый";
+	if (props.order.status.toLowerCase() === "preparation")
+		return "Подготовка бумаг";
+	if (props.order.status.toLowerCase() === "prepayment_invoice")
+		return "Отправка счета";
+	if (props.order.status.toLowerCase() === "executing")
+		return "В процессе выполнения";
+	if (props.order.status.toLowerCase() === "final_invoice")
+		return "Финальный счет";
+	if (props.order.status.toLowerCase() === "won") return "Завершено";
+	return "Отменено";
+});
 
 const { data: paymentTypes } = useNuxtData("paymenttypes");
 const { toMoney } = useCurrency();

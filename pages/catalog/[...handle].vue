@@ -20,7 +20,7 @@ import CatalogCategories from "../../components/catalog/CatalogCategories.vue";
 import UiPagination from "../../components/ui/UiPagination.vue";
 import CatalogFilters from "../../components/catalog/CatalogFilters.vue";
 import CatalogProducts from "../../components/catalog/CatalogProducts.vue";
-import { IProduct } from "../../types/product";
+import { IProduct, ICatalogProduct } from "../../types/product";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
 import { IFilterPayload } from "../../composables/useEventBus";
@@ -34,7 +34,6 @@ const pageHandle = computed(() =>
 		? "/" + route.params.handle.join("/")
 		: route.params.handle
 );
-console.log("pageHandle.value", pageHandle.value);
 const activeCategory = computed<ICategory | undefined>(() =>
 	categories.value?.find((item) => item.handle?.endsWith(pageHandle.value))
 );
@@ -45,7 +44,7 @@ useHead({
 const filters = ref<IFilters["filters"]>([]);
 const items = ref<ICategory[]>([]);
 const { getFiltersFromQuery } = useFiltersHelpers();
-const products = ref<IProduct[]>([]);
+const products = ref<ICatalogProduct[]>([]);
 const params = useUrlSearchParams<{
 	page: number;
 	sort?: string;
@@ -60,16 +59,6 @@ const params = useUrlSearchParams<{
 const totalCount = ref(0);
 const limit = shallowRef(15);
 
-watch(
-	() => route,
-	() => {
-		console.log(route.query);
-	},
-	{
-		deep: true,
-		immediate: true,
-	}
-);
 const reFetchData = async (withFilterCheck = true) => {
 	if (!activeCategory.value) return;
 	isLoading.value = true;
@@ -115,7 +104,7 @@ const reFetchData = async (withFilterCheck = true) => {
 		});
 	} else {
 		console.log("Fetch Catalog Products with", filter);
-		const result = await getItems<IProduct>({
+		const result = await getItems<ICatalogProduct>({
 			collection: "products",
 			params: {
 				filter,
@@ -131,12 +120,30 @@ const reFetchData = async (withFilterCheck = true) => {
 					"price",
 					"canNotBye",
 					"count",
+					'variants.id',
+					'variants.name',
+					'variants.images.directus_files_id',
 				],
 			},
 		});
 		if (typeof result.meta?.filter_count !== "undefined")
 			totalCount.value = result.meta.filter_count;
-		if (Array.isArray(result.data)) products.value = result.data;
+		if (Array.isArray(result.data)) {
+			products.value = []
+			for (const product of result.data) {
+				if (product.variants.length) {
+					for (const variant of product.variants) 
+					products.value.push({
+						...product,
+						name: variant.name,
+						images: variant.images?.length ? variant.images : product.images,
+						handle: product.handle + '?variantId=' + variant.id
+					})
+				} else {
+					products.value.push(product)
+				}
+			}
+		}
 	}
 
 	isLoading.value = false;

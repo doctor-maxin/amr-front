@@ -10,7 +10,7 @@ const [state, send] = useMachine(
 		id: "mainCatalog",
 		modal: true,
 		portalled: true,
-	})
+	}),
 );
 const api = computed(() => popover.connect(state.value, send, normalizeProps));
 const catalogBtn = ref(null);
@@ -25,7 +25,7 @@ watch(
 	() => api.value.isOpen,
 	() => {
 		if (api.value.isOpen) useEvent("open:menu", state.value.context.id);
-	}
+	},
 );
 
 defineExpose({ catalogBtn });
@@ -38,7 +38,8 @@ defineExpose({ catalogBtn });
 			v-bind="api.triggerProps"
 			class="hidden lg:flex gap-[0.88rem] h-full items-center px-9 bg-system-gray-600"
 		>
-			<CatalogIcon />
+			<CatalogIcon v-if="!api.isOpen" />
+			<svgo-close-arrow filled v-else />
 			<span class="font-semibold">Каталог</span>
 		</button>
 		<ClientOnly>

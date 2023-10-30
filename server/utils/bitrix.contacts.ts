@@ -9,16 +9,27 @@ export async function getBitrixContact(phone: string, email: string) {
 		type: "PHONE",
 		values: [phone],
 	});
-	if (result?.length) return result[0] as number;
+	console.log('result', result)
+	if (typeof result === "number") return result; else if (Array.isArray(result)) {
+		if (result.length) return result[0] as number;
+	} else if (typeof result === "object") return result.CONTACT[0] as number;
+
 	const { result: emailResult } = await client.call(
 		"crm.duplicate.findbycomm",
 		{
 			entity_type: "CONTACT",
 			type: "EMAIL",
 			values: [email],
-		}
+		},
 	);
-	if (emailResult?.length) return emailResult[0] as number;
+	if (typeof emailResult === "number") return emailResult;
+	else if (Array.isArray(emailResult)) {
+		if (emailResult?.length) {
+			return emailResult[0] as number;
+		}
+	} else if (typeof emailResult === "object")
+		return emailResult.CONTACT[0] as number;
+
 
 	return undefined;
 }
@@ -41,7 +52,7 @@ export async function createBitrixContact(data) {
 
 export async function createBitrixLead(
 	data: ILeadCreatePayload,
-	utms: IUTMPayload
+	utms: IUTMPayload,
 ) {
 	const client = useBitrixClient();
 	const phone = data.phone.replace(/[^\w\s]/gi, "");
@@ -55,7 +66,8 @@ export async function createBitrixLead(
 		type: "PHONE",
 		values: [phone],
 	});
-	if (!contactId || contactId.length === 0) {
+
+	if (!contactId || (Array.isArray(contactId) && contactId.length === 0)) {
 		const { result } = await client.contacts.create({
 			NAME: data.name,
 			PHONE: [
@@ -66,10 +78,20 @@ export async function createBitrixLead(
 			],
 		});
 		contactId = result;
+	} else if (typeof contactId !== "number") {
+		contactId = contactId.CONTACT[0];
 	}
-	console.log(contactId);
+
+	console.log("[contactId]", contactId);
 
 	if (data.product) {
+		let productName = data.product.name;
+		if (data.variant && data.product.variants?.length) {
+			const variant = data.product.variants.find(
+				(item) => item.id === data.variant,
+			);
+			if (variant?.name) productName = variant.name;
+		}
 		const lead = await client.leads.create({
 			NAME: data.name,
 			CONTACT_ID: contactId,
@@ -80,6 +102,8 @@ export async function createBitrixLead(
 					VALUE: phone,
 				},
 			],
+			STATUS: "NEW",
+			ASSIGNED_BY_ID: 27,
 			COMMENTS: data.comment,
 			UF_CRM_1693211893: reqType,
 			UTM_CONTENT: utms.utm_content,
@@ -88,11 +112,14 @@ export async function createBitrixLead(
 			UTM_MEDIUM: utms.utm_medium,
 			UTM_SOURCE: utms.utm_source,
 		});
+		await client.leads.update(lead.result.toString(), {
+			STATUS_ID: "NEW",
+		});
 		client.call("crm.lead.productrows.set", {
 			id: lead.result,
 			rows: [
 				{
-					PRODUCT_NAME: data.product.name,
+					PRODUCT_NAME: productName,
 					PRICE: data.product.price,
 					QUANTITY: data.product.count,
 				},
@@ -101,23 +128,34 @@ export async function createBitrixLead(
 		console.log("LEAD", lead);
 		return lead;
 	} else {
-		const lead = await client.leads.create({
-			NAME: data.name,
-			CONTACT_ID: contactId,
+		const payload = {
+			NAME: data.name ?? "",
+			CONTACT_ID: contactId.toString() ?? "",
 			TITLE: "Заявка с формы обратной связи",
 			PHONE: [
 				{
 					VALUE_TYPE: "WORK",
-					VALUE: phone,
+					VALUE: phone.toString(),
 				},
 			],
-			COMMENTS: data.comment,
-			UF_CRM_1693211893: reqType,
-			UTM_CONTENT: utms.utm_content,
-			UTM_TERM: utms.utm_term,
-			UTM_CAMPAIGN: utms.utm_campaign,
-			UTM_MEDIUM: utms.utm_medium,
-			UTM_SOURCE: utms.utm_source,
+			COMMENTS: data.comment ?? "",
+			ASSIGNED_BY_ID: 27,
+			STATUS: "NEW",
+			UF_CRM_1693211893: reqType ?? "",
+			UTM_CONTENT: utms.utm_content ?? "",
+			UTM_TERM: utms.utm_term ?? "",
+			UTM_CAMPAIGN: utms.utm_campaign ?? "",
+			UTM_MEDIUM: utms.utm_medium ?? "",
+			UTM_SOURCE: utms.utm_source ?? "",
+			UF_CRM_1696323959937: data.file
+				? `${process.env.DIRECTUS_URL}/assets/${data.file}/`
+				: "",
+		};
+
+		//@ts-ignore
+		const lead = await client.leads.create(payload);
+		await client.leads.update(lead.result.toString(), {
+			STATUS_ID: "NEW",
 		});
 		console.log("LEAD", lead);
 		return lead;
