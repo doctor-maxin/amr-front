@@ -12,7 +12,7 @@ defineProps<{
 		<div class="rounded-[1.25rem] relative overflow-hidden mb-4 lg:mb-9">
 			<nuxt-link :to="`/blog/${item.handle}`">
 				<NuxtImg width="600" loading="lazy" format="webp" sizes="90vw sm:600px" provider="directus"
-					:src="item.image" class="aspect-[573/333] grayscale-[50%] object-cover" />
+					:src="item.image" class="aspect-[573/333] object-cover" />
 			</nuxt-link>
 			<div class="absolute bottom-3 lg:bottom-5 w-full px-3 lg:px-5">
 				<div

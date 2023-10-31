@@ -71,7 +71,7 @@ const sendForm = handleSubmit(async (values) => {
 					class="bg-white w-screen relative lg:h-screen max-h-[90vh] max-w-[36rem] lg:max-h-[34.375rem] rounded-t-[1rem] lg:rounded-[2rem] px-4 py-7 lg:p-9">
 					<form v-if="product" class="flex flex-col gap-5" @submit.prevent="sendForm">
 						<h2 class="text-[1.375rem] lg:text-2xl text-system-black-950 font-semibold mb-3 text-center">
-							Заказть расчет {{ product.name }}
+							Заказать расчет {{ product.name }}
 						</h2>
 						<UiInput name="name" autocomplete="name" hide-error placeholder="Имя" class-name="w-full" />
 						<input type="text" hidden name="variant">

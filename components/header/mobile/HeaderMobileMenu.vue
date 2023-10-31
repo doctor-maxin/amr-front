@@ -80,7 +80,7 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 					<meta content="Контакты" itemprop="name" />
 				</li>
 				<li
-					v-for="page of pages.navBars"
+					v-for="page of pages?.navBars"
 					:key="page.id"
 					itemprop="itemListElement"
 					itemscope

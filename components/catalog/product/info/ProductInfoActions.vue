@@ -110,7 +110,7 @@ const hasInCart = computed(() => {
 			>
 				<svgo-cart class="text-2xl" filled />
 				<span class="block hidden lg:block font-medium lg:font-semibold text-white">
-					Оформить заказ
+					Заказать расчет
 				</span>
 			</button>
 		</div>

@@ -3,7 +3,16 @@ import {IBreadCrumb, ICustomerPage, ICustomerPages} from "../types/common";
 import HeaderPage from '../components/page/Header.vue'
 import {Swiper, SwiperSlide} from "swiper/vue";
 import 'swiper/css';
-import {computed, ref, useAsyncData, useDirectusItems, useRoute, useRouter, useHead} from "../.nuxt/imports";
+import {
+  computed,
+  ref,
+  useAsyncData,
+  useDirectusItems,
+  useRoute,
+  useRouter,
+  useHead,
+  watchEffect
+} from "../.nuxt/imports";
 
 const {getSingletonItem} = useDirectusItems()
 
@@ -43,12 +52,15 @@ const slideTo = (item: ICustomerPage, index: number) => {
 	if (swiper.value) swiper.value.slideTo(index)
 	router.push(item.handle)
 }
+watchEffect(() => {
+  if (route.path === '/pages' && activePage.value) router.push(activePage.value?.handle)
+})
 </script>
 
 <template>
 	<div class="flex-1">
 		<HeaderPage :bread-crumbs="breadCrumbs" :page-name="pages?.title ?? ''"/>
-		<main class="py-10 mx-auto lg:py-[6.25rem] px-4 lg:px-0 lg:max-w-[73.5rem]">
+		<main class="py-10 mx-auto lg:py-[4.25rem] px-4 lg:px-0 lg:max-w-[73.5rem]">
 			<ClientOnly>
 				<Swiper class="tabs" slides-per-view="auto" @swiper="setSwiper">
 					<SwiperSlide v-for="(item, index) in pages?.navBars" :key="item.id"

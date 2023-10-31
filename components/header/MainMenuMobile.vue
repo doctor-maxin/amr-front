@@ -12,7 +12,7 @@ defineProps<{
 }>();
 
 const [state, send] = useMachine(
-	tabs.machine({ id: "mobileSecondMenu", value: "menu" })
+	tabs.machine({ id: "mobileSecondMenu", value: "catalog" })
 );
 const tabsApi = computed(() => tabs.connect(state.value, send, normalizeProps));
 const tabList = markRaw([
@@ -35,11 +35,11 @@ const tabList = markRaw([
 			class="w-screen absolute mobile-menu overflow-hidden bg-system-gray-500 transition-opacity top-full bottom-auto z-20">
 			<div class="mobile-menu-content">
 				<div class="flex justify-center py-5 items-center gap-4">
-					<nuxt-link to="/sign_in" class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
+					<nuxt-link @click.native="useEvent('close-modals')" to="/sign_in" class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
 						<svgo-user class="text-[1.5rem]" filled />
 						<span class="font-semibold text-sm">Личный кабинет</span>
 					</nuxt-link>
-					<nuxt-link to="/favorites" class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
+					<nuxt-link @click.native="useEvent('close-modals')" to="/favorites" class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
 						<svgo-heart class="text-[1.5rem]" filled />
 						<span class="font-semibold text-sm">Избранное</span>
 					</nuxt-link>
@@ -47,7 +47,7 @@ const tabList = markRaw([
 				<div class="bg-white grid grid-cols-1 grid-rows-[auto_minmax(0,_1fr)] max-h-full w-full pt-4 px-4 pb-9 flex-1"
 					v-bind="tabsApi.rootProps">
 					<div v-bind="tabsApi.tablistProps"
-						class="bg-system-gray mb-5 rounded-[5rem] p-[0.315rem] overflow-hidden flex items-center">
+						class="bg-system-gray mb-5 rounded-[5rem] p-[0.315rem] flex-row-reverse overflow-hidden flex items-center">
 						<button v-for="item in tabList" v-bind="tabsApi.getTriggerProps({ value: item.id })" :key="item.id"
 							class="tab">
 							{{ item.label }}

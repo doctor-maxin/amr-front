@@ -1,17 +1,26 @@
 <script lang="ts" setup>
-import { IProduct } from "../../../types/product";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { Navigation } from "swiper/modules";
+import {IProduct} from "../../../types/product";
+import {Swiper, SwiperSlide} from "swiper/vue";
+import {Navigation} from "swiper/modules";
 import "swiper/css/navigation";
 import ProductSliderThumbs from "./ProductSliderThumbs.vue";
+import {Tabs, useProductStore} from "~/store/product.store";
+import {storeToRefs} from "pinia";
+import ProductConstructor from "~/components/catalog/product/ProductConstructor.vue";
 
 defineProps<{
 	list: IProduct["images"];
 }>();
+
+const productStore = useProductStore()
+const {activeTab, data} = storeToRefs(productStore)
 </script>
 
 <template>
-	<div class="w-full product-slider min-h-full bg-system-gray-500">
+  <div class="w-full product-slider min-h-full bg-system-gray-500" v-if="activeTab === Tabs.CONST && data?.file3D">
+      <ProductConstructor/>
+  </div>
+	<div v-else class="w-full product-slider min-h-full bg-system-gray-500">
 		<Swiper :modules="[Navigation]" navigation auto-height calculate-height rewind>
 			<template v-for="image of list" :key="image.directus_files_id">
 				<SwiperSlide>

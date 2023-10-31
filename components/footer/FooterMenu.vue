@@ -28,7 +28,8 @@ const { data: pages } = useNuxtData("customerPages");
 			</li>
 		</ul>
 		<ul>
-			<li>Покупателям</li>
+			<li>
+        <nuxt-link to="/pages">Покупателям</nuxt-link></li>
 			<li v-for="page of pages?.navBars">
 				<nuxt-link class="text-sm lg:text-base" :to="page.handle">{{
 					page.title

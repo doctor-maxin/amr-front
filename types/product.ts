@@ -46,6 +46,8 @@ export type IProduct = {
 		products_id?: string;
 	}[];
 	price: number;
+	have3DFile: boolean;
+	file3D: string;
 };
 
 export type IProductWithCategory = IProduct & {

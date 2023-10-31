@@ -11,15 +11,32 @@ export default defineNuxtConfig({
 		autoImport: true,
 	},
 	typescript: {
-		includeWorkspace: true,
+		tsConfig: {
+			compilerOptions: {
+				target: 'ESNext',
+				lib: ['DOM', 'ES2022'],
+				resolveJsonModule: true,
+				noImplicitAny: false
+			},
+			include: [
+				"index.d.ts",
+				"./composables/*.ts",
+				"~/types/*.ts",
+				"./components/*.vue",
+				"./pages/*.vue",
+				"./plugins/*.ts",
+				"./app.vue",
+				"./error.vue"
+			]
+		}
 	},
 	vite: {
 		server: {
-			hmr: {
-				protocol: "wss",
-				clientPort: 443,
-				path: "hmr/",
-			},
+			// hmr: {
+			// 	protocol: "wss",
+			// 	clientPort: 443,
+			// 	path: "hmr/",
+			// },
 		},
 	},
 	runtimeConfig: {

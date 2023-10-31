@@ -302,6 +302,8 @@ export type IHeroBlock = {
 	description: string;
 	linkHref?: string;
 	linkTitle?: string;
+	linkSecondHref?: string;
+	linkSecondTitle?: string;
 };
 
 export type IAdvantage = {

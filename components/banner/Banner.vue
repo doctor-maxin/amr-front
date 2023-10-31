@@ -75,6 +75,8 @@ const paginationOptions = {
 							</p>
 							<UiLink v-if="data?.linkHref" :title="data.linkTitle" :to="data.linkHref"
 								class="mt-12 lg:mt-9" />
+              <UiLink v-if="data?.linkSecondHref" :title="data.linkSecondTitle" :to="data.linkSecondHref"
+                      class="mt-12 lg:mt-9" />
 						</article>
 					</div>
 					<div ref="progressCircle"
@@ -95,7 +97,8 @@ const paginationOptions = {
 				<p class="text-[0.875rem] lg:text-base font-medium">
 					{{ data?.description }}
 				</p>
-				<UiLink v-if="data?.linkHref" :title="data.linkTitle" :to="data.linkHref" class="mt-12 lg:mt-9" />
+        <UiLink v-if="data?.linkHref" :title="data.linkTitle" :to="data.linkHref" class="mt-12 lg:mt-9" />
+        <UiLink v-if="data?.linkSecondHref" :title="data.linkSecondTitle" :to="data.linkSecondHref" class="mt-12 lg:mt-9" />
 			</article>
 		</div>
 	</div>

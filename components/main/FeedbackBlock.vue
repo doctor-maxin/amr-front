@@ -10,7 +10,7 @@ import {useEvent} from "../../composables/useEventBus";
 				<h3 class="mb-[1.125rem] text-[1.375rem] lg:text-[2.25rem]  font-bold leading-[140%] lg:mb-[0.875rem]">Создадим мебель по индивидуальному проекту</h3>
 				<p class="font-medium text-sm lg:text-base mb-7 lg:mb-14">От мечты к реальности. Конструируем, производим, устанавливаем. Не подстраивайтесь по каталоги
 					популярных фабрик, а создайте свою собственную прихожую, кухню или спальню</p>
-				<UiButton @click="useEvent('toFeedBack')" class="!border-accent-300 bg-accent-300" title-class="text-white" title="Оставить заявку"/>
+				<UiButton @click="useEvent('toFeedBack')" class="!border-accent-300 bg-accent-300" title-class="text-white" title="Заказать расчет"/>
 			</div>
 		</div>
 		<div class="relative">

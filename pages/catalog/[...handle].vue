@@ -131,7 +131,7 @@ const reFetchData = async (withFilterCheck = true) => {
 		if (Array.isArray(result.data)) {
 			products.value = []
 			for (const product of result.data) {
-				if (product.variants.length) {
+				if (product?.variants?.length) {
 					for (const variant of product.variants) 
 					products.value.push({
 						...product,

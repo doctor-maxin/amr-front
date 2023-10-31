@@ -163,7 +163,7 @@ const status = computed(() => {
 	if (props.order.status.toLowerCase() === "new") return "Новый";
 	if (props.order.status.toLowerCase() === "preparation")
 		return "Подготовка бумаг";
-	if (props.order.status.toLowerCase() === "prepayment_invoice")
+	if (props.order.status.toLowerCase() === "prepayment_invoic")
 		return "Отправка счета";
 	if (props.order.status.toLowerCase() === "executing")
 		return "В процессе выполнения";

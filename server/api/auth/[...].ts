@@ -32,8 +32,12 @@ router.post(
 			});
 		console.log("sign_in resuest");
 		const code = Date.now().toString().slice(-4)
-		const response = await client.sms.send({ to: phoneNumber, txt: 'Ваш код: ' + code });
-		console.log("response", response);
+		console.log('Generated code ', code)
+		client.sms.send({ to: phoneNumber, txt: 'Ваш код: ' + code }).then((response: any) => {
+			console.log("response", response);
+		}).catch((err: any) => {
+			console.error(err)
+		})
 		const hasUser = await directusClient.request(
 			readUsers({
 				filter: {

@@ -51,6 +51,7 @@ const signInConfirm = handleSubmit(async (values) => {
 			Не пришел код?
 			<button
 				type="button"
+        :disabled="timer"
 				@click="emit('resend')"
 				class="font-semibold disabled:text-system-gray-800"
 			>

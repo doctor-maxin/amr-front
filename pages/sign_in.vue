@@ -33,7 +33,7 @@ const onSignIn = (tel: string, em: string) => {
 
 const resendCode = async () => {
 	await useFetch("/api/auth/sign_in").post({
-		phoneNumber: phone,
+		phoneNumber: phone.value,
 	});
 	timer.value = window.setInterval(() => {
 		resendSeconds.value--;
