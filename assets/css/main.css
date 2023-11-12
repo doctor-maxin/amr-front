@@ -3,147 +3,108 @@
 @tailwind utilities;
 
 h1 {
-    font-family: "Montserrat", sans-serif;
+	font-family: "Montserrat", sans-serif;
 }
 
 body {
-    overscroll-behavior: contain;
-    position: relative;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
+	overscroll-behavior: contain;
+	position: relative;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
 }
 
 @media (max-width: 1520px) {
-    html {
-        font-size: 14px;
-    }
+	html {
+		font-size: 14px;
+	}
 }
 @media (max-width: 1440px) {
-    html {
-        font-size: 13px;
-    }
+	html {
+		font-size: 13px;
+	}
 }
 @media (max-width: 1280px) {
-    html {
-        font-size: 12px;
-    }
+	html {
+		font-size: 12px;
+	}
 }
 
 @media (max-width: 1025px) {
-    html {
-        font-size: 18px;
-    }
+	html {
+		font-size: 18px;
+	}
 }
 @media (max-width: 768px) {
-    html {
-        font-size: 16px;
-    }
+	html {
+		font-size: 16px;
+	}
 }
 
 @supports (font-variation-settings: "wdth" 115) {
-    h1 {
-        font-family: "Montserrat", sans-serif;
-        font-variation-settings: "wdth" 700;
-    }
+	h1 {
+		font-family: "Montserrat", sans-serif;
+		font-variation-settings: "wdth" 700;
+	}
 }
 
 @layer components {
-    .glass {
-        @apply backdrop-blur-[3.125rem] bg-system-gray bg-opacity-50;
-    }
+	.glass {
+		@apply backdrop-blur-[3.125rem] bg-system-gray bg-opacity-50;
+	}
 
-    .subhead {
-        @apply text-xs lg:text-sm font-bold text-system-gray-900 leading-[140%];
-    }
+	.subhead {
+		@apply text-xs lg:text-sm font-bold text-system-gray-900 leading-[140%];
+	}
 
-    .head {
-        @apply text-[1.375rem] lg:text-[2.25rem] leading-[140%] px-15 text-center text-system-black-900 font-bold
-    }
+	.head {
+		@apply text-[1.375rem] lg:text-[2.25rem] leading-[140%] px-15 text-center text-system-black-900 font-bold;
+	}
 
-    .card {
-        @apply lg:px-[2.75rem] lg:py-[2.125rem] p-6 rounded-[1.125rem] bg-system-gray-500;
-    }
-    .container {
-        @apply mx-auto max-w-[110rem];
-    }
+	.card {
+		@apply lg:px-[2.75rem] lg:py-[2.125rem] p-6 rounded-[1.125rem] bg-system-gray-500;
+	}
+	.container {
+		@apply mx-auto max-w-[110rem];
+	}
 }
 
 [type="search"]::-webkit-search-decoration {
-    display: none
+	display: none;
 }
 
 [type="search"]::-webkit-search-cancel-button {
-    display: none
+	display: none;
 }
 
 [type="search"]::-webkit-search-results-button {
-    display: none
+	display: none;
 }
 
 [type="search"]::-webkit-search-results-decoration {
-    display: none
+	display: none;
 }
 
 /* slide-fade */
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.5s ease;
+	transition: opacity 0.5s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-    opacity: 0;
+	opacity: 0;
 }
 
 .nuxt-loading-indicator {
-    height: 100vh !important;
-    width: 100vw !important;
-    transform: scaleX(1) !important;
+	height: 100vh !important;
+	width: 100vw !important;
+	transform: scaleX(1) !important;
 }
 
-/* TOASTIFY */
-:root {
-    --toastify-color-light: #fff;
-    --toastify-color-dark: #121212;
-    --toastify-color-info: #3498db;
-    --toastify-color-success: #07bc0c;
-    --toastify-color-warning: #f1c40f;
-    --toastify-color-error: #e74c3c;
-    --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+a:hover {
+	color: hsla(273, 66%, 56%, 1);
+}
 
-    --toastify-icon-color-info: var(--toastify-color-info);
-    --toastify-icon-color-success: var(--toastify-color-success);
-    --toastify-icon-color-warning: var(--toastify-color-warning);
-    --toastify-icon-color-error: var(--toastify-color-error);
-
-    --toastify-toast-width: 320px;
-    --toastify-toast-background: #fff;
-    --toastify-toast-min-height: 64px;
-    --toastify-toast-max-height: 800px;
-    --toastify-font-family: sans-serif;
-    --toastify-z-index: 9999;
-
-    --toastify-text-color-light: #757575;
-    --toastify-text-color-dark: #fff;
-
-    --toastify-text-color-info: #fff;
-    --toastify-text-color-success: #fff;
-    --toastify-text-color-warning: #fff;
-    --toastify-text-color-error: #fff;
-
-    --toastify-spinner-color: #616161;
-    --toastify-spinner-color-empty-area: #e0e0e0;
-
-    --toastify-color-progress-light: linear-gradient(to right,
-    #4cd964,
-    #5ac8fa,
-    #007aff,
-    #34aadc,
-    #5856d6,
-    #ff2d55);
---toastify-color-progress-dark: #bb86fc;
-    --toastify-color-progress-info: var(--toastify-color-info);
-    --toastify-color-progress-success: var(--toastify-color-success);
-    --toastify-color-progress-warning: var(--toastify-color-warning);
-    --toastify-color-progress-error: var(--toastify-color-error);
+a:hover.text-white svg {
+	color: white;
 }

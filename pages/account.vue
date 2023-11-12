@@ -27,41 +27,23 @@ const exit = async () => {
 
 <template>
 	<div>
-		<PageHeader
-			:bread-crumbs="[]"
-			:link="link"
-			page-name="Личный кабинет"
-		/>
+		<PageHeader :bread-crumbs="[]" :link="link" page-name="Личный кабинет" />
 		<main
-			class="px-4 pt-[2.375rem] pb-[4.375rem] mx-auto lg:pt-[4.5rem] lg:pb-[8.75rem] max-w-[92.375rem] flex flex-col gap-[1.75rem] lg:gap-[2.635rem]"
-		>
-			<div
-				class="flex justify-between rounded-[1.25rem] py-[1.56rem] bg-system-gray-500 px-[2.75rem]"
-			>
-				<div
-					class="gap-[1.12rem] text-system-black-900 flex lg:gap-[3.75rem] font-semibold"
-				>
-					<nuxt-link class="router-link" to="/account"
-						>Профиль</nuxt-link
-					>
-					<nuxt-link class="router-link" to="/account/orders"
-						>История заказов</nuxt-link
-					>
+			class="px-4 pt-[2.375rem] pb-[4.375rem] mx-auto lg:pt-[4.5rem] lg:pb-[8.75rem] max-w-[92.375rem] flex flex-col gap-[1.75rem] lg:gap-[2.635rem]">
+			<div class="flex justify-between rounded-[1.25rem] py-[1.56rem] bg-system-gray-500 px-[2.75rem]">
+				<div class="gap-[1.12rem] text-system-black-900 flex lg:gap-[3.75rem] font-semibold">
+					<nuxt-link class="router-link" to="/account">Профиль</nuxt-link>
+					<nuxt-link class="router-link" to="/account/orders">История заказов</nuxt-link>
 				</div>
-				<button
-					@click="logout"
-					class="lg:flex hidden gap-2 items-center font-semibold"
-					type="button"
-				>
+				<button @click="logout" class="lg:flex hidden gap-2 items-center font-semibold" type="button">
 					<svgo-exit class="text-[1.5rem]" filled />
 					<span class="">Выйти</span>
 				</button>
 			</div>
 			<nuxt-page />
-			<button
+			<button @click="logout"
 				class="flex w-fit mx-auto rounded-2xl lg:hidden gap-2 items-center font-semibold bg-system-gray-500 px-[0.62rem] py-[0.87rem]"
-				type="button"
-			>
+				type="button">
 				<svgo-exit class="text-[1.5rem]" filled />
 				<span class="">Выйти</span>
 			</button>
@@ -74,6 +56,7 @@ const exit = async () => {
 .router-link {
 	opacity: 0.5;
 }
+
 .router-link-exact-active {
 	opacity: 1;
 }

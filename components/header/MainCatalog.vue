@@ -50,6 +50,10 @@ const openLink = (item: ICategory) => {
 	router.push("/catalog" + item.handle);
 	// } else selectedCategory.value = item;
 };
+const selectCategory = (item: ICategory) => {
+	if (selectedCategory.value?.id !== item.id)
+		selectedCategory.value = item
+}
 </script>
 
 <template>
@@ -68,7 +72,7 @@ const openLink = (item: ICategory) => {
 							selectedCategory?.id === item.id,
 					}" :to="`/catalog${item.handle ?? ''}`" active-class="bg-system-gray-500"
 						class="rounded-[1.25rem] px-[2.25rem] py-[1.2rem] w-full cursor-pointer transition-colors hover:bg-system-gray-500"
-						@click.prevent="openLink(item)">
+						@click.prevent="openLink(item)" @mouseover="selectCategory(item)">
 						<span class="font-bold text-[1.5rem] text-system-black-900">{{ item.name }}</span>
 					</nuxt-link>
 				</template>
@@ -77,8 +81,8 @@ const openLink = (item: ICategory) => {
 				class="w-full max-h-full overflow-y-auto bg-system-gray-500 py-[6.3125rem] px-[11.25rem] grid items-start auto-rows-min grid-flow-row gap-4">
 				<template v-for="item of subCategories">
 					<nuxt-link @click.native="api.close()" :to="`/catalog${item.handle ?? ''}`"
-						class="main-catalog-link cursor-pointer hover:underline"><span
-							class="text-xl text-system-black-900 font-medium">{{ item.name }}</span></nuxt-link>
+						class="main-catalog-link text-system-black-900  cursor-pointer hover:text-accent-300"><span
+							class="text-xl font-medium">{{ item.name }}</span></nuxt-link>
 				</template>
 			</div>
 		</div>

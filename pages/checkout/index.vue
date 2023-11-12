@@ -65,23 +65,27 @@ const lines = ref<Map<string, CartPopulatedItem>>(new Map());
 const user = useDirectusUser();
 const appConfig = useAppConfig();
 const filters = computed(() => {
-	let payload = {
-		id: {
-			_in: "",
-		},
-	};
 	if (typeof productId === "string") {
-		payload.id._in = productId;
+		return {
+			id: {
+				_eq: productId
+			}
+		}
 	} else if (items.value?.length) {
-		payload.id._in = items.value.map((item) => item.id);
+		console.log(items.value)
+		return {
+			id: {
+				_in: items.value.map((item) => item.id)
+			}
+		}
 	}
-	return payload;
+	return null
 });
 
 const products = await getItems<IProduct>({
 	collection: "products",
 	params: {
-		filter: filters.value,
+		filter: filters.value ? filters.value : {},
 		fields: ["images.directus_files_id", "*"],
 	},
 });
@@ -180,9 +184,8 @@ const calcDeliveryPrice = async () => {
 	console.log("Calc started");
 	if (!window.ymaps) return;
 	if (!values.city || !values.street || !values.house) return;
-	const fromAddress = `${values.city ?? ""} ,${values.street ?? ""}, ${
-		values.house ?? ""
-	}`;
+	const fromAddress = `${values.city ?? ""} ,${values.street ?? ""}, ${values.house ?? ""
+		}`;
 
 	const route = await ymaps.route([fromAddress, appConfig.stockCoords]);
 	const km = parseInt(route.getLength()) / 1000;
@@ -201,44 +204,23 @@ const calcDeliveryPrice = async () => {
 </script>
 
 <template>
-	<PageHeader
-		:bread-crumbs="breadCrumbs"
-		:link="backLink"
-		page-name="Корзина"
-		progress
-	/>
-	<div
-		class="max-w-[92.375rem] lg:mx-auto pt-[2.375rem] pb-[1.56rem] lg:pb-[8.75rem] lg:pt-[4.62rem] flex-1"
-	>
-		<main
-			v-if="lines.size || productId"
-			class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex px-4 bg-white"
-		>
+	<PageHeader :bread-crumbs="breadCrumbs" :link="backLink" page-name="Корзина" progress />
+	<div class="max-w-[92.375rem] lg:mx-auto pt-[2.375rem] pb-[1.56rem] lg:pb-[8.75rem] lg:pt-[4.62rem] flex-1">
+		<main v-if="lines.size || productId"
+			class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex px-4 bg-white">
 			<div class="flex flex-1 w-screen max-w-full flex-col gap-7">
 				<CheckoutContacts />
 				<CheckoutDelivery />
 				<CheckoutPaymentTypes />
 			</div>
-			<CheckoutAside
-				:values="values"
-				:is-valid="meta.valid"
-				:lines="lines"
-				:set-field-error="setFieldError"
-			/>
+			<CheckoutAside :values="values" :is-valid="meta.valid" :lines="lines" :set-field-error="setFieldError" />
 		</main>
 		<main v-else class="flex items-center justify-center flex-col gap-10">
-			<div
-				class="text-system-black-900 text-center px-4 font-semibold text-2xl text-opacity-40"
-			>
+			<div class="text-system-black-900 text-center px-4 font-semibold text-2xl text-opacity-40">
 				В корзине ничего нет, давайте это исправим!
 			</div>
-			<UiButton
-				@click="router.push('/catalog')"
-				variant="dark"
-				title="Перейти в каталог"
-				class="w-full max-w-[22rem]"
-				title-class="!text-base"
-			/>
+			<UiButton @click="router.push('/catalog')" variant="dark" title="Перейти в каталог" class="w-full max-w-[22rem]"
+				title-class="!text-base" />
 		</main>
 	</div>
 </template>

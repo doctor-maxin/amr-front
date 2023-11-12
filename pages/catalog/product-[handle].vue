@@ -19,6 +19,7 @@ import { IBreadCrumb, ICategory } from "../../types/common";
 const route = useRoute();
 const handle = computed(() => route.params.handle);
 const { getItems } = useDirectusItems();
+const { getParentId, getCategoryChildIds } = useCategoriesHelper()
 
 const { data } = await useAsyncData(() =>
 	getItems<IProductWithCategory>({
@@ -91,29 +92,32 @@ const productImages = computed(() => {
 	}
 	return product.value?.images ? product.value.images : [];
 });
+
+const productSeemsCategegoryId = computed(() => {
+	if (!product.value) return ''
+	console.log('product.value.canNotBye', product.value.categoryId)
+	if (product.value.canNotBye && product.value.categoryId) {
+		const parentId = getParentId(product.value.categoryId?.id)
+		if (parentId) {
+			const ids = getCategoryChildIds(parentId)
+			return ids;
+		}
+	}
+	return product.value.categoryId?.id
+})
 </script>
 
 <template>
 	<div class="flex-1" itemscope itemtype="http://schema.org/Product">
-		<div
-			v-if="product"
-			class="grid w-full pb-[2.38rem] lg:pb-[6.25rem] grid-cols-1 lg:grid-cols-2"
-		>
+		<div v-if="product" class="grid w-full pb-[2.38rem] lg:pb-[6.25rem] grid-cols-1 lg:grid-cols-2">
 			<ProductSlider :list="productImages" />
-			<ProductInfo
-				:variant="activeVariants"
-				:bread-crumbs="breadCrumbs"
-				:product="product"
-			/>
+			<ProductInfo :variant="activeVariants" :bread-crumbs="breadCrumbs" :product="product" />
 		</div>
 		<div>
 			<ProductProjects :product-id="product?.id" />
 		</div>
 		<div>
-			<ProductSeems
-				:product-id="product?.id"
-				:category-id="product?.categoryId?.id"
-			/>
+			<ProductSeems :product-id="product?.id" :category-id="productSeemsCategegoryId" />
 		</div>
 	</div>
 </template>

@@ -8,6 +8,7 @@ import UiButton from "~/components/ui/UiButton.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import { useListen } from "~/composables/useEventBus";
 import * as dialog from "@zag-js/dialog";
+import UiFileInput from '~/components/ui/UiFileInput.vue'
 
 
 const [state, send] = useMachine(
@@ -20,10 +21,12 @@ const api = computed(() => dialog.connect(state.value, send, normalizeProps))
 
 const phoneRegExp = /^\+7 \d{3} \d{3} \d{2}-\d{2}$/;
 const appConfig = useAppConfig();
+const fileUpload = ref<boolean>(false)
 
 const { handleSubmit, isSubmitting, resetForm } = useForm({
     validationSchema: yup.object().shape({
         callBackName: yup.string().required(),
+        callBackFile: yup.mixed().optional(),
         callBackPhone: yup
             .string()
             .required()
@@ -33,18 +36,28 @@ const { handleSubmit, isSubmitting, resetForm } = useForm({
     initialValues: {
         callBackName: "",
         callBackPhone: "",
+        callBackFile: undefined,
         // callBackText: "",
     },
 });
 
-useListen("toFeedBack", () => {
+useListen("toFeedBack", (showFileUpload?: boolean) => {
+    if (showFileUpload) fileUpload.value = true;
     api.value.open();
 });
+
+watch(() => api.value.isOpen, (isOpen) => {
+    if (!isOpen) {
+        fileUpload.value = false;
+    }
+})
 
 const sendForm = handleSubmit(async (values) => {
     const form = new FormData();
     form.append("name", values.callBackName);
     form.append("phone", values.callBackPhone);
+    if (values.callBackFile) form.append("file", values.callBackFile);
+
     // form.append("comment", values.callBackText);
 
     const { data } = await useFetch("/api/callback").post(form).json<{
@@ -77,6 +90,7 @@ const sendForm = handleSubmit(async (values) => {
                             <UiInput autocomplete="tel" hide-error name="callBackPhone" placeholder="Телефон"
                                 class-name="w-full" type="tel" />
                             <!--                        <UiInput hide-error name="comment" placeholder="Комментарий" class-name="w-full" />-->
+                            <UiFileInput v-if="fileUpload" placeholder="Загрузить проект" name="callBackFile" />
                             <div class="w-full">
                                 <UiButton type="submit" :disabled="isSubmitting" title="Отправить" variant="dark"
                                     class="w-full" />

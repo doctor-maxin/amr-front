@@ -25,6 +25,8 @@ const tabList = markRaw([
 		label: "Каталог",
 	},
 ]);
+
+const user = useDirectusUser();
 </script>
 
 <template>
@@ -35,11 +37,14 @@ const tabList = markRaw([
 			class="w-screen absolute mobile-menu overflow-hidden bg-system-gray-500 transition-opacity top-full bottom-auto z-20">
 			<div class="mobile-menu-content">
 				<div class="flex justify-center py-5 items-center gap-4">
-					<nuxt-link @click.native="useEvent('close-modals')" to="/sign_in" class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
+					<nuxt-link @click.native="useEvent('close-modals')" to="/sign_in"
+						class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
 						<svgo-user class="text-[1.5rem]" filled />
-						<span class="font-semibold text-sm">Личный кабинет</span>
+						<span v-if="user?.first_name" class="font-semibold text-sm">{{ user?.first_name }}</span>
+						<span v-else class="font-semibold text-sm">Личный кабинет</span>
 					</nuxt-link>
-					<nuxt-link @click.native="useEvent('close-modals')" to="/favorites" class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
+					<nuxt-link @click.native="useEvent('close-modals')" to="/favorites"
+						class="bg-system-gray rounded-[1.25rem] px-3 py-2 flex gap-2 items-center">
 						<svgo-heart class="text-[1.5rem]" filled />
 						<span class="font-semibold text-sm">Избранное</span>
 					</nuxt-link>

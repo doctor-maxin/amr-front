@@ -1,8 +1,14 @@
-import {IBlock} from "./common";
+import { IBlock } from "./common";
 
+export enum IIdeaType {
+    news = 'news',
+    project = 'project',
+    idea = 'idea',
+    all = '*'
+}
 export type IIdeaItem = {
     id: number
-    type: 'news' | 'project' | 'idea';
+    type: IIdeaType;
     date_created: string;
     description: string;
     bloks: {

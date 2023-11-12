@@ -16,6 +16,8 @@ import CheckoutSelfDeliveryBalloon from "./CheckoutSelfDeliveryBalloon.vue";
 const { mapCenter } = useAppConfig();
 const { getItems } = useDirectusItems();
 const points = ref<IStore[]>([]);
+const center = ref(mapCenter)
+const zoom = ref(12)
 
 const bounds = ref<any[]>([]);
 const map = ref<any>(null);
@@ -26,19 +28,6 @@ const { data: stores } = useAsyncData(() =>
 	})
 );
 
-watch(
-	stores,
-	() => {
-		if (stores.value?.length) {
-			bounds.value = stores.value.map((item) => [item.lat, item.long]);
-			points.value = stores.value;
-		}
-	},
-	{
-		deep: true,
-		immediate: true,
-	}
-);
 
 const loadItems = async (map) => {
 	// const res = await window.ymaps.geoXml.load(
@@ -55,12 +44,41 @@ const isOpen = ref(false)
 const { value: deliveryPointId, handleChange } = useField("deliveryPointId");
 const { value: address, handleChange: handleChangeAddress } =
 	useField("deliveryPointId");
-	
+
 useListen("setDeliveryPoint", (store: IStore) => {
 	handleChange(store.id);
 	isOpen.value = false;
 	handleChangeAddress(store.address);
+	center.value = [store.lat, store.long]
+	zoom.value = 15
+
 });
+
+watch(
+	stores,
+	() => {
+		if (stores.value?.length) {
+			bounds.value = stores.value.map((item) => [item.lat, item.long]);
+			points.value = stores.value;
+
+			if (!deliveryPointId.value) {
+				handleChange(stores.value[0].id)
+				handleChangeAddress(stores.value[0].address);
+				center.value = [stores.value[0].lat, stores.value[0].long]
+				zoom.value = 15
+			}
+		}
+	},
+	{
+		deep: true,
+		immediate: true,
+	}
+);
+
+
+onMounted(() => {
+
+})
 
 const { isTablet } = useDeviceWidth()
 </script>
@@ -80,8 +98,8 @@ const { isTablet } = useDeviceWidth()
 				<div
 					class="bg-white lg:w-full lg:h-full lg:p-0 lg:bg-transparent w-screen relative h-screen max-h-[90dvh] max-w-[68.75rem] lg:max-h-[34.375rem] rounded-t-[1rem] lg:rounded-[2rem]">
 					<client-only>
-						<yandex-map class="w-full h-full overflow-hidden rounded-[1.125rem]" v-if="bounds.length" :zoom="12"
-							:coordinates="mapCenter" ref="map" @created="loadItems">
+						<yandex-map class="w-full h-full overflow-hidden rounded-[1.125rem]" v-if="bounds.length"
+							:zoom="zoom" :coordinates="center" ref="map" @created="loadItems">
 							<yandex-marker v-for="point of points" :key="point.id" :marker-id="point.id" type="Point"
 								:properties="{
 									hintContent: point.name,
@@ -92,7 +110,8 @@ const { isTablet } = useDeviceWidth()
 							</yandex-marker>
 						</yandex-map>
 					</client-only>
-					<button class="text-white lg:hidden absolute xl:-right-8 -top-10 xl:-top-8 right-3 z-10" @click="isOpen = false">
+					<button class="text-white lg:hidden absolute xl:-right-8 -top-10 xl:-top-8 right-3 z-10"
+						@click="isOpen = false">
 						<svgo-close filled class="text-4xl" />
 					</button>
 				</div>

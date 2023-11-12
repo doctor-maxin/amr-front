@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="lg:pt-[5.3125rem] pt-[3.875rem] page-layout relative flex flex-col min-h-screen"
-	>
+	<div class="lg:pt-[5.3125rem] pt-[3.875rem] page-layout relative flex flex-col min-h-screen">
 		<ClientOnly>
 			<TheHeader />
 		</ClientOnly>
@@ -34,6 +32,7 @@ import {
 } from "./.nuxt/imports";
 import { useFavoritesStore } from "./store/favorites.store";
 import CustomPageLoader from "./components/common/CustomPageLoader.vue";
+import { toast } from "vue3-toastify";
 
 const { getItems, getSingletonItem } = useDirectusItems();
 const cartStore = useCartStore();

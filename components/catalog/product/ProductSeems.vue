@@ -12,7 +12,7 @@ import SwiperPagination from "../../common/SwiperPagination.vue";
 import { IProductPicked } from "../../../types/product";
 
 const props = defineProps<{
-	categoryId?: string;
+	categoryId?: string | string[] | undefined;
 	productId?: string;
 }>();
 
@@ -25,7 +25,9 @@ watchEffect(async () => {
 			collection: "products",
 			params: {
 				filter: {
-					categoryId: {
+					categoryId: Array.isArray(props.categoryId) ? {
+						_in: props.categoryId
+					} : {
 						_eq: props.categoryId,
 					},
 				},
@@ -40,6 +42,7 @@ watchEffect(async () => {
 				],
 			},
 		});
+		console.log('items', result)
 		products.value = result.filter((item) => item.id !== props.productId);
 	}
 });
@@ -68,25 +71,15 @@ const paginationOptions = shallowRef({
 </script>
 
 <template>
-	<section
-		v-if="products.length"
-		class="lg:mx-auto max-w-[111.25rem] px-4 lg:px-[4.37rem] product-project"
-	>
+	<section v-if="products.length" class="lg:mx-auto max-w-[111.25rem] px-4 lg:px-[4.37rem] product-project">
 		<h4 class="mb-1 text-system-gray-900 font-bold text-xs">ТОВАРЫ</h4>
 		<h3 class="text-system-black-900 text-[1.375rem] font-bold mb-7">
 			Похожие товары
 		</h3>
 		<div class="pb-[6.8rem]">
-			<Swiper
-				:autoplay="autoPlayOptions"
-				:breakpoints="breakpoints"
-				:modules="[Pagination, Autoplay]"
-				:pagination="paginationOptions"
-			>
-				<SwiperSlide
-					v-for="item of products"
-					class="relative rounded-[1.25rem] overflow-hidden !h-auto"
-				>
+			<Swiper :autoplay="autoPlayOptions" :breakpoints="breakpoints" :modules="[Pagination, Autoplay]"
+				:pagination="paginationOptions">
+				<SwiperSlide v-for="item of products" class="relative rounded-[1.25rem] overflow-hidden !h-auto">
 					<ProductItem :item="item" />
 				</SwiperSlide>
 				<template #container-end>

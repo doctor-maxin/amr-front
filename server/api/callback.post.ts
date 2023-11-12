@@ -3,22 +3,15 @@ import {
 	staticToken,
 	createItem,
 	uploadFiles,
-	graphql,
 	rest,
 } from "@directus/sdk";
 import { createError } from "@directus/errors";
 import { createBitrixLead } from "~/server/utils/bitrix.contacts";
 
 export default defineEventHandler(async (event) => {
-	const client = createDirectus("http://localhost:8055")
+	const client = createDirectus("http://avtorm.ru:8055")
 		.with(rest())
 		.with(staticToken(process.env.DIRECTUS_TOKEN));
-
-	const userClient = createDirectus("http://localhost:8055").with(
-		graphql({
-			credentials: "include",
-		}),
-	);
 
 	const body = await readMultipartFormData(event);
 	const query = getQuery(event);

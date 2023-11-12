@@ -37,99 +37,50 @@ const addProductItem = (id: string) => {
 </script>
 
 <template>
-	<div
-		itemscope
-		itemtype="http://schema.org/Product"
-		class="rounded-[1.25rem] overflow-hidden group border relative cursor-pointer"
-	>
-		<button
-			type="button"
-			@click="addProductToFavorites(item.id)"
-			class="bg-system-black-600 backdrop-blur-[10px] rounded-2xl lg:rounded-[1.25rem] p-3 lg:p-5 absolute left-3 lg:left-5 top-3 lg:top-5"
-		>
-			<svgo-heart
-				filled
-				class="text-white !mb-0 text-base lg:text-2xl"
-				:class="{
-					'fill-white': hasInFavorites(item.id),
-				}"
-			/>
+	<div itemscope itemtype="http://schema.org/Product"
+		class="rounded-[1.25rem] overflow-hidden group border relative cursor-pointer">
+		<button type="button" @click="addProductToFavorites(item.id)"
+			class="bg-system-black-600 backdrop-blur-[10px] rounded-2xl lg:rounded-[1.25rem] p-3 lg:p-5 absolute left-3 lg:left-5 top-3 lg:top-5">
+			<svgo-heart filled class="text-white !mb-0 text-base lg:text-2xl" :class="{
+				'fill-white': hasInFavorites(item.id),
+			}" />
 		</button>
 		<nuxt-link :to="`/catalog${item?.handle ?? ''}`">
 			<client-only>
-				<NuxtImg
-					:class="{
-						'object-cover': item?.images?.length,
-					}"
-					:src="getItemImage(item)"
-					itemprop="image"
-					class="w-full object-contain h-full aspect-[21/14] lg:aspect-[574/398]"
-					provider="directus"
-				/>
+				<NuxtImg :class="{
+					'object-cover': item?.images?.length,
+				}" :src="getItemImage(item)" itemprop="image"
+					class="w-full object-contain h-full aspect-[21/14] lg:aspect-[574/398]" provider="directus" />
 			</client-only>
 		</nuxt-link>
-		<nuxt-link
-			:to="`/catalog${item?.handle ?? ''}`"
-			class="font-semibold group-hover:opacity-100 z-10 lg:block hidden lg:opacity-0 transition-opacity absolute text-white left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-system-black-600 backdrop-blur-[10px] py-3 px-[1.135rem] rounded-[0.63rem]"
-		>
+		<nuxt-link :to="`/catalog${item?.handle ?? ''}`"
+			class="font-semibold group-hover:opacity-100 z-10 lg:block hidden lg:opacity-0 transition-opacity group-hover:text-white absolute text-white left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-system-black-600 backdrop-blur-[10px] py-3 px-[1.135rem] rounded-[0.63rem]">
 			Посмотреть
 		</nuxt-link>
-		<div
-			class="flex gap-3 absolute font-semibold items-center text-white px-3 lg:px-5 bottom-3 lg:bottom-5 w-full"
-		>
-			<nuxt-link
-				:to="`/catalog${item?.handle ?? ''}`"
-				itemprop="offers"
-				itemscope
-				itemtype="http://schema.org/Offer"
-				class="bg-system-black-600 gap-2 flex flex-1 items-center justify-between backdrop-blur-[10px] rounded-2xl text-sm lg:text-base lg:rounded-[1.25rem] p-4 lg:p-5"
-			>
-				<span itemprop="name" :title="item.name" class="line-clamp-2">{{
+		<div class="flex gap-3 absolute font-semibold items-center text-white px-3 lg:px-5 bottom-3 lg:bottom-5 w-full">
+			<nuxt-link :to="`/catalog${item?.handle ?? ''}`" itemprop="offers" itemscope itemtype="http://schema.org/Offer"
+				class="bg-system-black-600 gap-2 flex flex-1 items-center justify-between backdrop-blur-[10px] rounded-2xl text-sm lg:text-base lg:rounded-[1.25rem] p-4 lg:p-5">
+				<span itemprop="name" :title="item.name" class="line-clamp-2 group-hover:text-white">{{
 					item.name
 				}}</span>
 				<meta itemprop="priceCurrency" content="RUB" />
-				<span class="whitespace-nowrap" itemprop="price"
-					>{{ item.canNotBye ? "от " : ""
-					}}{{ toMoney(item.price) }}</span
-				>
-				<link
-					v-if="item.count"
-					itemprop="availability"
-					href="http://schema.org/InStock"
-				/>
-				<link
-					v-else
-					itemprop="availability"
-					href="http://schema.org/OutOfStock"
-				/>
+				<span class="whitespace-nowrap group-hover:text-white" itemprop="price">{{ item.canNotBye ? "от " : ""
+				}}{{ toMoney(item.price) }}</span>
+				<link v-if="item.count" itemprop="availability" href="http://schema.org/InStock" />
+				<link v-else itemprop="availability" href="http://schema.org/OutOfStock" />
 			</nuxt-link>
-			<button
-				v-if="!item.canNotBye"
-				@click="addProductItem(item.id)"
-				:disabled="item.count <= 0"
+			<button v-if="!item.canNotBye" @click="addProductItem(item.id)" :disabled="item.count <= 0"
 				class="bg-system-black-600 gap-1 flex items-center justify-between backdrop-blur-[10px] rounded-2xl lg:rounded-[1.25rem] p-4 lg:p-5"
 				:class="{
 					'hidden lg:flex': item.count <= 0,
-				}"
-			>
+				}">
 				<template v-if="item.count">
 					<svgo-cart filled class="text-2xl" />
-					<span
-						v-if="hasInCart"
-						class="text-sm hidden lg:block lg:text-base whitespace-nowrap"
-						>В корзине
+					<span v-if="hasInCart" class="text-sm hidden lg:block lg:text-base whitespace-nowrap">В корзине
 					</span>
-					<span
-						v-else
-						class="text-sm hidden lg:block lg:text-base whitespace-nowrap"
-						>В корзину</span
-					>
+					<span v-else class="text-sm hidden lg:block lg:text-base whitespace-nowrap">В корзину</span>
 				</template>
-				<span
-					v-else
-					class="text-sm hidden lg:block lg:text-base whitespace-nowrap"
-					>Распродан</span
-				>
+				<span v-else class="text-sm hidden lg:block lg:text-base whitespace-nowrap">Распродан</span>
 			</button>
 		</div>
 	</div>

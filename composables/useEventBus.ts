@@ -1,4 +1,5 @@
 import mitt from "mitt";
+import { IStore } from "~/types/common";
 import { IProduct, IVariant } from "~/types/product";
 
 export type IFilterPayload = {
@@ -9,11 +10,12 @@ export type IFilterPayload = {
 type ApplicationEvents = {
 	"on-filter": IFilterPayload[];
 	"on-sort": void;
-	toFeedBack: void;
+	'toFeedBack': boolean | undefined;
 	"open-map": void;
 	"open:product-form": IProduct;
 	"close-modals": void;
 	"select:variant": IVariant;
+	'setDeliveryPoint': IStore;
 };
 
 const emitter = mitt<ApplicationEvents>();
