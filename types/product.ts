@@ -46,7 +46,7 @@ export type IProduct = {
 		products_id?: string;
 	}[];
 	price: number;
-	have3DFile: boolean;
+	have3D: boolean;
 	file3D: string;
 };
 

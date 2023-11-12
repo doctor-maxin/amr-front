@@ -41,7 +41,7 @@ type IProductConstructor = {
 
 export const useProductStore = defineStore('product-store', {
    state: (): ProductState => ({
-       activeTab: Tabs.CONST,
+       activeTab: Tabs.DESC,
        product: null,
        isLoading: false,
        isLoadingModel: false,
@@ -75,7 +75,7 @@ export const useProductStore = defineStore('product-store', {
             return this.materialItems.find(item => item.id === id)
         },
         setProduct(product: IProduct) {
-            if (product?.have3DFile) {
+            if (product?.have3D) {
                 this.product = product
                 this.isLoading = true;
             }

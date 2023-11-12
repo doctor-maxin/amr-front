@@ -85,7 +85,7 @@ watchEffect(async () => {
           Характеристики
         </button>
       </div>
-      <button v-if="product.have3DFile" :class="{
+      <button v-if="product.have3D" :class="{
         'border-black': activeTab === Tabs.CONST
       }"
               class="hidden lg:flex rounded-[5rem] border mr-auto gap-3 bg-system-gray py-3.5 px-5 items-center"
@@ -111,12 +111,12 @@ watchEffect(async () => {
                           :variant="variant"
       />
       <div class="lg:hidden flex flex-col gap-4">
-        <button v-if="product.have3DFile && activeTab !== Tabs.CONST" class="flex gap-3 w-full lg:hidden px-[1.44rem] py-[1.195rem] rounded-[5rem] bg-system-gray items-center"
+        <button v-if="product.have3D && activeTab !== Tabs.CONST" class="flex gap-3 w-full lg:hidden px-[1.44rem] py-[1.195rem] rounded-[5rem] bg-system-gray items-center"
                 @click="productStore.setTab(Tabs.CONST)">
           <svgo-const class="text-[1.875rem]" filled/>
           <span class="text-lg font-bold text-system-black-950">Конструктор</span>
         </button>
-        <button v-if="product.have3DFile && activeTab === Tabs.CONST" class="flex gap-3 w-full lg:hidden px-[1.44rem] py-[1.195rem] rounded-[5rem] bg-system-gray items-center"
+        <button v-if="product.have3D && activeTab === Tabs.CONST" class="flex gap-3 w-full lg:hidden px-[1.44rem] py-[1.195rem] rounded-[5rem] bg-system-gray items-center"
                 @click="productStore.setTab(Tabs.DESC)">
           <svgo-close-arrow class="text-[1.875rem]" filled/>
           <span class="text-lg font-bold text-system-black-950">Закрыть конструктор</span>

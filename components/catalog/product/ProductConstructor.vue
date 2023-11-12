@@ -51,7 +51,7 @@ onMounted(async () => {
     controls.value.update();
     scene.value.add( dirLight );
     animate()
-    loader.value.load(`//localhost:8055/assets/${data.value?.file3D}`, (gltf) => {
+    loader.value.load(`/assets/${data.value?.file3D}`, (gltf) => {
       scene.value.add(gltf.scene)
 
     }, undefined, (err) => {
@@ -65,7 +65,7 @@ useListen('selectOption', ev => {
   for (const name of ev.list.split(',')) {
     const mesh = scene.value.getObjectByName(name)
     if (mesh) {
-      new THREE.TextureLoader().load(`//localhost:8055/assets/${ev.image}`, (txt) => {
+      new THREE.TextureLoader().load(`/assets/${ev.image}`, (txt) => {
         mesh.material.map = txt;
         mesh.material.needsUpdate = true;
       })

@@ -64,6 +64,7 @@ onMounted(() => {
 				type="search"
 			/>
 			<UiButton
+				type="submit"
 				class="!py-3 !px-[1.7rem] max-h-11 absolute right-[0.31rem]"
 				title="Поиск"
 				title-class="text-[1rem] font-medium"
