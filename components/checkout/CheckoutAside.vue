@@ -184,7 +184,7 @@ const getItemImage = (item: any): string => {
 			class="fixed lg:mt-2 lg:static bottom-4 z-20 left-4 w-[calc(100%_-_2rem)] lg:w-full"
 			type="button"
 			variant="dark"
-			title="Заказать расчет"
+			title="Оформить заказ"
 			title-class="!text-base"
 			:disabled="isLoading || !isValid"
 			:class="{

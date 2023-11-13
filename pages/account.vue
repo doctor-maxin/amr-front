@@ -20,8 +20,13 @@ const link = shallowRef<ILink>({
 const router = useRouter();
 
 const exit = async () => {
-	await logout();
+	try {
+		await logout();
+	} catch (err) {
+		console.log(err)
+	}
 	await router.push("/");
+
 };
 </script>
 
@@ -35,13 +40,13 @@ const exit = async () => {
 					<nuxt-link class="router-link" to="/account">Профиль</nuxt-link>
 					<nuxt-link class="router-link" to="/account/orders">История заказов</nuxt-link>
 				</div>
-				<button @click="logout" class="lg:flex hidden gap-2 items-center font-semibold" type="button">
+				<button @click="exit" class="lg:flex hidden gap-2 items-center font-semibold" type="button">
 					<svgo-exit class="text-[1.5rem]" filled />
 					<span class="">Выйти</span>
 				</button>
 			</div>
 			<nuxt-page />
-			<button @click="logout"
+			<button @click="exit"
 				class="flex w-fit mx-auto rounded-2xl lg:hidden gap-2 items-center font-semibold bg-system-gray-500 px-[0.62rem] py-[0.87rem]"
 				type="button">
 				<svgo-exit class="text-[1.5rem]" filled />

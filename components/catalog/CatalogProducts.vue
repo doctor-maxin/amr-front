@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-	<div v-if="items.length" class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-7">
+	<div v-if="items.length" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7">
 		<template v-for="item of items" :key="item.id">
 			<ProductItem :item="item"/>
 		</template>
