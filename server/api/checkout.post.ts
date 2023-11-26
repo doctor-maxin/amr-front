@@ -8,6 +8,8 @@ import {
 	readItems,
 	createItem,
 	staticToken,
+	readSingleton,
+	updateSingleton,
 } from "@directus/sdk";
 import { initPayment } from "~/server/utils/tinkoff.payments";
 import createBitrixOrder from "~/server/utils/bitrix.order";
@@ -92,7 +94,16 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const bitrixOrder = await createBitrixOrder(payload, query);
+		const managers = await client.request(readSingleton('managers'))
+
+		const list: string[] = managers?.ids?.split(',')
+		const firstElement = list.shift() as string
+
+		const bitrixOrder = await createBitrixOrder(payload, query, firstElement);
+		client.request(updateSingleton('managers', {
+			ids: [...list, firstElement].join(',')
+		}))
+
 		payload.paymentType = body.paymentType;
 		payload["number"] = bitrixOrder;
 		console.log("Payload", payload);

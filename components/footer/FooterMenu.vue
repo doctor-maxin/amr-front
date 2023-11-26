@@ -43,6 +43,9 @@ const { data: pages } = useNuxtData("customerPages");
 			<li>
 				<nuxt-link class="text-sm lg:text-base" to="/blog">Идеи и тренды</nuxt-link>
 			</li>
+			<li>
+				<nuxt-link class="text-sm lg:text-base" to="/career">Карьера</nuxt-link>
+			</li>
 		</ul>
 		<ul>
 			<li>

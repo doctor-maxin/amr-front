@@ -109,7 +109,7 @@ const { setFieldError, meta, values } = useForm({
 			payload.city = yup.string().required();
 			payload.street = yup.string().required();
 			payload.house = yup.string().required();
-			payload.flat = yup.string().required();
+			payload.flat = yup.string().optional();
 			payload.floor = yup.string().optional();
 			payload.entrance = yup.string().optional();
 		}

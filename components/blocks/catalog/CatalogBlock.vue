@@ -48,10 +48,25 @@ const { data: mainCategories } = await useAsyncData('mainCategories', () => getI
 	}
 }))
 
+const progressCircle = ref(null);
+
+const onAutoplayTimeLeft = (s, time, progress) => {
+	if (progressCircle.value)
+		progressCircle.value.style.setProperty("--progress", 1 - progress);
+};
 const paginationOptions = shallowRef({
 	el: '.swiper-pagination',
 	clickable: true,
+	renderBullet: function (index, className) {
+		return `<span class="${className} autoplay-progress">
+					<svg xmlns="http://www.w3.org/2000/svg"  class="origami" height="360" viewBox="0 0 24 24" width="360">
+						<circle cx="13" cy="11" r="10"></circle>
+					</svg>
+				</span>`;
+	},
 })
+
+
 </script>
 
 <template>
@@ -65,12 +80,12 @@ const paginationOptions = shallowRef({
 		<div>
 			<ClientOnly>
 				<Swiper :autoplay="autoPlayOptions" :breakpoints="breakpoints" :modules="[Pagination, Autoplay]"
-					:pagination="paginationOptions">
+					:pagination="paginationOptions" @autoplayTimeLeft="onAutoplayTimeLeft">
 					<SwiperSlide v-for="item of mainCategories" :key="item.id">
 						<CatalogBlockCard :item="item" />
 					</SwiperSlide>
 					<template v-slot:container-end>
-						<div class="top-full hidden mt-10 lg:flex justify-center">
+						<div ref="progressCircle" class="top-full hidden mt-10 lg:flex justify-center">
 							<div
 								class="swiper-pagination !w-auto bg-system-gray !static flex gap-3 py-5 px-[4.8125rem] rounded-[4.5rem]">
 							</div>
@@ -85,13 +100,14 @@ const paginationOptions = shallowRef({
 <style>
 .catalog-block .swiper-pagination-bullet {
 	background-color: hsla(220, 8%, 22%, 0.5);
+	position: relative;
 }
 
 .catalog-block .swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
 .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
 	margin: 0 !important;
-	width: 13px;
-	height: 13px;
+	width: 12px;
+	height: 12px;
 }
 
 .catalog-block .swiper-wrapper {
@@ -100,5 +116,9 @@ const paginationOptions = shallowRef({
 
 .catalog-block .swiper-pagination-bullet-active {
 	background-color: hsla(220, 8%, 22%, 1);
+}
+
+.catalog-block .swiper-pagination-bullet-active svg {
+	opacity: 1;
 }
 </style>

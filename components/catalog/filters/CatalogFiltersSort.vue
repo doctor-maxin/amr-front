@@ -87,70 +87,45 @@ const onSortChange = (item) => {
 </script>
 
 <template>
-	<div
-		v-if="api.isOpen"
-		class="z-20 pt-8 lg:pt-4 lg:px-0 pb-5 w-screen lg:w-[17rem] bg-white lg:bg-transparent !-left-2 px-4"
-		v-bind="api.positionerProps"
-	>
-		<div v-bind="api.contentProps">
-			<div class="w-full hidden lg:block">
-				<button
-					v-bind="apiSelect.triggerProps"
-					class="flex justify-between mb-2 items-center w-full bg-system-gray rounded-[1.25rem]"
-				>
-					<span class="text-xl py-5 pl-5">{{
-						apiSelect.valueAsString || "Select option"
-					}}</span>
-					<svgo-chevron-right
-						filled
-						class="rotate-90 transition-transform mr-5 mb-0 lg:text-2xl"
-						:class="{
-							'-rotate-90': apiSelect.isOpen,
-						}"
-					/>
-				</button>
-			</div>
+	<transition enter-active-class="transition duration-150 ease-out" enter-from-class="-translate-y-4 opacity-0"
+		enter-to-class="translate-y-0 opacity-100" leave-active-class="transition duration-150 ease-in"
+		leave-from-class="translate-y-0 opacity-100" leave-to-class="-translate-y-4 opacity-0">
+		<div v-if="api.isOpen"
+			class="z-20 pt-8 lg:pt-4 lg:px-0 pb-5 w-screen lg:w-[17rem] bg-white lg:bg-transparent !-left-2 px-4"
+			v-bind="api.positionerProps">
+			<div v-bind="api.contentProps">
+				<div class="w-full hidden lg:block">
+					<button v-bind="apiSelect.triggerProps"
+						class="flex justify-between mb-2 items-center w-full bg-system-gray rounded-[1.25rem]">
+						<span class="text-xl py-5 pl-5">{{
+							apiSelect.valueAsString || "Select option"
+						}}</span>
+						<svgo-chevron-right filled class="rotate-90 transition-transform mr-5 mb-0 lg:text-2xl" :class="{
+									'-rotate-90': apiSelect.isOpen,
+								}" />
+					</button>
+				</div>
 
-			<div
-				class="!static !transform-none"
-				v-bind="apiSelect.positionerProps"
-			>
-				<ul
-					class="flex flex-col gap-4 lg:gap-0 lg:bg-system-gray lg:rounded-[1.25rem] lg:p-2.5"
-					v-bind="apiSelect.contentProps"
-					v-if="isTablet ? true : apiSelect.isOpen"
-				>
-					<li
-						v-for="item in selectData"
-						:key="item.value"
-						:class="{
+				<div class="!static !transform-none" v-bind="apiSelect.positionerProps">
+					<ul class="flex flex-col gap-4 lg:gap-0 lg:bg-system-gray lg:rounded-[1.25rem] lg:p-2.5"
+						v-bind="apiSelect.contentProps" v-if="isTablet ? true : apiSelect.isOpen">
+						<li v-for="item in selectData" :key="item.value" :class="{
 							'border-system-gray-800 lg:border-transparent lg:bg-system-gray-600':
 								apiSelect.value?.[0] === item.value,
-						}"
-						class="bg-system-gray border py-5 px-6 rounded-[1.25rem] lg:px-3 lg:py-2.5 lg:rounded-xl cursor-pointer transition-colors hover:bg-system-gray-600"
-						v-bind="apiSelect.getItemProps({ item })"
-						@click="onSortChange(item)"
-					>
-						<span class="text-lg font-semibold">{{
-							item.label
-						}}</span>
-					</li>
-				</ul>
-				<UiButton
-					class="my-4 w-full lg:hidden"
-					title="Применить"
-					variant="dark"
-					@click="updateParam"
-				/>
-				<UiButton
-					class="mb-4 lg:hidden w-full"
-					title="Сбросить фильтры"
-					title-class="text-center w-full"
-					@click="api.close()"
-				/>
+						}" class="bg-system-gray border py-5 px-6 rounded-[1.25rem] lg:px-3 lg:py-2.5 lg:rounded-xl cursor-pointer transition-colors hover:bg-system-gray-600"
+							v-bind="apiSelect.getItemProps({ item })" @click="onSortChange(item)">
+							<span class="text-lg font-semibold">{{
+								item.label
+							}}</span>
+						</li>
+					</ul>
+					<UiButton class="my-4 w-full lg:hidden" title="Применить" variant="dark" @click="updateParam" />
+					<UiButton class="mb-4 lg:hidden w-full" title="Сбросить фильтры" title-class="text-center w-full"
+						@click="api.close()" />
+				</div>
 			</div>
 		</div>
-	</div>
+	</transition>
 </template>
 
 <style scoped></style>

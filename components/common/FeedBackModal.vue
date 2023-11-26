@@ -60,7 +60,10 @@ const sendForm = handleSubmit(async (values) => {
 
     // form.append("comment", values.callBackText);
 
-    const { data } = await useFetch("/api/callback").post(form).json<{
+    const params = new URLSearchParams(window.location.search)
+    params.append('from', window.location.href)
+
+    const { data } = await useFetch(`/api/callback?${params.toString()}`).post(form).json<{
         id: string;
         status: string;
     }>();
@@ -107,14 +110,3 @@ const sendForm = handleSubmit(async (values) => {
         </Transition>
     </ClientOnly>
 </template>
-<style>
-.call-icon-btn {
-    width: 65px;
-    height: 65px;
-}
-
-.call-icon-btn svg {
-    width: 32px;
-    height: 32px;
-}
-</style>

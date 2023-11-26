@@ -14,7 +14,7 @@ import { useFetch } from "@vueuse/core/index";
 import { toast } from "vue3-toastify";
 
 useHead({
-  title: 'Контакты'
+	title: 'Контакты'
 })
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
@@ -54,7 +54,10 @@ const sendForm = handleSubmit(async (values) => {
 	form.append("phone", values.phone);
 	form.append("comment", values.comment);
 
-	const { data } = await useFetch("/api/callback").post(form).json<{
+	const params = new URLSearchParams(window.location.search)
+	params.append('from', window.location.href)
+
+	const { data } = await useFetch(`/api/callback?${params.toString()}`).post(form).json<{
 		id: string;
 		status: string;
 	}>();
@@ -69,79 +72,35 @@ const sendForm = handleSubmit(async (values) => {
 <template>
 	<div>
 		<PageHeader :bread-crumbs="breadCrumbs" page-name="Контакты" />
-		<main
-			class="bg-white px-4 pt-[2.37rem] pb-[4.37rem] lg:pb-[8.75rem] lg:pt-[4.38rem]"
-		>
+		<main class="bg-white px-4 pt-[2.37rem] pb-[4.37rem] lg:pb-[8.75rem] lg:pt-[4.38rem]">
 			<div class="max-w-[73.5rem] mx-auto">
-				<div
-					class="grid grid-cols-1 gap-10 w-full justify-between lg:grid-cols-[36rem_16.875rem]"
-				>
+				<div class="grid grid-cols-1 gap-10 w-full justify-between lg:grid-cols-[36rem_16.875rem]">
 					<form @submit.prevent="sendForm">
-						<h4
-							class="text-system-gray-900 font-bold text-xs leading-[140%] lg:text-sm mb-1 lg:mb-0"
-						>
+						<h4 class="text-system-gray-900 font-bold text-xs leading-[140%] lg:text-sm mb-1 lg:mb-0">
 							ОБРАТНАЯ СВЯЗЬ
 						</h4>
-						<h2
-							class="text-[1.375rem] font-bold lg:text-[2.25rem] leading-[140%]"
-						>
+						<h2 class="text-[1.375rem] font-bold lg:text-[2.25rem] leading-[140%]">
 							Свяжитесь с нами, если у вас остались вопросы или
 							нужна помощь
 						</h2>
 						<div class="flex pt-7 flex-col gap-[1.125rem]">
-							<UiInput
-								name="name"
-								autocomplete="name"
-								hide-error
-								placeholder="Имя"
-								class-name="w-full"
-							/>
-							<UiInput
-								autocomplete="tel"
-								hide-error
-								name="phone"
-								placeholder="Телефон"
-								class-name="w-full"
-								type="tel"
-							/>
-							<UiInput
-								hide-error
-								name="comment"
-								placeholder="Комментарий"
-								class-name="w-full"
-							/>
+							<UiInput name="name" autocomplete="name" hide-error placeholder="Имя" class-name="w-full" />
+							<UiInput autocomplete="tel" hide-error name="phone" placeholder="Телефон" class-name="w-full"
+								type="tel" />
+							<UiInput hide-error name="comment" placeholder="Комментарий" class-name="w-full" />
 							<div class="w-full">
-								<UiButton
-									type="submit"
-									:disabled="isSubmitting"
-									title="Отправить"
-									variant="dark"
-									class="w-full"
-								/>
-								<FormHelperLink
-									class="mt-[0.6rem] block w-full lg:mt-[0.8rem]"
-								/>
+								<UiButton type="submit" :disabled="isSubmitting" title="Отправить" variant="dark"
+									class="w-full" />
+								<FormHelperLink class="mt-[0.6rem] block w-full lg:mt-[0.8rem]" />
 							</div>
 						</div>
 					</form>
-					<div
-						itemscope
-						itemtype="http://schema.org/Organization"
-						class="ml-auto lg:pt-[2.1325rem]"
-					>
-						<address
-							class="flex flex-col gap-6 lg:gap-10 not-italic font-medium text-system-black-900 text-lg"
-						>
+					<div itemscope itemtype="http://schema.org/Organization" class="ml-auto lg:pt-[2.1325rem]">
+						<address class="flex flex-col gap-6 lg:gap-10 not-italic font-medium text-system-black-900 text-lg">
 							<div class="address-block">
-								<span class="address-header"
-									>Адрес шоурума</span
-								>
-								<span
-									itemprop="address"
-									itemscope
-									itemtype="http://schema.org/PostalAddress"
-									>{{ settings?.adressShowRoom }}</span
-								>
+								<span class="address-header">Адрес шоурума</span>
+								<span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">{{
+									settings?.adressShowRoom }}</span>
 							</div>
 							<div class="address-block">
 								<span class="address-header">Время работы</span>
@@ -159,23 +118,11 @@ const sendForm = handleSubmit(async (values) => {
 								<EmailLink :email="settings?.Email" />
 								<TelLink :tel="settings?.phone" />
 								<div class="flex gap-4">
-									<a
-										v-if="settings?.telegramLink"
-										:href="settings.telegramLink"
-										target="_blank"
-									>
-										<svgo-socials-telegram
-											class="text-[2.3125rem]"
-										/>
+									<a v-if="settings?.telegramLink" :href="settings.telegramLink" target="_blank">
+										<svgo-socials-telegram class="text-[2.3125rem]" />
 									</a>
-									<a
-										v-if="settings?.vkLink"
-										:href="settings.vkLink"
-										target="_blank"
-									>
-										<svgo-socials-vk
-											class="text-[2.3125rem]"
-										/>
+									<a v-if="settings?.vkLink" :href="settings.vkLink" target="_blank">
+										<svgo-socials-vk class="text-[2.3125rem]" />
 									</a>
 								</div>
 							</div>
@@ -183,15 +130,9 @@ const sendForm = handleSubmit(async (values) => {
 					</div>
 				</div>
 				<div
-					class="rounded-2xl flex items-center justify-center map-block overflow-hidden aspect-[21.4/9.125] lg:aspect-[73.5/25.8] mt-10 lg:mt-[5.75rem]"
-				>
-					<UiButton
-						class="!py-2.5"
-						@click="openMap"
-						title="Мы на карте"
-						title-class="!font-medium"
-						variant="dark"
-					/>
+					class="rounded-2xl flex items-center justify-center map-block overflow-hidden aspect-[21.4/9.125] lg:aspect-[73.5/25.8] mt-10 lg:mt-[5.75rem]">
+					<UiButton class="!py-2.5" @click="openMap" title="Мы на карте" title-class="!font-medium"
+						variant="dark" />
 				</div>
 			</div>
 		</main>
@@ -203,12 +144,14 @@ const sendForm = handleSubmit(async (values) => {
 	flex-direction: column;
 	gap: 0.75rem;
 }
+
 .address-header {
 	@apply text-system-gray-900;
 	font-weight: 600;
 	font-size: 1rem;
 	line-height: 140%;
 }
+
 .map-block {
 	background-image: url("/images/map.png");
 	background-position: center;

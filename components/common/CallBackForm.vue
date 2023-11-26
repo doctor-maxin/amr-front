@@ -61,7 +61,10 @@ const sendForm = handleSubmit(async (values) => {
 	form.append("type", values.callBackType);
 	if (values.callBackFile) form.append("file", values.callBackFile);
 
-	const { data } = await useFetch("/api/callback").post(form).json<{
+	const params = new URLSearchParams(window.location.search)
+	params.append('from', window.location.href)
+
+	const { data } = await useFetch(`/api/callback?${params.toString()}`).post(form).json<{
 		id: string;
 		status: string;
 	}>();

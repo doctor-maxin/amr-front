@@ -9,6 +9,7 @@ import WhatsAppLink from '~/components/header/WhatsAppLink.vue';
 import FavoriteBtn from './header/FavoriteBtn.vue';
 import ProfileBtn from './header/ProfileBtn.vue';
 import CartBtn from './header/CartBtn.vue';
+import CompareBtn from './header/CompareBtn.vue'
 import { ISettings } from "~/types/common";
 import { useNuxtData } from "../.nuxt/imports";
 
@@ -26,6 +27,7 @@ const { data: settings } = useNuxtData<ISettings>('settings')
 			<div class="flex items-center gap-6 lg:gap-11 pr-[1.81rem] relative lg:pr-0">
 				<WhatsAppLink />
 				<TelLink :tel="settings?.phone" class="hidden lg:block text-system-gray-800" />
+				<CompareBtn class="hidden lg:block" />
 				<SearchBtn />
 				<FavoriteBtn class="hidden lg:block" />
 				<ProfileBtn class="hidden lg:block" />

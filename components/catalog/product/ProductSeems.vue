@@ -63,11 +63,28 @@ const breakpoints = shallowRef({
 });
 const autoPlayOptions = shallowRef({
 	delay: 7000,
+	disableOnInteraction: false,
 });
-const paginationOptions = shallowRef({
+
+const progressCircle = ref(null);
+
+const onAutoplayTimeLeft = (s, time, progress) => {
+	if (progressCircle.value)
+		progressCircle.value.style.setProperty("--progress", 1 - progress);
+};
+
+
+const paginationOptions = {
 	el: ".swiper-pagination",
 	clickable: true,
-});
+	renderBullet: function (index, className) {
+		return `<span class="${className} autoplay-progress">
+					<svg xmlns="http://www.w3.org/2000/svg"  class="origami" height="360" viewBox="0 0 24 24" width="360">
+						<circle cx="13" cy="11" r="10"></circle>
+					</svg>
+				</span>`;
+	},
+};
 </script>
 
 <template>
@@ -76,18 +93,20 @@ const paginationOptions = shallowRef({
 		<h3 class="text-system-black-900 text-[1.375rem] font-bold mb-7">
 			Похожие товары
 		</h3>
-		<div class="pb-[6.8rem]">
+		<div class="pb-[6.25rem]">
 			<Swiper :autoplay="autoPlayOptions" :breakpoints="breakpoints" :modules="[Pagination, Autoplay]"
-				:pagination="paginationOptions">
+				:pagination="paginationOptions" @autoplayTimeLeft="onAutoplayTimeLeft">
 				<SwiperSlide v-for="item of products" class="relative rounded-[1.25rem] overflow-hidden !h-auto">
 					<ProductItem :item="item" />
 				</SwiperSlide>
 				<template #container-end>
-					<SwiperPagination />
+					<div ref="progressCircle">
+						<SwiperPagination />
+					</div>
 				</template>
 			</Swiper>
 		</div>
 	</section>
 </template>
 
-<style scoped></style>
+<style></style>

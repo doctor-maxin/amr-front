@@ -47,8 +47,7 @@ const searchProducts = async () => {
 			},
 		});
 		list.value = items;
-		params.search = search.value
-		console.log(items);
+		params.search = String(search.value).trim().replace(/[^А-яЁё A-Za-z]/g, '')
 	} catch (e: any) {
 		console.error(e);
 	}

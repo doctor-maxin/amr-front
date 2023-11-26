@@ -7,6 +7,7 @@ import AttachesBlock from "~/components/blocks/AttachesBlock.vue";
 import QuoteBlock from "~/components/blocks/QuoteBlock.vue";
 import ImageBlock from "~/components/blocks/ImageBlock.vue";
 import ArticleSlider from "./ArticleSlider.vue";
+import ArticleSlides from './ArticleSlides.vue'
 
 const props = defineProps<{
 	item: any;
@@ -24,6 +25,7 @@ watchEffect(async () => {
 			},
 			fields: [
 				"*",
+				'slides.*',
 				"products.productPoints_id.*",
 				"products.productPoints_id.product.name",
 				"products.productPoints_id.product.handle",
@@ -38,21 +40,18 @@ watchEffect(async () => {
 	<div v-if="item.collection === 'blogBlocks' && data?.length">
 		<template v-for="block of data[0].content?.blocks" :key="block.id">
 			<HeaderBlock v-if="block.type === 'header'" :block="block" />
-			<ParagraphBlock
-				v-else-if="block.type === 'paragraph'"
-				:block="block"
-			/>
+			<ParagraphBlock v-else-if="block.type === 'paragraph'" :block="block" />
 			<ListBlock v-else-if="block.type === 'nestedlist'" :block="block" />
 			<TableBlock v-else-if="block.type === 'table'" :block="block" />
-			<AttachesBlock
-				v-else-if="block.type === 'attaches'"
-				:block="block"
-			/>
+			<AttachesBlock v-else-if="block.type === 'attaches'" :block="block" />
 			<QuoteBlock v-else-if="block.type === 'quote'" :block="block" />
 			<ImageBlock v-else-if="block.type === 'image'" :block="block" />
 		</template>
 	</div>
 	<div v-else-if="item.collection === 'blogProductPoints' && data?.length">
 		<ArticleSlider :data="data[0]" />
+	</div>
+	<div v-else-if="item.collection === 'blogProductPointsList' && data.length">
+		<ArticleSlides :data="data[0]" />
 	</div>
 </template>

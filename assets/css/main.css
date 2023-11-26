@@ -108,3 +108,25 @@ a:hover {
 a:hover.text-white svg {
 	color: white;
 }
+.autoplay-progress {
+	color: hsla(220, 8%, 22%, 1);
+}
+
+.autoplay-progress svg {
+	opacity: 0;
+	position: absolute;
+	left: -5px;
+	top: -5px;
+	z-index: 10;
+	width: 24px;
+	height: 24px;
+	stroke-width: 2px;
+	stroke: hsla(220, 8%, 22%, 1);
+	fill: none;
+	stroke-dashoffset: calc(70 * (1 - var(--progress)));
+	stroke-dasharray: 70;
+	transform: rotate(-90deg);
+}
+#tooltip-container {
+	z-index: 10;
+}

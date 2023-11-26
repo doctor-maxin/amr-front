@@ -2,8 +2,11 @@ import {
 	createDirectus,
 	staticToken,
 	createItem,
+	readItems,
+	readSingleton,
 	uploadFiles,
 	rest,
+	updateSingleton,
 } from "@directus/sdk";
 import { createError } from "@directus/errors";
 import { createBitrixLead } from "~/server/utils/bitrix.contacts";
@@ -64,8 +67,17 @@ export default defineEventHandler(async (event) => {
 				products: productsPayload,
 			}),
 		);
-		console.log("[directusCreaterequest]", req);
-		createBitrixLead(data, query);
+
+		const managers = await client.request(readSingleton('managers'))
+
+		console.log("[directusCreaterequest]", req, managers);
+		const list: string[] = managers?.ids?.split(',')
+		const firstElement = list.shift() as string
+		createBitrixLead(data, query.from as string, query, firstElement)
+
+		client.request(updateSingleton('managers', {
+			ids: [...list, firstElement].join(',')
+		})).then((r) => console.log(r))
 
 		return {
 			id: req.id,

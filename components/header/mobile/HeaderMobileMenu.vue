@@ -29,68 +29,28 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 
 <template>
 	<div class="">
-		<nav
-			class="pb-8"
-			itemscope
-			itemtype="http://schema.org/SiteNavigationElement"
-		>
-			<ul
-				class="header-mobile-menu flex flex-col gap-[1.375rem]"
-				itemprop="about"
-				itemscope
-				itemtype="http://schema.org/ItemList"
-			>
-				<li
-					itemprop="itemListElement"
-					itemscope
-					itemtype="http://schema.org/ItemList"
-				>
-					<nuxt-link
-						@click.native="api.close()"
-						itemprop="url"
-						to="/blog"
-						>Идеи и тренды</nuxt-link
-					>
+		<nav class="pb-8" itemscope itemtype="http://schema.org/SiteNavigationElement">
+			<ul class="header-mobile-menu flex flex-col gap-[1.375rem]" itemprop="about" itemscope
+				itemtype="http://schema.org/ItemList">
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+					<nuxt-link @click.native="api.close()" itemprop="url" to="/blog">Идеи и тренды</nuxt-link>
 					<meta content="Идеи и тренды" itemprop="name" />
 				</li>
-				<li
-					itemprop="itemListElement"
-					itemscope
-					itemtype="http://schema.org/ItemList"
-				>
-					<nuxt-link
-						@click.native="api.close()"
-						itemprop="url"
-						to="/about"
-						>О нас</nuxt-link
-					>
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+					<nuxt-link @click.native="api.close()" itemprop="url" to="/about">О нас</nuxt-link>
 					<meta content="О нас" itemprop="name" />
 				</li>
-				<li
-					itemprop="itemListElement"
-					itemscope
-					itemtype="http://schema.org/ItemList"
-				>
-					<nuxt-link
-						@click.native="api.close()"
-						itemprop="url"
-						to="/contacts"
-						>Контакты</nuxt-link
-					>
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+					<nuxt-link @click.native="api.close()" itemprop="url" to="/career">Карьера</nuxt-link>
+					<meta content="Карьера" itemprop="name" />
+				</li>
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+					<nuxt-link @click.native="api.close()" itemprop="url" to="/contacts">Контакты</nuxt-link>
 					<meta content="Контакты" itemprop="name" />
 				</li>
-				<li
-					v-for="page of pages?.navBars"
-					:key="page.id"
-					itemprop="itemListElement"
-					itemscope
-					itemtype="http://schema.org/ItemList"
-				>
-					<nuxt-link
-						@click.native="api.close()"
-						:to="page.handle"
-						itemprop="url"
-					>
+				<li v-for="page of pages?.navBars" :key="page.id" itemprop="itemListElement" itemscope
+					itemtype="http://schema.org/ItemList">
+					<nuxt-link @click.native="api.close()" :to="page.handle" itemprop="url">
 						{{ page.title }}
 					</nuxt-link>
 					<meta :content="page.title" itemprop="name" />
@@ -100,16 +60,9 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 		<div class="" itemscope itemtype="http://schema.org/Organization">
 			<address class="flex flex-col gap-5 not-italic">
 				<div class="flex flex-col gap-3">
-					<span class="text-system-gray-900 text-base"
-						>Адрес шоурума</span
-					>
-					<span
-						class="text-lg font-medium text-system-black-900"
-						itemprop="address"
-						itemscope
-						itemtype="http://schema.org/PostalAddress"
-						>{{ settings?.adressShowRoom }}</span
-					>
+					<span class="text-system-gray-900 text-base">Адрес шоурума</span>
+					<span class="text-lg font-medium text-system-black-900" itemprop="address" itemscope
+						itemtype="http://schema.org/PostalAddress">{{ settings?.adressShowRoom }}</span>
 				</div>
 				<div class="flex flex-col gap-3">
 					<span class="text-system-gray-900 text-base">Контакты</span>

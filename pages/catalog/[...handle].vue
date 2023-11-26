@@ -38,7 +38,7 @@ const activeCategory = computed<ICategory | undefined>(() =>
 	categories.value?.find((item) => item.handle?.endsWith(pageHandle.value))
 );
 useHead({
-  title: activeCategory.value ? activeCategory.value.name : 'Каталог'
+	title: activeCategory.value ? activeCategory.value.name : 'Каталог'
 })
 
 const filters = ref<IFilters["filters"]>([]);
@@ -108,7 +108,7 @@ const reFetchData = async (withFilterCheck = true) => {
 			collection: "products",
 			params: {
 				filter,
-				meta: "filter_count",
+				meta: "*",
 				page: params.page,
 				sort,
 				limit: limit.value,
@@ -132,13 +132,13 @@ const reFetchData = async (withFilterCheck = true) => {
 			products.value = []
 			for (const product of result.data) {
 				if (product?.variants?.length) {
-					for (const variant of product.variants) 
-					products.value.push({
-						...product,
-						name: variant.name,
-						images: variant.images?.length ? variant.images : product.images,
-						handle: product.handle + '?variantId=' + variant.id
-					})
+					for (const variant of product.variants)
+						products.value.push({
+							...product,
+							name: variant.name,
+							images: variant.images?.length ? variant.images : product.images,
+							handle: product.handle + '?variantId=' + variant.id
+						})
 				} else {
 					products.value.push(product)
 				}
@@ -240,36 +240,23 @@ useListen("on-sort", (sort) => {
 
 <template>
 	<div class="flex-1">
-		<PageHeader
-			:bread-crumbs="breadCrumbs"
-			:link="{
-				title: 'Назад',
-				path: 'back',
-			}"
-			:page-name="activeCategory?.name ?? ''"
-		/>
+		<PageHeader :bread-crumbs="breadCrumbs" :link="{
+			title: 'Назад',
+			path: 'back',
+		}" :page-name="activeCategory?.name ?? ''" />
 		<main
-			class="pt-[2.37rem] lg:pt-[4.62rem] w-full lg:pb-[8.25rem] lg:px-[4.38rem] max-w-[120rem] lg:mx-auto px-4 pb-[6.88rem]"
-		>
+			class="pt-[2.37rem] lg:pt-[4.62rem] w-full lg:pb-[8.25rem] lg:px-[4.38rem] max-w-[120rem] lg:mx-auto px-4 pb-[6.88rem]">
 			<template v-if="!isLoading && items.length">
 				<CatalogCategories :items="items" />
 			</template>
 			<template v-else-if="!isLoading">
+				<CatalogFilters v-if="totalCount" :items="filters" />
 				<template v-if="products?.length">
-					<CatalogFilters :items="filters" />
 					<CatalogProducts :items="products" />
-					<UiPagination
-						:page="+params.page"
-						@onPage="params.page = $event"
-						:total="totalCount"
-						:limit="limit"
-						class="mt-6"
-					/>
+					<UiPagination :page="+params.page" @onPage="params.page = $event" :total="totalCount" :limit="limit"
+						class="mt-6" />
 				</template>
-				<h2
-					v-else
-					class="text-2xl text-center text-system-gray-900 font-semibold text-opacity-40"
-				>
+				<h2 v-else class="text-2xl text-center text-system-gray-900 font-semibold text-opacity-40">
 					В этой категории пока нет товаров
 				</h2>
 			</template>

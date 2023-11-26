@@ -21,94 +21,46 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 </script>
 
 <template>
-	<Transition
-		enter-active-class="transition duration-200 ease-out"
-		enter-from-class="opacity-0"
-		enter-to-class=" opacity-100"
-		leave-active-class="transition duration-150 ease-in"
-		leave-from-class=" opacity-100"
-		leave-to-class=" opacity-0"
-	>
-		<div
-			v-show="api.isOpen"
-			:class="{}"
+	<Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0"
+		enter-to-class=" opacity-100" leave-active-class="transition duration-150 ease-in" leave-from-class=" opacity-100"
+		leave-to-class=" opacity-0">
+		<div v-show="api.isOpen" :class="{}"
 			class="w-screen absolute overflow-hidden glass transition-opacity top-full bottom-auto z-20 main-menu"
-			@click.native="api.close()"
-		>
-			<Transition
-				enter-active-class="transition duration-200 ease-out"
-				enter-from-class="translate-y-1"
-				enter-to-class="translate-y-0"
-				leave-active-class="transition duration-150 ease-in"
-				leave-from-class="translate-y-0"
-				leave-to-class="translate-y-1"
-			>
-				<div
-					v-if="api.isOpen"
-					class="main-menu-content gap-6 flex flex-col justify-between animate-menu-down transition ml-auto bg-system-gray-500 max-w-[40.1875rem] px-[5.87rem]"
-				>
-					<nav
-						class="main-nav text-system-black-900"
-						itemscope
-						itemtype="http://schema.org/SiteNavigationElement"
-					>
-						<ul
-							itemprop="about"
-							itemscope
-							itemtype="http://schema.org/ItemList"
-						>
-							<li
-								itemprop="itemListElement"
-								itemscope
-								itemtype="http://schema.org/ItemList"
-							>
-								<nuxt-link
-									@click.native="api.close()"
-									itemprop="url"
-									to="/catalog"
-								>
+			@click.native="api.close()">
+			<Transition enter-active-class="transition duration-200 ease-out" enter-from-class="translate-y-1"
+				enter-to-class="translate-y-0" leave-active-class="transition duration-150 ease-in"
+				leave-from-class="translate-y-0" leave-to-class="translate-y-1">
+				<div v-if="api.isOpen"
+					class="main-menu-content gap-6 flex flex-col justify-between animate-menu-down transition ml-auto bg-system-gray-500 max-w-[40.1875rem] px-[5.87rem]">
+					<nav class="main-nav text-system-black-900" itemscope
+						itemtype="http://schema.org/SiteNavigationElement">
+						<ul itemprop="about" itemscope itemtype="http://schema.org/ItemList">
+							<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+								<nuxt-link @click.native="api.close()" itemprop="url" to="/catalog">
 									<span>Каталог</span>
 								</nuxt-link>
 								<meta content="Каталог" itemprop="name" />
 							</li>
-							<li
-								itemprop="itemListElement"
-								itemscope
-								itemtype="http://schema.org/ItemList"
-							>
-								<nuxt-link
-									@click.native="api.close()"
-									itemprop="url"
-									to="/blog"
-								>
+							<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+								<nuxt-link @click.native="api.close()" itemprop="url" to="/blog">
 									<span>Идеи и тренды</span>
 								</nuxt-link>
 								<meta content="Идеи и тренды" itemprop="name" />
 							</li>
-							<li
-								itemprop="itemListElement"
-								itemscope
-								itemtype="http://schema.org/ItemList"
-							>
-								<nuxt-link
-									@click.native="api.close()"
-									itemprop="url"
-									to="/about"
-								>
+							<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+								<nuxt-link @click.native="api.close()" itemprop="url" to="/about">
 									<span>О нас</span>
 								</nuxt-link>
 								<meta content="О нас" itemprop="name" />
 							</li>
-							<li
-								itemprop="itemListElement"
-								itemscope
-								itemtype="http://schema.org/ItemList"
-							>
-								<nuxt-link
-									@click.native="api.close()"
-									itemprop="url"
-									to="/contacts"
-								>
+							<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+								<nuxt-link @click.native="api.close()" itemprop="url" to="/career">
+									<span>Карьера</span>
+								</nuxt-link>
+								<meta content="Карьера" itemprop="name" />
+							</li>
+							<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+								<nuxt-link @click.native="api.close()" itemprop="url" to="/contacts">
 									<span>Контакты</span>
 								</nuxt-link>
 								<meta content="Контакты" itemprop="name" />
@@ -116,36 +68,15 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 						</ul>
 					</nav>
 
-					<nav
-						class="second-nav text-system-black-900"
-						itemscope
-						itemtype="http://schema.org/SiteNavigationElement"
-					>
-						<ul
-							itemprop="about"
-							itemscope
-							itemtype="http://schema.org/ItemList"
-						>
-							<template
-								v-for="page of pages?.navBars"
-								:key="page.id"
-							>
-								<li
-									itemprop="itemListElement"
-									itemscope
-									itemtype="http://schema.org/ItemList"
-								>
-									<nuxt-link
-										@click.native="api.close()"
-										:to="page?.handle"
-										itemprop="url"
-									>
+					<nav class="second-nav text-system-black-900" itemscope
+						itemtype="http://schema.org/SiteNavigationElement">
+						<ul itemprop="about" itemscope itemtype="http://schema.org/ItemList">
+							<template v-for="page of pages?.navBars" :key="page.id">
+								<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ItemList">
+									<nuxt-link @click.native="api.close()" :to="page?.handle" itemprop="url">
 										<span>{{ page.title }}</span>
 									</nuxt-link>
-									<meta
-										:content="page?.title"
-										itemprop="name"
-									/>
+									<meta :content="page?.title" itemprop="name" />
 								</li>
 							</template>
 						</ul>
@@ -153,24 +84,13 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 					<address>
 						<div class="address-block">
 							<span class="address-header">Адрес шоурума</span>
-							<span
-								class="font-medium text-[1.125rem]"
-								itemprop="address"
-								itemscope
-								itemtype="http://schema.org/PostalAddress"
-								>{{ settings?.adressShowRoom }}</span
-							>
+							<span class="font-medium text-[1.125rem]" itemprop="address" itemscope
+								itemtype="http://schema.org/PostalAddress">{{ settings?.adressShowRoom }}</span>
 						</div>
 						<div class="address-block">
 							<span class="address-header">Контакты</span>
-							<EmailLink
-								:email="settings?.Email"
-								class="!font-medium text-[1.125rem]"
-							/>
-							<TelLink
-								:tel="settings?.phone"
-								class="-mt-1 whitespace-nowrap !font-medium text-[1.125rem]"
-							/>
+							<EmailLink :email="settings?.Email" class="!font-medium text-[1.125rem]" />
+							<TelLink :tel="settings?.phone" class="-mt-1 whitespace-nowrap !font-medium text-[1.125rem]" />
 						</div>
 					</address>
 				</div>
@@ -184,6 +104,7 @@ const { data: settings } = useNuxtData<ISettings>("settings");
 	from {
 		opacity: 0;
 	}
+
 	to {
 		opacity: 1;
 	}

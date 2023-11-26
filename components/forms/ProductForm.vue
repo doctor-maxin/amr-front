@@ -47,8 +47,10 @@ const sendForm = handleSubmit(async (values) => {
 	form.append("comment", values.comment);
 	form.append('variant', route.query?.variantId)
 	form.append("product", JSON.stringify(product.value));
+	const params = new URLSearchParams(window.location.search)
+	params.append('from', window.location.href)
 
-	const { data } = await useFetch("/api/callback").post(form).json<{
+	const { data } = await useFetch(`/api/callback?${params.toString()}`).post(form).json<{
 		id: string;
 		status: string;
 	}>();

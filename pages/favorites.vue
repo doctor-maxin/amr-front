@@ -16,9 +16,10 @@ import UiSpinner from "../components/ui/UiSpinner.vue";
 import ProductItem from "../components/catalog/product/ProductItem.vue";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiPagination from "../components/ui/UiPagination.vue";
+import UiLink from '~/components/ui/UiLink.vue'
 
 useHead({
-  title: 'Избранное'
+	title: 'Избранное'
 })
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
@@ -80,34 +81,26 @@ watchEffect(async () => {
 <template>
 	<main class="flex-1">
 		<PageHeader :bread-crumbs="breadCrumbs" page-name="Избранное" />
-		<div
-			class="pt-[2.375rem] px-4 pb-[6.88rem] lg:pb-[8.75rem] lg:pt-[4.63rem]"
-		>
+		<div class="pt-[2.375rem] px-4 pb-[6.88rem] lg:pb-[8.75rem] lg:pt-[4.63rem]">
 			<template v-if="isLoading">
 				<UiSpinner />
 			</template>
 			<template v-else>
 				<template v-if="products.length">
-					<div
-						class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-[1.875rem]"
-					>
+					<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-[1.875rem]">
 						<template v-for="item of products">
 							<ProductItem :item="item" />
 						</template>
 					</div>
-					<UiPagination
-						:limit="9"
-						:page="+params.page"
-						:total="totalCount"
-						class="mt-6"
-						@onPage="params.page = $event"
-					/>
+					<UiPagination :limit="9" :page="+params.page" :total="totalCount" class="mt-6"
+						@onPage="params.page = $event" />
 				</template>
-				<div
-					v-else
-					class="mt-[1rem] text-center mx-auto lg:text-2xl font-semibold lg:mt-[2.5rem] text-system-black-900 text-opacity-40"
-				>
-					{{ appConfig.favorites.emptyList }}
+				<div v-else class="flex flex-col items-center gap-8 lg:gap-10">
+					<div
+						class="mt-[1rem] text-center mx-auto lg:text-2xl font-semibold lg:mt-[2.5rem] text-system-black-900 text-opacity-40">
+						{{ appConfig.favorites.emptyList }}
+					</div>
+					<UiLink to="/catalog" title="Перейти в каталог" variant="dark" class="lg:min-w-[22rem]" />
 				</div>
 			</template>
 		</div>

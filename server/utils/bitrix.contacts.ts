@@ -52,7 +52,9 @@ export async function createBitrixContact(data) {
 
 export async function createBitrixLead(
 	data: ILeadCreatePayload,
+	from: string,
 	utms: IUTMPayload,
+	active: string
 ) {
 	const client = useBitrixClient();
 	const phone = data.phone.replace(/[^\w\s]/gi, "");
@@ -103,28 +105,33 @@ export async function createBitrixLead(
 				},
 			],
 			STATUS: "NEW",
-			ASSIGNED_BY_ID: 27,
+			ASSIGNED_BY_ID: active.trim(),
 			COMMENTS: data.comment,
 			UF_CRM_1693211893: reqType,
+			UF_CRM_1700389811434: from,
 			UTM_CONTENT: utms.utm_content,
 			UTM_TERM: utms.utm_term,
 			UTM_CAMPAIGN: utms.utm_campaign,
 			UTM_MEDIUM: utms.utm_medium,
 			UTM_SOURCE: utms.utm_source,
-		});
-		await client.leads.update(lead.result.toString(), {
-			STATUS_ID: "NEW",
-		});
-		client.call("crm.lead.productrows.set", {
-			id: lead.result,
-			rows: [
-				{
-					PRODUCT_NAME: productName,
-					PRICE: data.product.price,
-					QUANTITY: data.product.count,
-				},
-			],
-		});
+		}).catch(console.error)
+
+		if (lead?.result) {
+			await client.leads.update(lead.result.toString(), {
+				STATUS_ID: "NEW",
+			});
+
+			client.call("crm.lead.productrows.set", {
+				id: lead.result,
+				rows: [
+					{
+						PRODUCT_NAME: productName,
+						PRICE: data.product.price,
+						QUANTITY: data.product.count,
+					},
+				],
+			});
+		}
 		console.log("LEAD", lead);
 		return lead;
 	} else {
@@ -139,9 +146,10 @@ export async function createBitrixLead(
 				},
 			],
 			COMMENTS: data.comment ?? "",
-			ASSIGNED_BY_ID: 27,
+			ASSIGNED_BY_ID: active.trim(),
 			STATUS: "NEW",
 			UF_CRM_1693211893: reqType ?? "",
+			UF_CRM_1700389811434: from,
 			UTM_CONTENT: utms.utm_content ?? "",
 			UTM_TERM: utms.utm_term ?? "",
 			UTM_CAMPAIGN: utms.utm_campaign ?? "",
@@ -153,10 +161,14 @@ export async function createBitrixLead(
 		};
 
 		//@ts-ignore
-		const lead = await client.leads.create(payload);
-		await client.leads.update(lead.result.toString(), {
-			STATUS_ID: "NEW",
-		});
+		const lead = await client.leads.create(payload).catch(console.error)
+		if (lead?.result) {
+
+			await client.leads.update(lead.result.toString(), {
+				STATUS_ID: "NEW",
+			});
+		}
+
 		console.log("LEAD", lead);
 		return lead;
 	}

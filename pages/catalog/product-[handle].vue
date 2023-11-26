@@ -114,10 +114,10 @@ const productSeemsCategegoryId = computed(() => {
 			<ProductInfo :variant="activeVariants" :bread-crumbs="breadCrumbs" :product="product" />
 		</div>
 		<div>
-			<ProductProjects :product-id="product?.id" />
+			<ProductSeems :product-id="product?.id" :category-id="productSeemsCategegoryId" />
 		</div>
 		<div>
-			<ProductSeems :product-id="product?.id" :category-id="productSeemsCategegoryId" />
+			<ProductProjects :can-not-bye="product?.canNotBye ?? false" :product-id="product?.id" />
 		</div>
 	</div>
 </template>

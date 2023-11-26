@@ -18,7 +18,7 @@ const router = useRouter();
 <template>
 	<div class="bg-system-gray-500 relative page-header overflow-hidden">
 		<div
-			class="flex flex-col p-7 items-center lg:pt-[4.12rem] lg:pb-[4.06rem] gap-1 lg:gap-0 z-10 text-white bg-gradient-to-b from-black-30 to-black-30 w-full h-full">
+			class="flex flex-col p-7 items-center lg:pt-[1.62rem] lg:pb-[2.5rem] gap-1 lg:gap-0 z-10 text-white bg-gradient-to-b from-black-30 to-black-30 w-full h-full">
 			<h1 class="">{{ pageName }}</h1>
 			<button v-if="link"
 				class="font-semibold group top-[2.6375rem] left-[4.375rem] absolute text-[1.125rem] gap-1.5 hidden lg:flex items-center"

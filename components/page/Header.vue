@@ -14,7 +14,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="p-7 bg-system-gray-500 relative page-header lg:pt-[4.12rem] lg:pb-[4.06rem]">
+  <div class="p-7 bg-system-gray-500 relative page-header lg:pt-[1.62rem] lg:pb-[2.5rem]">
     <h1 class="">{{ pageName }}</h1>
     <button v-if="link"
       class="font-semibold group top-[2.6375rem] left-[4.375rem] absolute text-[1.125rem] gap-1.5 hidden lg:flex items-center"
@@ -49,4 +49,5 @@ const router = useRouter()
       font-size: 2.625rem;
     }
   }
-}</style>
+}
+</style>
