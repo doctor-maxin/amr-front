@@ -25,11 +25,6 @@ const toCheckout = () => {
 			variant.name : product.name }}</h1>
 		<p itemprop="description" class="font-medium text-system-black-950" v-html="product.description" />
 		<ProductInfoVariants :variants="product.variants" v-if="product.variants?.length && product.canNotBye" />
-		<button @click="toCheckout" v-if="product.count > 0 && !product.canNotBye" :disabled="product.count <= 0"
-			class="px-[1.375rem] mt-4 w-full  rounded-full border border-system-black-950 lg:hidden items-center justify-center h-[4rem]"
-			type="button">
-			<span class="font-semibold">Покупка в 1 клик</span>
-		</button>
 	</div>
 </template>
 

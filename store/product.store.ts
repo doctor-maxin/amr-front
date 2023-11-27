@@ -1,11 +1,11 @@
-import {defineStore} from "pinia";
-import {IProduct} from "~/types/product";
+import { defineStore } from "pinia";
+import { IProduct } from "~/types/product";
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 type ProductState = {
     activeTab: Tabs;
-    product: IProduct |null;
+    product: IProduct | null;
     isLoading: boolean;
     isLoadingModel: boolean;
     data: null | IProductConstructor;
@@ -16,41 +16,42 @@ export enum Tabs {
     PROPS = "properties",
     CONST = 'constructor'
 }
-type IMaterialItem = {
+export type IMaterialItem = {
     id: number;
     name: string;
     image: string;
     price: number;
 }
-type IProductMaterial = {
-    name:string;
+export type IProductMaterial = {
+    name: string;
     id: number;
-    nameList:string;
-    items: number[];
+    nameList: string;
+    items: {
+        productConstructorMaterialItem_id: IMaterialItem
+    }[];
     selectedValue?: number;
 }
-type IProductConstructor = {
+export type IProductConstructor = {
     id: number;
     description: string;
     file3D: string;
-    cameraX: number;
-    cameraY: number;
-    cameraZ: number;
+    position: string;
+    rotation: string;
     materials: { productConstructorMaterials_id: IProductMaterial }[];
 }
 
 export const useProductStore = defineStore('product-store', {
-   state: (): ProductState => ({
-       activeTab: Tabs.DESC,
-       product: null,
-       isLoading: false,
-       isLoadingModel: false,
-       materialItems: [],
-       data: null,
-       scene: null,
-       camera: null,
-       renderer: null
-   }),
+    state: (): ProductState => ({
+        activeTab: Tabs.DESC,
+        product: null,
+        isLoading: false,
+        isLoadingModel: false,
+        materialItems: [],
+        data: null,
+        scene: null,
+        camera: null,
+        renderer: null
+    }),
     actions: {
         selectOption(materialId: number, valueId: number) {
             if (this.data) {
@@ -58,7 +59,7 @@ export const useProductStore = defineStore('product-store', {
                 if (materialItem) {
                     materialItem.productConstructorMaterials_id.selectedValue = valueId;
                     const item = this.materialItems.find(i => i.id === valueId)
-                    useEvent('selectOption',{
+                    useEvent('selectOption', {
                         list: materialItem.productConstructorMaterials_id.nameList,
                         image: item?.image
                     })
@@ -94,19 +95,19 @@ export const useProductStore = defineStore('product-store', {
             // return renderer.domElement
         },
         startAnimate() {
-            requestAnimationFrame( this.startAnimate );
-            this.renderer.render( this.scene, this.camera );
+            requestAnimationFrame(this.startAnimate);
+            this.renderer.render(this.scene, this.camera);
         },
         startLoadModel(path) {
             const light = new THREE.AmbientLight(0x404040)
             this.scene.add(light)
 
             const loader = new GLTFLoader();
-            loader.load( path,  ( gltf ) => {
-                this.scene.add( gltf.scene );
-            }, undefined, function ( error ) {
-                console.error( error );
-            } );
+            loader.load(path, (gltf) => {
+                this.scene.add(gltf.scene);
+            }, undefined, function (error) {
+                console.error(error);
+            });
         }
     }
 })

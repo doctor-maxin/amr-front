@@ -37,7 +37,7 @@ export default async function createBitrixOrder(
 		CLOSED: "N",
 		CATEGORY_ID: "27",
 		ASSIGNED_BY_ID: active.trim(),
-		STAGE_ID: "NEW",
+		STAGE_ID: "C27:NEW",
 		UTM_CONTENT: query?.utm_content?.toString() ?? "",
 		UTM_MEDIUM: query?.utm_medium?.toString() ?? "",
 		UTM_TERM: query?.utm_term?.toString() ?? "",
@@ -50,8 +50,8 @@ export default async function createBitrixOrder(
 			payload.paymentType === PaymentTypes.TINKOFF
 				? "Онлайн по карте"
 				: payload.paymentType++ + PaymentTypes.SELF_CARD
-				? "При получении картой"
-				: "При получении наличными",
+					? "При получении картой"
+					: "При получении наличными",
 		UF_CRM_1695564173225:
 			payload.deliveryType === DeliveryTypes.points
 				? "Самовывоз"

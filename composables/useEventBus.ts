@@ -16,6 +16,10 @@ type ApplicationEvents = {
 	"close-modals": void;
 	"select:variant": IVariant;
 	'setDeliveryPoint': IStore;
+	'selectOption': {
+		list: string;
+		image?: string;
+	}
 };
 
 const emitter = mitt<ApplicationEvents>();

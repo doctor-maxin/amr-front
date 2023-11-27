@@ -10,9 +10,11 @@ import { Tabs, useProductStore } from "~/store/product.store";
 import { storeToRefs } from "pinia";
 import ProductInfoOptions from "~/components/catalog/product/info/ProductInfoOptions.vue";
 import { Tooltip } from '@programic/vue3-tooltip';
+import type { IProductConstructor, IMaterialItem } from '~/store/product.store'
 
 const productStore = useProductStore()
 const { activeTab } = storeToRefs(productStore)
+const router = useRouter();
 
 const props = defineProps<{
   product: IProduct;
@@ -22,31 +24,34 @@ const props = defineProps<{
 const { getItems } = useDirectusItems()
 productStore.setProduct(props.product)
 
+const toCheckout = () => {
+  router.push({
+    path: "/checkout",
+    query: {
+      productId: props.product.id,
+    },
+  });
+};
+
 watchEffect(async () => {
-  const items = await getItems({
+  const items = await getItems<IProductConstructor>({
     collection: 'productConstructor',
     params: {
       filter: {
         productId: props.product.id
       },
-      fields: ['*', 'materials.productConstructorMaterials_id.*']
+      fields: ['*', 'materials.productConstructorMaterials_id.*', 'materials.productConstructorMaterials_id.items.productConstructorMaterialItem_id.*']
     }
   })
   if (items?.length) {
-    const idList = []
-    for (const material of items[0].materials) {
-      idList.push(...material.productConstructorMaterials_id.items)
-    }
-    const materialItems = await getItems({
-      collection: 'productConstructorMaterialItem',
-      params: {
-        filter: {
-          id: {
-            _in: idList
-          }
-        }
+    const materialItems: IMaterialItem[] = []
+
+    for (const item of items[0].materials) {
+      for (const material of item.productConstructorMaterials_id.items) {
+        materialItems.push(material.productConstructorMaterialItem_id)
       }
-    })
+    }
+
     productStore.setMaterialItems(materialItems)
     productStore.setData(items[0])
   }
@@ -105,8 +110,8 @@ watchEffect(async () => {
           <svgo-close-arrow class="text-[1.875rem]" filled />
           <span class="text-lg font-bold text-system-black-950">Закрыть конструктор</span>
         </button>
-        <UiButton v-if="product.count > 0 && !product.canNotBye" class="w-full h-[3.25rem]" title="Покупка в 1 клик"
-          title-class="text-center block mx-auto" type="button" />
+        <UiButton @click="toCheckout" v-if="product.count > 0 && !product.canNotBye" class="w-full h-[3.25rem]"
+          title="Покупка в 1 клик" title-class="text-center block mx-auto" type="button" />
       </div>
       <ProductInfoOptions v-if="activeTab === Tabs.CONST" :product="product" :variant="variant" show-variants />
       <ProductInfoActions :product="product" class="mt-auto" />

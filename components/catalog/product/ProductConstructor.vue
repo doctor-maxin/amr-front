@@ -3,7 +3,6 @@ import { useProductStore } from "~/store/product.store";
 import { storeToRefs } from "pinia";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
 
 const productStore = useProductStore();
@@ -31,8 +30,43 @@ const animate = () => {
 	renderer.value.render(scene.value, camera.value);
 };
 
+const onResize = () => {
+	if (container.value) {
+		const width = container.value.getBoundingClientRect().width;
+		const height = container.value.getBoundingClientRect().height;
+		renderer.value.setSize(width, height);
+	}
+}
+
+onBeforeUnmount(() => {
+	if (process.client) window.removeEventListener('resize', onResize)
+})
+
+const setCameraData = () => {
+	if (!camera.value) return;
+
+	const position = data.value?.position?.split(',')
+	const pX = position?.[0] ? Number(position[0]) : 0
+	const pY = position?.[1] ? Number(position[1]) : 0
+	const pZ = position?.[2] ? Number(position[2]) : 0
+	const rotation = data.value?.rotation?.split(',')
+	const rX = rotation?.[0] ? Number(rotation[0]) : 0
+	const rY = rotation?.[1] ? Number(rotation[1]) : 0
+	const rZ = rotation?.[2] ? Number(rotation[2]) : 0
+
+	//@ts-ignore
+	camera.value.position.set(pX, pY, pZ)
+	//@ts-ignore
+	camera.value.rotation.set(rX, rY, rZ)
+}
+
 onMounted(async () => {
 	if (process.client && container.value) {
+		setTimeout(() => {
+			onResize()
+		}, 300)
+		window.addEventListener('resize', onResize)
+
 		const width = container.value.getBoundingClientRect().width;
 		const height = container.value.getBoundingClientRect().height;
 		renderer.value.setSize(width, height);
@@ -43,10 +77,8 @@ onMounted(async () => {
 			0.1,
 			100
 		);
-		camera.value.position.set(0, 1.2, -2.5);
-		camera.value.rotation.set(6.3, 3.1, 0);
-		const axesHelper = new THREE.AxesHelper(3);
-		// scene.value.add(axesHelper);
+
+		setCameraData()
 		const dirLight = new THREE.DirectionalLight(0xffffff, 3);
 		dirLight.position.set(-3, 10, -10);
 		dirLight.castShadow = true;
@@ -92,10 +124,7 @@ useListen("selectOption", (ev) => {
 
 <template>
 	<div class="aspect-square relative sticky top-0 w-full" ref="container">
-		<div
-			v-if="isLoading"
-			class="bg-white w-full h-full absolute top-0 left-0 flex items-center justify-center"
-		>
+		<div v-if="isLoading" class="bg-white w-full h-full absolute top-0 left-0 flex items-center justify-center">
 			<UiSpinner />
 		</div>
 	</div>
