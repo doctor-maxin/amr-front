@@ -4,12 +4,14 @@ import { storeToRefs } from "pinia";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import UiSpinner from "~/components/ui/UiSpinner.vue";
 
 const productStore = useProductStore();
 const { data } = storeToRefs(productStore);
 const container = ref<HTMLDivElement | null>(null);
 const renderer = shallowRef(new THREE.WebGLRenderer());
 const scene = shallowRef(new THREE.Scene());
+const isLoading = ref(true);
 const camera = shallowRef(null);
 const light = shallowRef(new THREE.AmbientLight(0x404040, 10));
 const loader = shallowRef(new GLTFLoader());
@@ -26,9 +28,6 @@ const animate = () => {
 	requestAnimationFrame(animate);
 	// controls.value.update();
 
-	// camera.value.rotation.z += 0.01;
-	console.log(camera.value.rotation.y);
-
 	renderer.value.render(scene.value, camera.value);
 };
 
@@ -39,20 +38,15 @@ onMounted(async () => {
 		renderer.value.setSize(width, height);
 		container.value.appendChild(renderer.value.domElement);
 		camera.value = new THREE.PerspectiveCamera(
-			45,
+			60,
 			width / height,
 			0.1,
 			100
 		);
-		camera.value.position.set(0, 1, -1);
-		camera.value.rotation.set(6, 3, 10);
+		camera.value.position.set(0, 1.2, -2.5);
+		camera.value.rotation.set(6.3, 3.1, 0);
 		const axesHelper = new THREE.AxesHelper(3);
-		scene.value.add(axesHelper);
-		// controls.value = new OrbitControls(
-		// 	camera.value,
-		// 	renderer.value.domElement
-		// );
-		console.log(controls.value);
+		// scene.value.add(axesHelper);
 		const dirLight = new THREE.DirectionalLight(0xffffff, 3);
 		dirLight.position.set(-3, 10, -10);
 		dirLight.castShadow = true;
@@ -70,6 +64,7 @@ onMounted(async () => {
 			`${config.public.directus.url}/assets/${data.value?.file3D}`,
 			(gltf) => {
 				scene.value.add(gltf.scene);
+				isLoading.value = false;
 			},
 			undefined,
 			(err) => {
@@ -80,7 +75,6 @@ onMounted(async () => {
 });
 
 useListen("selectOption", (ev) => {
-	console.log("selectOption", ev);
 	for (const name of ev.list.split(",")) {
 		const mesh = scene.value.getObjectByName(name);
 		if (mesh) {
@@ -92,13 +86,19 @@ useListen("selectOption", (ev) => {
 				}
 			);
 		}
-		console.log(mesh);
 	}
 });
 </script>
 
 <template>
-	<div class="aspect-square w-full" ref="container"></div>
+	<div class="aspect-square relative sticky top-0 w-full" ref="container">
+		<div
+			v-if="isLoading"
+			class="bg-white w-full h-full absolute top-0 left-0 flex items-center justify-center"
+		>
+			<UiSpinner />
+		</div>
+	</div>
 </template>
 
 <style scoped>
