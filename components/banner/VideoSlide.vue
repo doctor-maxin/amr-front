@@ -28,7 +28,16 @@ const src = computed(
 </script>
 
 <template>
-	<video ref="videoRef" v-if="src" playsinline :title="title" :src="src" />
+	<video
+		ref="videoRef"
+		v-if="src"
+		muted
+		autoplay
+		playsinline
+		:title="slide.title"
+	>
+		<source :src="src" type="video/mp4" />
+	</video>
 </template>
 
 <style scoped></style>

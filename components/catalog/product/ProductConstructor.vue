@@ -36,36 +36,36 @@ const onResize = () => {
 		const height = container.value.getBoundingClientRect().height;
 		renderer.value.setSize(width, height);
 	}
-}
+};
 
 onBeforeUnmount(() => {
-	if (process.client) window.removeEventListener('resize', onResize)
-})
+	if (process.client) window.removeEventListener("resize", onResize);
+});
 
 const setCameraData = () => {
 	if (!camera.value) return;
 
-	const position = data.value?.position?.split(',')
-	const pX = position?.[0] ? Number(position[0]) : 0
-	const pY = position?.[1] ? Number(position[1]) : 0
-	const pZ = position?.[2] ? Number(position[2]) : 0
-	const rotation = data.value?.rotation?.split(',')
-	const rX = rotation?.[0] ? Number(rotation[0]) : 0
-	const rY = rotation?.[1] ? Number(rotation[1]) : 0
-	const rZ = rotation?.[2] ? Number(rotation[2]) : 0
+	const position = data.value?.position?.split(",");
+	const pX = position?.[0] ? Number(position[0]) : 0;
+	const pY = position?.[1] ? Number(position[1]) : 0;
+	const pZ = position?.[2] ? Number(position[2]) : 0;
+	const rotation = data.value?.rotation?.split(",");
+	const rX = rotation?.[0] ? Number(rotation[0]) : 0;
+	const rY = rotation?.[1] ? Number(rotation[1]) : 0;
+	const rZ = rotation?.[2] ? Number(rotation[2]) : 0;
 
 	//@ts-ignore
-	camera.value.position.set(pX, pY, pZ)
+	camera.value.position.set(pX, pY, pZ);
 	//@ts-ignore
-	camera.value.rotation.set(rX, rY, rZ)
-}
+	camera.value.rotation.set(rX, rY, rZ);
+};
 
 onMounted(async () => {
 	if (process.client && container.value) {
 		setTimeout(() => {
-			onResize()
-		}, 300)
-		window.addEventListener('resize', onResize)
+			onResize();
+		}, 300);
+		window.addEventListener("resize", onResize);
 
 		const width = container.value.getBoundingClientRect().width;
 		const height = container.value.getBoundingClientRect().height;
@@ -78,16 +78,18 @@ onMounted(async () => {
 			100
 		);
 
-		setCameraData()
-		const dirLight = new THREE.DirectionalLight(0xffffff, 3);
-		dirLight.position.set(-3, 10, -10);
+		setCameraData();
+		renderer.value.shadowMap.enabled = true;
+		renderer.value.shadowMap.type = THREE.PCFSoftShadowMap;
+		const dirLight = new THREE.DirectionalLight(0xffffff, 5);
+		dirLight.position.set(0, 1, 3);
 		dirLight.castShadow = true;
-		dirLight.shadow.camera.top = 2;
-		dirLight.shadow.camera.bottom = -2;
-		dirLight.shadow.camera.left = -2;
-		dirLight.shadow.camera.right = 2;
-		dirLight.shadow.camera.near = 0.1;
-		dirLight.shadow.camera.far = 40;
+		// dirLight.shadow.camera.top = 2;
+		// dirLight.shadow.camera.bottom = -2;
+		// dirLight.shadow.camera.left = -2;
+		// dirLight.shadow.camera.right = 2;
+		// dirLight.shadow.camera.near = 0.1;
+		// dirLight.shadow.camera.far = 40;
 
 		// controls.value.update();
 		scene.value.add(dirLight);
@@ -124,7 +126,10 @@ useListen("selectOption", (ev) => {
 
 <template>
 	<div class="aspect-square relative sticky top-0 w-full" ref="container">
-		<div v-if="isLoading" class="bg-white w-full h-full absolute top-0 left-0 flex items-center justify-center">
+		<div
+			v-if="isLoading"
+			class="bg-white w-full h-full absolute top-0 left-0 flex items-center justify-center"
+		>
 			<UiSpinner />
 		</div>
 	</div>

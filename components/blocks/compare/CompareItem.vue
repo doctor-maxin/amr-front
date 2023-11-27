@@ -3,6 +3,9 @@ import { type IProduct } from "~/types/product";
 import { useCompareStore } from "../../../store/compare.store";
 import { useCartStore } from "../../../store/cart.store";
 import { useEvent } from "~/composables/useEventBus";
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/pagination";
 
 defineProps<{
 	product: IProduct;
