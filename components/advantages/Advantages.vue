@@ -28,23 +28,39 @@ const getItemImage = (item: any): string => {
 		</h2>
 		<suspense>
 			<div
-				class="grid sm:grid-cols-2 max-w-[110rem] mx-auto items-start gap-9 px-4 lg:px-0 lg:gap-x-[6rem] lg:gap-y-0">
+				class="grid sm:grid-cols-2 max-w-[110rem] mx-auto items-start gap-9 px-4 lg:px-0 lg:gap-x-[6rem] lg:gap-y-0"
+			>
 				<template v-for="(item, index) of list" :key="item?.id">
-					<article v-if="item" class="flex flex-col relative advantage-item">
-						<div class="relative lg:aspect-auto lg:max-w-[35rem] lg:max-h-[34rem]" :class="{
-							'lg:mt-8': index % 2 === 0,
-							'mx-auto lg:flex flex-col justify-center':
-								index !== 0 && index % 2 === 0,
-						}">
-							<NuxtImg format="webp" placeholder loading="lazy" provider="directus" :src="getItemImage(item)"
+					<article
+						v-if="item"
+						class="flex flex-col relative advantage-item"
+					>
+						<div
+							class="relative lg:aspect-auto lg:max-w-[35rem] lg:max-h-[34rem]"
+							:class="{
+								'lg:mt-8': index % 2 === 0,
+								'mx-auto lg:flex flex-col justify-center':
+									index !== 0 && index % 2 === 0,
+							}"
+						>
+							<NuxtImg
+								format="webp"
+								placeholder
+								loading="lazy"
+								provider="directus"
+								:src="getItemImage(item)"
 								sizes="100vw sm:400px lg:800px 2xl:1200px"
-								class="w-full aspect-[21/13] lg:aspect-auto lg:h-full lg:max-h-[34rem]" />
+								class="w-full aspect-[21/13] lg:aspect-auto lg:h-full lg:max-h-[34rem]"
+							/>
 							<div
-								class="glass -mt-[4rem] lg:relative lg:-translate-y-3/4 lg:mt-0 lg:left-0 lg:ml-[40%] z-10 lg:w-[34rem] lg:max-w-[max(0px,_28vw)] lg:max-h-[34rem] rounded-[1.25rem] gap-2 flex flex-col pt-[1.3rem] pl-[1.6rem] pr-[3.6rem] pb-[1.8rem]">
-								<h3 class="font-extrabold leading-[140%]">
+								class="glass -mt-[4rem] lg:relative lg:-translate-y-3/4 lg:mt-0 lg:left-0 lg:ml-[40%] z-10 lg:w-[34rem] lg:max-w-[max(0px,_28vw)] lg:max-h-[34rem] rounded-[1.25rem] gap-2 flex flex-col pt-[1.3rem] pl-[1.6rem] pr-[3.6rem] pb-[1.8rem]"
+							>
+								<h3 class="font-medium leading-[140%]">
 									{{ item.title }}
 								</h3>
-								<p class="leading-[140%] text-system-gray-900 text-sm">
+								<p
+									class="leading-[140%] text-system-gray-900 text-sm"
+								>
 									{{ item.description }}
 								</p>
 							</div>

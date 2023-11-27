@@ -33,6 +33,7 @@ const { token } = useDirectusToken();
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
 	isValid?: boolean;
+	validate: any;
 	values: any;
 	setFieldError: (field: string, message: string) => void;
 }>();
@@ -52,7 +53,7 @@ watch(
 	{
 		immediate: true,
 		deep: true,
-	},
+	}
 );
 
 const discountAmount = computed(() => {
@@ -73,7 +74,7 @@ const total = computed(() => {
 	return amount;
 });
 
-const createOrder = async () => {
+const createOrder = props.validate(async () => {
 	isLoading.value = true;
 	const payload: { id: string; count: number }[] = [];
 	for (const item of Array.from(props.lines.values())) {
@@ -120,7 +121,7 @@ const createOrder = async () => {
 		}
 	}
 	isLoading.value = false;
-};
+});
 
 const getItemImage = (item: any): string => {
 	if (item.product?.images?.[0].directus_files_id)
@@ -186,7 +187,7 @@ const getItemImage = (item: any): string => {
 			variant="dark"
 			title="Оформить заказ"
 			title-class="!text-base"
-			:disabled="isLoading || !isValid"
+			:disabled="isLoading"
 			:class="{
 				'pulse cursor-progress': isLoading,
 			}"

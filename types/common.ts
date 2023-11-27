@@ -78,6 +78,10 @@ export type ICategory = {
 	};
 };
 
+export type ITag = {
+	id: number;
+	title: string;
+};
 export type ISettings = {
 	phone: string;
 	Email: string;
@@ -258,44 +262,44 @@ export type IOrder = IOrderPayload & {
 
 export type IOrderPayload =
 	| {
-		phone: string;
-		email: string;
-		name: string;
-		deliveryType: string;
-		city: string;
-		street: string;
-		house: string;
-		flat: string;
-		entrance?: string;
-		floor?: string;
-		paymentType: string;
-		items: any[];
-		promocodes: string[];
-		deliveryPrice: number;
-		total: number;
-		number?: number;
-	}
+			phone: string;
+			email: string;
+			name: string;
+			deliveryType: string;
+			city: string;
+			street: string;
+			house: string;
+			flat: string;
+			entrance?: string;
+			floor?: string;
+			paymentType: string;
+			items: any[];
+			promocodes: string[];
+			deliveryPrice: number;
+			total: number;
+			number?: number;
+	  }
 	| {
-		phone: string;
-		email: string;
-		name: string;
-		deliveryType: string;
-		deliveryStoreId: string;
-		paymentType: string;
-		promocodes: string[];
-		deliveryPrice: number;
-		total: number;
-	}
+			phone: string;
+			email: string;
+			name: string;
+			deliveryType: string;
+			deliveryStoreId: string;
+			paymentType: string;
+			promocodes: string[];
+			deliveryPrice: number;
+			total: number;
+	  }
 	| {
-		phone: string;
-		email: string;
-		name: string;
-		deliveryType: string;
-		paymentType: string;
-		promocodes: string[];
-		deliveryPrice: number;
-		total: number;
-	};
+			phone: string;
+			email: string;
+			name: string;
+			deliveryType: string;
+			paymentType: string;
+			promocodes: string[];
+			deliveryPrice: number;
+			total: number;
+	  };
 
 export type IHeroBlock = {
 	title: string;
@@ -326,7 +330,6 @@ export type IFilters = {
 	filters: IFilter[];
 };
 
-
 export type ICareer = {
 	id: number;
 	name: string;
@@ -335,11 +338,14 @@ export type ICareer = {
 	type: {
 		title: string;
 		value: string;
-	}
+	};
 	status: string;
 	date_created: string;
 	blocks: {
-		blocks: IBlock[]
-	}
-}
-export type ICareerShort = Pick<ICareer, 'id' | 'name' | 'handle' | 'description'>
+		blocks: IBlock[];
+	};
+};
+export type ICareerShort = Pick<
+	ICareer,
+	"id" | "name" | "handle" | "description"
+>;

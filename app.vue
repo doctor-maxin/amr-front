@@ -1,5 +1,7 @@
 <template>
-	<div class="lg:pt-[5.3125rem] pt-[3.875rem] page-layout relative flex flex-col min-h-screen">
+	<div
+		class="lg:pt-[5.3125rem] pt-[3.875rem] page-layout relative flex flex-col min-h-screen"
+	>
 		<ClientOnly>
 			<TheHeader />
 		</ClientOnly>
@@ -57,12 +59,17 @@ await Promise.all([
 			params: {
 				fields: ["id", "name", "childrens", "handle", "parentId"],
 			},
-		}),
+		})
 	),
 	useAsyncData("settings", () =>
 		getSingletonItem({
 			collection: "settings",
-		}),
+		})
+	),
+	useAsyncData("tags", () =>
+		getItems({
+			collection: "blogTags",
+		})
 	),
 	useAsyncData("customerPages", () =>
 		getSingletonItem({
@@ -75,14 +82,14 @@ await Promise.all([
 					"title",
 				],
 			},
-		}),
+		})
 	),
 ]);
 
- useHead({
- 	script: [
- 		{
- 			innerHTML: `
+useHead({
+	script: [
+		{
+			innerHTML: `
  		(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
     for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
@@ -97,12 +104,12 @@ await Promise.all([
          ecommerce:"dataLayer"
     });
     `,
- 		},
- 	],
- 	noscript: [
- 		{
- 			innerHTML: `<div><img src="https://mc.yandex.ru/watch/95336171" style="position:absolute; left:-9999px;" alt="" /></div>`,
- 		},
- 	],
- });
+		},
+	],
+	noscript: [
+		{
+			innerHTML: `<div><img src="https://mc.yandex.ru/watch/95336171" style="position:absolute; left:-9999px;" alt="" /></div>`,
+		},
+	],
+});
 </script>

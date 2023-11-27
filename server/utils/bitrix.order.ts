@@ -6,11 +6,15 @@ import useBitrixClient from "~/server/utils/bitrix.client";
 import { PaymentTypes } from "~/server/types/checkout.types";
 import { DeliveryTypes } from "~/types/cart";
 
-export default async function createBitrixOrder(payload: any, query: any, active: string) {
+export default async function createBitrixOrder(
+	payload: any,
+	query: any,
+	active: string
+) {
 	const bitrix = useBitrixClient();
 	let contactId = await getBitrixContact(
 		payload.phone.replace(/[^\w\s]/gi, ""),
-		payload.email,
+		payload.email
 	);
 	console.log("get contact", contactId);
 
@@ -24,12 +28,15 @@ export default async function createBitrixOrder(payload: any, query: any, active
 	address += payload.flat ?? "";
 	address += payload.floor;
 
+	console.log("CREATE DEAL PAYLOAD", payload.items);
+
 	const { result: orderId } = await bitrix.deals.create({
 		TYPE_ID: "SALE",
 		TITLE: "Заказ №",
 		IS_NEW: "Y",
 		CLOSED: "N",
-		CATEGORY_ID: active.trim(),
+		CATEGORY_ID: "27",
+		ASSIGNED_BY_ID: active.trim(),
 		STAGE_ID: "NEW",
 		UTM_CONTENT: query?.utm_content?.toString() ?? "",
 		UTM_MEDIUM: query?.utm_medium?.toString() ?? "",
@@ -43,13 +50,14 @@ export default async function createBitrixOrder(payload: any, query: any, active
 			payload.paymentType === PaymentTypes.TINKOFF
 				? "Онлайн по карте"
 				: payload.paymentType++ + PaymentTypes.SELF_CARD
-					? "При получении картой"
-					: "При получении наличными",
+				? "При получении картой"
+				: "При получении наличными",
 		UF_CRM_1695564173225:
 			payload.deliveryType === DeliveryTypes.points
 				? "Самовывоз"
 				: "Доставка",
 	});
+
 	const result = await Promise.all([
 		bitrix.deals.update(orderId, {
 			TITLE: `Заказ №${orderId}`,

@@ -21,11 +21,11 @@ export default defineEventHandler(async (event) => {
 	const body = await readBody<ICheckoutPayload>(event);
 	const client = createDirectus("http://localhost:8055")
 		.with(rest())
-		.with(staticToken(bearerToken?.slice(7)));
+		.with(staticToken(process.env.DIRECTUS_TOKEN));
 
 	const data = jwt.decode(bearerToken?.slice(7));
 
-	console.log("[createOrderBody]", body, data, bearerToken);
+	console.log("[createOrderBody]", body, data, process.env.DIRECTUS_TOKEN);
 	const customerId = [];
 	if (data?.id)
 		customerId.push({
@@ -78,11 +78,11 @@ export default defineEventHandler(async (event) => {
 				},
 			},
 			fields: ["price", "id", "name"],
-		}),
+		})
 	)) as { price: number; id: string; name: string }[];
 
 	payload.items = payload.items.map((item) => {
-		const product = items.find((item) => item.id === item.id);
+		const product = items.find((d) => d.id === item.id);
 		if (!product) return item;
 		payload.total += product.price * item.count;
 
@@ -94,15 +94,21 @@ export default defineEventHandler(async (event) => {
 	});
 
 	try {
-		const managers = await client.request(readSingleton('managers'))
+		const managers = await client.request(readSingleton("managers"));
 
-		const list: string[] = managers?.ids?.split(',')
-		const firstElement = list.shift() as string
+		const list: string[] = managers?.ids?.split(",");
+		const firstElement = list.shift() as string;
 
-		const bitrixOrder = await createBitrixOrder(payload, query, firstElement);
-		client.request(updateSingleton('managers', {
-			ids: [...list, firstElement].join(',')
-		}))
+		const bitrixOrder = await createBitrixOrder(
+			payload,
+			query,
+			firstElement
+		);
+		client.request(
+			updateSingleton("managers", {
+				ids: [...list, firstElement].join(","),
+			})
+		);
 
 		payload.paymentType = body.paymentType;
 		payload["number"] = bitrixOrder;
@@ -137,8 +143,9 @@ export default defineEventHandler(async (event) => {
 		}
 	} catch (err: any) {
 		if (err.errors) console.log("Error on bitrix", err.errors);
-		else console.dir(err, {
-			depth: 10
-		})
+		else
+			console.dir(err, {
+				depth: 10,
+			});
 	}
 });

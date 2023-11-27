@@ -36,9 +36,9 @@ const { data } = await useAsyncData(() =>
 					_eq: route.params.handle.toString(),
 				},
 			},
-			fields: ["*", "contentBlocks.*"],
+			fields: ["*", "contentBlocks.*", "tags.blogTags_id.*"],
 		},
-	}),
+	})
 );
 const { data: seems } = await useAsyncData(() =>
 	getItems<IIdeaItem>({
@@ -50,12 +50,12 @@ const { data: seems } = await useAsyncData(() =>
 					_neq: data.value?.[0].id,
 				},
 			},
-			limit: 3
+			limit: 3,
 		},
-	}),
+	})
 );
 const article = computed<IIdeaItem | null>(() =>
-	data.value?.length ? data.value[0] : null,
+	data.value?.length ? data.value[0] : null
 );
 const breadCrumbs = computed<IBreadCrumb[]>(() => {
 	const arr: IBreadCrumb[] = [
@@ -87,26 +87,31 @@ const nextArticle = computed<ILink | null>(() => {
 		title: "Следующая новость",
 	};
 });
-
-const articleType = computed(() => {
-	if (!article?.value?.type) return "";
-	if (article.value.type === "project") return "Проект";
-	if (article.value.type === "idea") return "Идея";
-	if (article.value.type === "news") return "Новость";
-});
 </script>
 
 <template>
 	<div class="flex-1">
-		<PageHeader :bread-crumbs="breadCrumbs" :image="article.image" :link="{
-			title: 'Назад',
-			path: 'back',
-		}" :page-name="article?.name" :to="nextArticle" />
+		<PageHeader
+			:bread-crumbs="breadCrumbs"
+			:image="article.image"
+			:link="{
+				title: 'Назад',
+				path: 'back',
+			}"
+			:page-name="article?.name"
+			:to="nextArticle"
+		/>
 		<div class="py-8 px-4 lg:py-[3.25rem] page">
-			<div v-if="article"
-				class="mb-7 lg:mb-6 flex text-xs lg:text-base font-semibold text-system-black-950 items-center gap-4 lg:gap-6">
-				<div class="bg-system-gray px-8 lg:px-10 py-2 lg:py-4 rounded-full">
-					{{ articleType }}
+			<div
+				v-if="article"
+				class="mb-7 lg:mb-6 flex text-xs lg:text-base font-semibold text-system-black-950 items-center gap-4 lg:gap-6"
+			>
+				<div
+					v-for="tag of article.tags"
+					:key="tag.blogTags_id.id"
+					class="bg-system-gray px-8 lg:px-10 py-2 lg:py-4 rounded-full"
+				>
+					{{ tag.blogTags_id.title }}
 				</div>
 				<div>
 					{{ new Date(article.date_created).toLocaleDateString() }}
@@ -117,28 +122,61 @@ const articleType = computed(() => {
 			</template>
 			<template v-for="block of article?.bloks?.blocks" :key="block.id">
 				<HeaderBlock v-if="block.type === 'header'" :block="block" />
-				<ParagraphBlock v-else-if="block.type === 'paragraph'" :block="block" />
-				<ListBlock v-else-if="block.type === 'nestedlist'" :block="block" />
+				<ParagraphBlock
+					v-else-if="block.type === 'paragraph'"
+					:block="block"
+				/>
+				<ListBlock
+					v-else-if="block.type === 'nestedlist'"
+					:block="block"
+				/>
 				<TableBlock v-else-if="block.type === 'table'" :block="block" />
-				<AttachesBlock v-else-if="block.type === 'attaches'" :block="block" />
+				<AttachesBlock
+					v-else-if="block.type === 'attaches'"
+					:block="block"
+				/>
 				<QuoteBlock v-else-if="block.type === 'quote'" :block="block" />
 				<ImageBlock v-else-if="block.type === 'image'" :block="block" />
 			</template>
 			<div class="flex items-center justify-between pt-7 pb-12">
-				<button class="font-semibold group gap-2.5 flex items-center" type="button" @click="router.back()">
-					<svgo-arrow-right class="rotate-180 text-2xl transition-colors group-hover:text-accent-300" filled />
-					<span class="text-sm lg:text-lg group-hover:text-accent-300 transition-colors">Назад</span>
+				<button
+					class="font-semibold group gap-2.5 flex items-center"
+					type="button"
+					@click="router.back()"
+				>
+					<svgo-arrow-right
+						class="rotate-180 text-2xl transition-colors group-hover:text-accent-300"
+						filled
+					/>
+					<span
+						class="text-sm lg:text-lg group-hover:text-accent-300 transition-colors"
+						>Назад</span
+					>
 				</button>
 
-				<button v-if="nextArticle" class="font-semibold group gap-2.5 flex items-center" type="button"
-					@click="router.push(nextArticle.path)">
-					<span class="text-sm lg:text-lg group-hover:text-accent-300 transition-colors">{{ nextArticle.title
-					}}</span>
-					<svgo-arrow-right class="text-2xl transition-colors group-hover:text-accent-300" filled />
+				<button
+					v-if="nextArticle"
+					class="font-semibold group gap-2.5 flex items-center"
+					type="button"
+					@click="router.push(nextArticle.path)"
+				>
+					<span
+						class="text-sm lg:text-lg group-hover:text-accent-300 transition-colors"
+						>{{ nextArticle.title }}</span
+					>
+					<svgo-arrow-right
+						class="text-2xl transition-colors group-hover:text-accent-300"
+						filled
+					/>
 				</button>
 			</div>
 		</div>
-		<ArticlesSeems :list="seems" hide-blog title="Похожие статьи" class="mb-[9rem]" />
+		<ArticlesSeems
+			:list="seems"
+			hide-blog
+			title="Похожие статьи"
+			class="mb-[9rem]"
+		/>
 	</div>
 </template>
 

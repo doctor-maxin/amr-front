@@ -52,9 +52,9 @@ export default defineEventHandler(async (event) => {
 				products_id: data.product.id,
 			});
 		const variantPayload = [];
-		if (data.variant)
+		if (query.variantId)
 			variantPayload.push({
-				variants_id: data.variant,
+				variants_id: query.variantId,
 			});
 		const req = await client.request(
 			createItem("requests", {
@@ -65,19 +65,23 @@ export default defineEventHandler(async (event) => {
 				file: data.file,
 				variant: variantPayload,
 				products: productsPayload,
-			}),
+			})
 		);
 
-		const managers = await client.request(readSingleton('managers'))
+		const managers = await client.request(readSingleton("managers"));
 
 		console.log("[directusCreaterequest]", req, managers);
-		const list: string[] = managers?.ids?.split(',')
-		const firstElement = list.shift() as string
-		createBitrixLead(data, query.from as string, query, firstElement)
+		const list: string[] = managers?.ids?.split(",");
+		const firstElement = list.shift() as string;
+		createBitrixLead(data, query.from as string, query, firstElement);
 
-		client.request(updateSingleton('managers', {
-			ids: [...list, firstElement].join(',')
-		})).then((r) => console.log(r))
+		client
+			.request(
+				updateSingleton("managers", {
+					ids: [...list, firstElement].join(","),
+				})
+			)
+			.then((r) => console.log(r));
 
 		return {
 			id: req.id,

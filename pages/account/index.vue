@@ -3,26 +3,27 @@ import UiInput from "~/components/ui/UiInput.vue";
 import UiButton from "~/components/ui/UiButton.vue";
 import {
 	nextTick,
-	ref, useDirectusAuth,
+	ref,
+	useDirectusAuth,
 	useDirectusUser,
 	useDirectusUsers,
 	useForm,
-useHead
+	useHead,
 } from "../../.nuxt/imports";
 import * as yup from "yup";
 import { DirectusUser } from "nuxt-directus/dist/runtime/types";
 import { toast } from "vue3-toastify";
 
 useHead({
-	title: 'Личный кабинет'
-})
+	title: "Личный кабинет",
+});
 const isEditing = ref<boolean>(false);
 const user = useDirectusUser();
 const { updateUser } = useDirectusUsers();
 const firstNameRef = ref<{
-	input?: null | HTMLInputElement
-}>(null)
-const {setUser} = useDirectusAuth()
+	input?: null | HTMLInputElement;
+}>(null);
+const { setUser } = useDirectusAuth();
 
 const { handleSubmit, resetForm } = useForm({
 	validationSchema: yup.object().shape({
@@ -30,12 +31,14 @@ const { handleSubmit, resetForm } = useForm({
 		lastName: yup.string().optional(),
 		phone: yup.string().required(),
 		email: yup.string().required().email(),
+		city: yup.string().optional(),
 	}),
 	initialValues: {
 		firstName: user.value?.first_name,
 		lastName: user.value?.last_name,
 		phone: user.value?.phone,
 		email: user.value?.email,
+		city: user.value?.city,
 	},
 });
 
@@ -48,31 +51,31 @@ const save = handleSubmit(async (values) => {
 				last_name: values.lastName,
 				email: values.email,
 				phone: values.phone,
+				city: values.city,
 			},
 		});
-		setUser(newUser)
-		toast.success('Данные успешно обновлены')
-		isEditing.value = false
+		setUser(newUser);
+		toast.success("Данные успешно обновлены");
+		isEditing.value = false;
 	} catch (err: any) {
-		toast.error('Возникла ошибка при сохранении')
+		toast.error("Возникла ошибка при сохранении");
 		console.log("updatte ", err);
 	}
 });
 
-
 const startEdit = () => {
-	isEditing.value = true
+	isEditing.value = true;
 	nextTick(() => {
 		if (firstNameRef.value?.input) {
-			console.log(firstNameRef.value.input)
-			firstNameRef.value.input.focus()
+			console.log(firstNameRef.value.input);
+			firstNameRef.value.input.focus();
 		}
-	})
-}
+	});
+};
 const stopEdit = () => {
-	resetForm()
+	resetForm();
 	isEditing.value = false;
-}
+};
 </script>
 
 <template>
@@ -110,6 +113,12 @@ const stopEdit = () => {
 			name="phone"
 			:readonly="!isEditing"
 			placeholder="Телефон"
+		/>
+		<UiInput
+			class-name="w-full"
+			name="city"
+			:readonly="!isEditing"
+			placeholder="Город"
 		/>
 		<div class="ml-auto flex gap-1.5 lg:gap-[1.12rem] overflow-x-clip">
 			<UiButton
