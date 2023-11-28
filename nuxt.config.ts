@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { defineNuxtConfig } from "nuxt/config";
 
+
 export default defineNuxtConfig({
 	devtools: { enabled: false },
 	css: ["~/assets/css/fonts.css", "~/assets/css/main.css"],
@@ -49,9 +50,9 @@ export default defineNuxtConfig({
 		},
 	},
 	routeRules: {
-		"/": {
-			prerender: true,
-		},
+		// "/": {
+		// 	prerender: true,
+		// },
 	},
 	components: false,
 	modules: [
