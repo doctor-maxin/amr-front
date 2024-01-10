@@ -17,10 +17,12 @@ import ProductItem from "../components/catalog/product/ProductItem.vue";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiPagination from "../components/ui/UiPagination.vue";
 import UiLink from '~/components/ui/UiLink.vue'
+import fetchSeo from "~/composables/fetchSeo";
 
 useHead({
 	title: 'Избранное'
 })
+await fetchSeo()
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{

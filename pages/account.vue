@@ -7,6 +7,7 @@ import {
 	useDirectusAuth,
 	useRouter,
 } from "~/.nuxt/imports";
+import fetchSeo from "~/composables/fetchSeo";
 
 definePageMeta({
 	middleware: ["auth"],
@@ -18,6 +19,7 @@ const link = shallowRef<ILink>({
 	path: "/catalog",
 });
 const router = useRouter();
+await fetchSeo()
 
 const exit = async () => {
 	try {

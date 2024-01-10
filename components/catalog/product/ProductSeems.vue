@@ -31,6 +31,7 @@ watchEffect(async () => {
 						_eq: props.categoryId,
 					},
 				},
+				limit: 4,
 				fields: [
 					"name",
 					"handle",

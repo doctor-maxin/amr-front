@@ -10,6 +10,7 @@ import {
 	useAsyncData,
 	useDirectusItems,
 } from "~/.nuxt/imports";
+import fetchSeo from "~/composables/fetchSeo";
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
@@ -19,6 +20,7 @@ const breadCrumbs = markRaw<IBreadCrumb[]>([
 ]);
 
 const { getItems } = useDirectusItems();
+await fetchSeo()
 
 const { data: categories } = await useAsyncData<ICategory[]>(
 	"fullCategories",
@@ -38,17 +40,12 @@ const mainCategories = computed(
 
 <template>
 	<div class="flex-1">
-		<PageHeader
-			page-name="Каталог"
-			:link="{
-				title: 'Назад',
-				path: 'back',
-			}"
-			:bread-crumbs="breadCrumbs"
-		/>
+		<PageHeader page-name="Каталог" :link="{
+			title: 'Назад',
+			path: 'back',
+		}" :bread-crumbs="breadCrumbs" />
 		<main
-			class="pt-[2.37rem] lg:pt-[4.62rem] lg:pb-[8.25rem] lg:px-[4.38rem] max-w-[111.25rem] lg:mx-auto px-4 pb-[6.88rem]"
-		>
+			class="pt-[2.37rem] lg:pt-[4.62rem] lg:pb-[8.25rem] lg:px-[4.38rem] max-w-[111.25rem] lg:mx-auto px-4 pb-[6.88rem]">
 			<CatalogCategories :items="mainCategories" />
 		</main>
 	</div>

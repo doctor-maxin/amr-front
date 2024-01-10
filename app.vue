@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="lg:pt-[5.3125rem] pt-[3.875rem] page-layout relative flex flex-col min-h-screen"
-	>
+	<div class="lg:pt-[5.3125rem] pt-[3.875rem] page-layout relative flex flex-col min-h-screen">
 		<ClientOnly>
 			<TheHeader />
 		</ClientOnly>
@@ -26,29 +24,29 @@ import FeedBackModal from "./components/common/FeedBackModal.vue";
 import { useCartStore } from "./store/cart.store";
 import {
 	useAsyncData,
-	useDirectusAuth,
 	useDirectusItems,
 	useDirectusToken,
-	useDirectusUser,
 	useHead,
 } from "./.nuxt/imports";
 import { useFavoritesStore } from "./store/favorites.store";
 import CustomPageLoader from "./components/common/CustomPageLoader.vue";
-import { toast } from "vue3-toastify";
 
 const { getItems, getSingletonItem } = useDirectusItems();
 const cartStore = useCartStore();
 const favoritesStore = useFavoritesStore();
-const { refreshTokens, token, checkAutoRefresh, token_expires_in } =
-	useDirectusToken();
-const user = useDirectusUser();
 
-console.log("Token", token.value, token_expires_in.value);
-if (token.value) {
-	await checkAutoRefresh();
 
-	if (token_expires_in.value === 0) await refreshTokens();
-}
+onMounted(async () => {
+	const { refreshTokens, token, checkAutoRefresh, token_expires_in } =
+		useDirectusToken();
+
+	console.log("Token", token.value, token_expires_in.value);
+	if (token.value) {
+		await checkAutoRefresh();
+
+		if (token_expires_in.value === 0) await refreshTokens();
+	}
+})
 
 await Promise.all([
 	cartStore.getCart(),
@@ -105,6 +103,22 @@ useHead({
     });
     `,
 		},
+		{
+			innerHTML: `
+			(function(w,d,u){
+                var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/60000|0);
+                var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+        })(window,document,'https://cdn-ru.bitrix24.ru/b12239668/crm/site_button/loader_5_6to2pi.js');`
+		}, {
+			"data-b24-form": "inline/15/88rt9c",
+			"data-skip-moving": true,
+			innerHTML: `
+			(function(w,d,u){
+			var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);
+			var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+			})(window,document,'https://cdn-ru.bitrix24.ru/b12239668/crm/form/loader_15.js');
+`
+		}
 	],
 	noscript: [
 		{

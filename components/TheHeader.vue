@@ -25,9 +25,9 @@ const { data: settings } = useNuxtData<ISettings>('settings')
 				<HeaderCatalogBtn />
 			</div>
 			<div class="flex items-center gap-6 lg:gap-11 pr-[1.81rem] relative lg:pr-0">
-				<WhatsAppLink />
+				<!-- <WhatsAppLink /> -->
 				<TelLink :tel="settings?.phone" class="hidden lg:block text-system-gray-800" />
-				<CompareBtn class="hidden lg:block" />
+				<CompareBtn  />
 				<SearchBtn />
 				<FavoriteBtn class="hidden lg:block" />
 				<ProfileBtn class="hidden lg:block" />

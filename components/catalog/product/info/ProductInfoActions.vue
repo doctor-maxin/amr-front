@@ -5,8 +5,8 @@ import { useCartStore } from "../../../../store/cart.store";
 import { useFavoritesStore } from "../../../../store/favorites.store";
 import { IProduct } from "../../../../types/product";
 import { storeToRefs } from "pinia";
-import { Tooltip } from '@programic/vue3-tooltip';
 import { useCompareStore } from "../../../../store/compare.store";
+import { Tooltip } from '@programic/vue3-tooltip';
 
 const props = defineProps<{
 	product: IProduct;
@@ -54,11 +54,15 @@ const hasInCart = computed(() => {
 				<link v-if="product.count" itemprop="availability" href="http://schema.org/InStock" />
 				<span class="text-xs font-medium">без учета доставки</span>
 			</div>
-			<button v-tooltip="`Сравнить товар`" placement="top-left"
-				class="rounded-full ml-auto flex items-center justify-center border border-system-black-950 lg:w-[4rem] lg:h-[4rem] w-[3.25rem] h-[3.25rem]"
-				@click="compareStore.addToCompare(product.id)">
-				<svgo-compare class="text-2xl" filled />
-			</button>
+			<client-only>
+				<Tooltip class="ml-auto" placement="top-start" title="Сравнить товар">
+					<button
+						class="rounded-full flex items-center justify-center border border-system-black-950 lg:w-[4rem] lg:h-[4rem] w-[3.25rem] h-[3.25rem]"
+						@click="compareStore.addToCompare(product.id)">
+						<svgo-compare class="text-2xl" filled />
+					</button>
+				</Tooltip>
+			</client-only>
 			<button @click="addProductToFavorites(product.id)"
 				class="rounded-full flex items-center justify-center border border-system-black-950 lg:w-[4rem] lg:h-[4rem] w-[3.25rem] h-[3.25rem]"
 				type="button">
@@ -77,7 +81,7 @@ const hasInCart = computed(() => {
 				<svgo-cart class="text-2xl" filled />
 				<span class="hidden lg:block font-semibold text-white">
 					{{
-						product.count <= 0 ? "Товар распродан" : hasInCart ? "В коризне" : "В корзину" }}</span>
+						product.count <= 0 ? "Товар распродан" : hasInCart ? "В корзине" : "В корзину" }}</span>
 			</button>
 			<button v-if="product.canNotBye" type="button" @click="useEvent('open:product-form', product)"
 				class="rounded-full max-w-[3.25rem] w-[3.25rem] lg:max-w-none lg:gap-[0.88rem] border border-system-black-950 bg-system-black-950 flex items-center justify-center lg:w-auto lg:h-[4rem] h-[3.25rem] text-white lg:px-6">

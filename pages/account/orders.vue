@@ -8,11 +8,13 @@ import {
 import { IOrder } from "../../types/common";
 import AccountOrderList from "~/components/account/AccountOrderList.vue";
 import UiSpinner from "../../components/ui/UiSpinner.vue";
+import fetchSeo from "~/composables/fetchSeo";
 
 
 useHead({
 	title: 'Заказы'
 })
+await fetchSeo()
 
 const { getItems } = useDirectusItems();
 const user = useDirectusUser();
@@ -34,10 +36,7 @@ const { data, pending } = useAsyncData(() =>
 	<div>
 		<div class="flex justify-center" v-if="!data?.length">
 			<UiSpinner v-if="pending" />
-			<h2
-				v-else
-				class="text-2xl text-center text-system-gray-900 font-semibold text-opacity-40"
-			>
+			<h2 v-else class="text-2xl text-center text-system-gray-900 font-semibold text-opacity-40">
 				Вы еще ничего не заказывали
 			</h2>
 		</div>

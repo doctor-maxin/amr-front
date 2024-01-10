@@ -4,12 +4,9 @@ import UiInput from "../ui/UiInput.vue";
 import FormHelperLink from "../helpers/FormHelperLink.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import {
-	computed,
 	ref,
 	useAppConfig,
-	useField,
 	useForm,
-	useListen,
 	useNuxtData,
 	useRoute,
 } from "../../.nuxt/imports";
@@ -21,14 +18,16 @@ import { useEvent } from "~/composables/useEventBus";
 import * as yup from "yup";
 import { useFetch } from "@vueuse/core";
 import { toast } from "vue3-toastify";
-import { normalizeProps, useMachine } from "@zag-js/vue";
-import * as popover from "@zag-js/popover";
 
 const container = ref<HTMLElement | null>(null);
 
 const phoneRegExp = /^\+7 \d{3} \d{3} \d{2}-\d{2}$/;
 const { data: settings } = useNuxtData<ISettings>("settings");
 const appConfig = useAppConfig();
+
+defineProps<{
+	title?: string;
+}>()
 
 const { handleSubmit, setFieldValue, values, resetForm } = useForm({
 	validationSchema: yup.object().shape({
@@ -83,11 +82,8 @@ const setCallBackType = (value: string) => setFieldValue("callBackType", value);
 		<div class="flex flex-col order-1 relative">
 			<img class="absolute w-full h-full object-cover -z-10" src="/images/callback-bg.png" alt="Мебель" />
 			<div class="px-4 lg:p-[4.38rem] lg:pb-[5rem] h-full lg:flex lg:flex-col pt-[3.19rem] pb-[2.59rem]">
-				<h4 class="mb-1 text-xs lg:text-sm font-bold text-system-gray-500">
-					КАТАЛОГ
-				</h4>
 				<h3 class="text-white lg:text-[2.25rem] font-bold mb-[1.62rem] text-[1.375rem]">
-					Хотите получить консультацию?
+					{{ title ? title : 'Хотите получить консультацию?' }}
 				</h3>
 				<div
 					class="w-full lg:mt-auto aspect-[21/9] map-block rounded-2xl flex items-center relative justify-center">
@@ -131,6 +127,12 @@ const setCallBackType = (value: string) => setFieldValue("callBackType", value);
 					</a>
 					<a v-if="settings?.vkLink" :href="settings.vkLink" target="_blank">
 						<svgo-socials-vk class="text-[2rem]" />
+					</a>
+					<a v-if="settings?.whatsAppLink" :href="settings.whatsAppLink" target="_blank">
+						<svgo-socials-whatsapp class="text-[2rem]" />
+					</a>
+					<a v-if="settings?.youtubeLink" :href="settings.youtubeLink" target="_blank">
+						<svgo-socials-youtube filled class="text-[2rem]" />
 					</a>
 				</div>
 			</div>

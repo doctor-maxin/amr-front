@@ -70,6 +70,9 @@ const compareStore = useCompareStore()
                     <button v-if="!product.canNotBye && product.count > 0" @click="cartStore.addProduct(product.id)"
                         class="rounded-[1rem] backdrop-blur-[10px] bg-system-black-600 flex items-center justify-center text-white w-[3.25rem] h-[3.25rem]"><svgo-cart
                             filled class="text-2xl" /> </button>
+                    <button 	v-else-if="product.canNotBye" @click="useEvent('open:product-form', product)"
+                        class="rounded-[1rem] backdrop-blur-[10px] bg-system-black-600 flex items-center justify-center text-white w-[3.25rem] h-[3.25rem]"><svgo-cart
+                            filled class="text-2xl" /> </button>
                 </div>
             </template>
         </div>

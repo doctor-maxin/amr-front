@@ -11,16 +11,10 @@ const closeModals = () => {
 </script>
 
 <template>
-	<nuxt-link
-		to="/favorites"
-		type="button"
-		class="relative"
-		@click.native="closeModals"
-	>
+	<nuxt-link to="/favorites" type="button" class="relative appearance-none" @click.native="closeModals">
 		<template v-if="favoritesStore.favoritesTotalLength">
 			<div
-				class="absolute -top-[0.69rem] -right-[0.81rem] aspect-square w-[1.1875rem] h-[1.1875rem] bg-system-gray-800 rounded-full flex items-center justify-center"
-			>
+				class="absolute -top-[0.69rem] -right-[0.81rem] aspect-square w-[1.1875rem] h-[1.1875rem] bg-system-gray-800 rounded-full flex items-center justify-center">
 				<span class="text-[0.75rem] leading-[1.1875rem] text-white">{{
 					favoritesStore.favoritesTotalLength
 				}}</span>

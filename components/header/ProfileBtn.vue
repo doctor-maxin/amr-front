@@ -5,7 +5,8 @@ const user = useDirectusUser();
 </script>
 
 <template>
-	<nuxt-link to="/account" class="lg:!flex items-center gap-2" type="button" @click.native="useEvent('close-modals')">
+	<nuxt-link to="/account" class="lg:!flex items-center gap-2 appearance-none" type="button"
+		@click.native="useEvent('close-modals')">
 		<ProfileIcon filled class="text-2xl" />
 		<span class="font-medium">{{ user?.first_name ?? 'Войти' }}</span>
 	</nuxt-link>

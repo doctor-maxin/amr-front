@@ -7,7 +7,10 @@ export default defineNuxtConfig({
 	css: ["~/assets/css/fonts.css", "~/assets/css/main.css"],
 	// @ts-ignore
 	loading: "~/components/loader/Loader.vue",
-	ssr: false,
+	ssr: true,
+	experimental: {
+		asyncContext: true
+	},
 	imports: {
 		autoImport: true,
 	},
@@ -50,9 +53,9 @@ export default defineNuxtConfig({
 		},
 	},
 	routeRules: {
-		// "/": {
-		// 	prerender: true,
-		// },
+		'/catalog/product-[handle]': {
+			ssr: false
+		},
 	},
 	components: false,
 	modules: [

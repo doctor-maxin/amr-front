@@ -2,6 +2,7 @@ import { useSeoMeta } from "#imports";
 
 export default defineNuxtRouteMiddleware(async (to) => {
 	const config = useRuntimeConfig();
+
 	const seo = await fetch(
 		`${config.public.directus.url}/items/seo?filter={"handle":"${to.path}"}`,
 		{
@@ -10,8 +11,15 @@ export default defineNuxtRouteMiddleware(async (to) => {
 			},
 		}
 	).then((r) => r.json());
-	if (seo.length) {
-		useSeoMeta(seo[0]);
+	if (seo.data.length) {
+		const data = seo.data[0]
+		useSeoMeta({
+			title: data.title,
+			ogTitle: data.ogTitle,
+			description: data.description,
+			ogDescription: data.ogDescription,
+			ogImage: data.ogImage,
+		})
 	}
-	console.log("seo", seo);
+	console.log("seo", seo.data[0]);
 });

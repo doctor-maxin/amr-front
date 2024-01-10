@@ -2,14 +2,14 @@
 import { useProductStore } from "~/store/product.store";
 import { storeToRefs } from "pinia";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const productStore = useProductStore();
 const { data } = storeToRefs(productStore);
 const container = ref<HTMLDivElement | null>(null);
-const renderer = shallowRef(new THREE.WebGLRenderer());
+const renderer = shallowRef(new THREE.WebGLRenderer({ antialias: true }));
 const scene = shallowRef(new THREE.Scene());
 const isLoading = ref(true);
 const camera = shallowRef(null);
@@ -73,10 +73,10 @@ onMounted(async () => {
 		renderer.value.setSize(width, height);
 		container.value.appendChild(renderer.value.domElement);
 		camera.value = new THREE.PerspectiveCamera(
-			60,
+			(0.8 * 180) / Math.PI,
 			width / height,
-			0.1,
-			100
+			0.01,
+			1000
 		);
 
 		setCameraData();
@@ -87,11 +87,11 @@ onMounted(async () => {
 		scene.value.background = new THREE.Color(0xa0a0a0);
 		scene.value.fog = new THREE.Fog(0xa0a0a0, 10, 50);
 
-		const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 3);
+		const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 2);
 		hemiLight.position.set(0, 20, 0);
 		scene.value.add(hemiLight);
 
-		const dirLight = new THREE.DirectionalLight(0xffffff, 3);
+		const dirLight = new THREE.DirectionalLight(0xffffff, 2);
 		dirLight.position.set(3, 10, 10).normalize()
 		dirLight.castShadow = true;
 		dirLight.shadow.camera.top = 2;
@@ -134,22 +134,13 @@ useListen("selectOption", (ev) => {
 			new THREE.TextureLoader().load(
 				`${config.public.directus.url}/assets/${ev.image}`,
 				(txt) => {
-					const m = new THREE.MeshBasicMaterial({
-						map: txt,
-						wireframe: false,
-						bumpScale: 1,
-						transparent: false,
-						side: THREE.DoubleSide
-					})
+
+					txt.encoding = THREE.sRGBEncoding;
 					txt.wrapS = THREE.RepeatWrapping;
 					txt.wrapT = THREE.RepeatWrapping;
 
-					m.map = txt;
-					mesh.material = m
-
-					// mesh.material.map = txt;
-					// txt.minFilter = THREE.NearestMinMapNearestFilter;
-					// txt.wrapS = THREE.RepeatWrapping;
+					mesh.material.map = txt;
+					mesh.material.needsUpdate = true;
 				}
 			);
 		}
@@ -158,7 +149,7 @@ useListen("selectOption", (ev) => {
 </script>
 
 <template>
-	<div class="aspect-square relative sticky top-0 w-full" ref="container">
+	<div class="aspect-[59/42] relative sticky top-[5.3125rem] w-full" ref="container">
 		<div v-if="isLoading" class="bg-white w-full h-full absolute top-0 left-0 flex items-center justify-center">
 			<UiSpinner />
 		</div>

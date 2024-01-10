@@ -7,6 +7,7 @@ import UiSpinner from "~/components/ui/UiSpinner.vue";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import CareerBlockCard from '~/components/blocks/career/CareerBlockCard.vue';
 import CareerFilter from '~/components/blocks/career/CareerFilter.vue';
+import fetchSeo from '~/composables/fetchSeo';
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([{
     path: '/',
@@ -19,6 +20,7 @@ const breadCrumbs = markRaw<IBreadCrumb[]>([{
 useHead({
     title: 'Карьера'
 })
+await fetchSeo()
 
 const isLoading = ref<boolean>(false)
 const totalCount = ref<number>(0)

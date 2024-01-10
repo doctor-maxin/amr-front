@@ -67,6 +67,12 @@ const { data: pages } = useNuxtData("customerPages");
 				<a v-if="settings?.vkLink" :href="settings.vkLink" target="_blank">
 					<svgo-socials-vk class="text-[2rem]" />
 				</a>
+				<a v-if="settings?.whatsAppLink" :href="settings.whatsAppLink" target="_blank">
+					<svgo-socials-whatsapp class="text-[2rem]" />
+				</a>
+				<a v-if="settings?.youtubeLink" :href="settings.youtubeLink" target="_blank">
+					<svgo-socials-youtube filled class="text-[2rem]" />
+				</a>
 			</li>
 		</ul>
 	</nav>

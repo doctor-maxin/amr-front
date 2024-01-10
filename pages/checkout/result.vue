@@ -14,10 +14,13 @@ import CheckoutOrderDelivery from "~/components/checkout/order/CheckoutOrderDeli
 import CheckoutOrderTotals from "~/components/checkout/order/CheckoutOrderTotals.vue";
 import CheckoutOrderInfo from "~/components/checkout/order/CheckoutOrderInfo.vue";
 import { useCartStore } from "../../store/cart.store";
+import fetchSeo from "~/composables/fetchSeo";
 
 useHead({
-  title: 'Результат оформления заказа'
+	title: 'Результат оформления заказа'
 })
+await fetchSeo()
+
 
 const cartStore = useCartStore()
 const breadCrumbs = markRaw<IBreadCrumb[]>([
@@ -57,19 +60,10 @@ if (params.status === 'success') cartStore.clearCart()
 </script>
 
 <template>
-	<PageHeader
-		:bread-crumbs="breadCrumbs"
-		:link="backLink"
-		page-name="Корзина"
-		progress
-	/>
-	<div
-		class="max-w-[92.375rem] lg:mx-auto pt-[2.375rem] pb-[1.56rem] lg:pb-[8.75rem] lg:pt-[4.62rem] flex-1"
-	>
-		<main
-			v-if="order"
-			class="lg:items-start max-w-[54rem] gap-7 w-screen gap-[2.75rem] lg:gap-[1.875rem] flex-col justify-center flex px-4 bg-white"
-		>
+	<PageHeader :bread-crumbs="breadCrumbs" :link="backLink" page-name="Корзина" progress />
+	<div class="max-w-[92.375rem] lg:mx-auto pt-[2.375rem] pb-[1.56rem] lg:pb-[8.75rem] lg:pt-[4.62rem] flex-1">
+		<main v-if="order"
+			class="lg:items-start max-w-[54rem] gap-7 w-screen gap-[2.75rem] lg:gap-[1.875rem] flex-col justify-center flex px-4 bg-white">
 			<CheckoutOrderInfo :status="params.status" :order="order" />
 			<CheckoutOrderDate v-if="order.date_created" :date="order.date_created" />
 			<CheckoutOrderPayment v-if="order.paymentType" :payment-type="order.paymentType" />

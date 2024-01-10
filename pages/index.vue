@@ -7,17 +7,21 @@ import LazyBlocksIdeasIdeiasBlock from "~/components/blocks/ideas/IdeiasBlock.vu
 import CallBackForm from "../components/common/CallBackForm.vue";
 import { computed, useDirectusItems, useHead } from "../.nuxt/imports";
 import { IIdeaItem } from "../types/ideas";
+import fetchSeo from "~/composables/fetchSeo";
 
 const { getItems } = useDirectusItems();
 
 useHead({
 	title: "Автор мебельных решений",
 });
+await fetchSeo()
+
 
 const IdeaList = await getItems<IIdeaItem>({
 	collection: "projects",
 	params: {
 		limit: 6,
+		sort: '-date_created',
 		fields: ["*", "tags.blogTags_id.*"],
 	},
 });
@@ -38,11 +42,8 @@ const IdeaList = await getItems<IIdeaItem>({
 			<CatalogBlock />
 		</div>
 		<div class="mb-[4.25rem] lg:mb-[7.125rem] container">
-			<LazyBlocksIdeasIdeiasBlock
-				:list="IdeaList"
-				subheader="ИДЕИ И ТРЕНДЫ"
-				title="Современные решения и не только"
-			/>
+			<LazyBlocksIdeasIdeiasBlock :list="IdeaList" subheader="ИДЕИ И ТРЕНДЫ"
+				title="Современные решения и не только" />
 		</div>
 		<CallBackForm />
 	</div>

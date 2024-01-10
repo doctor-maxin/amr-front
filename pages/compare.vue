@@ -4,6 +4,7 @@ import { IBreadCrumb } from '../types/common';
 import { useCompareStore } from '../store/compare.store';
 import UiLink from '../components/ui/UiLink.vue';
 import CompareList from '~/components/blocks/compare/CompareList.vue'
+import fetchSeo from '~/composables/fetchSeo';
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([{
     path: '/',
@@ -15,6 +16,8 @@ const breadCrumbs = markRaw<IBreadCrumb[]>([{
     path: '/compare',
     title: 'Сравнение товаров'
 }])
+
+await fetchSeo()
 
 const compareStore = useCompareStore()
 </script>

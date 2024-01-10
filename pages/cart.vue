@@ -1,18 +1,21 @@
 <script lang="ts" setup>
 import PageHeader from '~/components/page/Header.vue';
-import {IBreadCrumb, ILink} from "~/types/common";
+import { IBreadCrumb, ILink } from "~/types/common";
 import CartAside from "~/components/cart/CartAside.vue";
-import {markRaw, useHead, ref, useDirectusItems, useForm, useRouter, watchEffect} from "../.nuxt/imports";
+import { markRaw, useHead, ref, useDirectusItems, useForm, useRouter, watchEffect } from "../.nuxt/imports";
 import CartList from "../components/cart/CartList.vue";
-import {CartPopulatedItem} from "../types/cart";
-import {useCartStore} from "../store/cart.store";
-import {IProduct} from "../types/product";
-import {storeToRefs} from "pinia";
+import { CartPopulatedItem } from "../types/cart";
+import { useCartStore } from "../store/cart.store";
+import { IProduct } from "../types/product";
+import { storeToRefs } from "pinia";
 import UiButton from "../components/ui/UiButton.vue";
+import fetchSeo from '~/composables/fetchSeo';
 
 useHead({
-  title: 'Корзина'
+	title: 'Корзина'
 })
+await fetchSeo()
+
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([{
 	title: 'Корзина',
@@ -32,10 +35,10 @@ const backLink = {
 	title: 'Продолжить покупки'
 } satisfies ILink
 const cartStore = useCartStore()
-const {items} = storeToRefs(cartStore)
+const { items } = storeToRefs(cartStore)
 const router = useRouter()
 
-const {getItems} = useDirectusItems()
+const { getItems } = useDirectusItems()
 const lines = ref<Map<string, CartPopulatedItem>>(new Map())
 let filters: any = {}
 if (items.value?.length) {
@@ -52,7 +55,7 @@ const products = await getItems<IProduct>({
 	}
 })
 
-const {setFieldError} = useForm()
+const { setFieldError } = useForm()
 
 watchEffect(() => {
 	for (const item of items.value) {
@@ -72,21 +75,20 @@ watchEffect(() => {
 </script>
 
 <template>
-	<PageHeader :bread-crumbs="breadCrumbs" :link="backLink" page-name="Корзина" progress/>
+	<PageHeader :bread-crumbs="breadCrumbs" :link="backLink" page-name="Корзина" progress />
 	<div class="max-w-[92.375rem] lg:mx-auto pt-[2.375rem] pb-[1.56rem] lg:pb-[8.75rem] lg:pt-[4.62rem] flex-1">
-	<main
-		v-if="lines.size"
-		class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex  px-4 bg-white ">
-		<CartList :lines="lines" />
-		<CartAside :lines="lines" :set-field-error="setFieldError" />
-	</main>
-	<main v-else class="flex items-center justify-center flex-col gap-10">
-		<div class="text-system-black-900 font-semibold text-2xl text-center px-4 text-opacity-40">В корзине ничего нет, давайте это исправим!</div>
-		<UiButton @click="router.push('/catalog')" variant="dark" title="Перейти в каталог" class="w-full max-w-[22rem]" title-class="!text-base" />
-	</main>
+		<main v-if="lines.size"
+			class="lg:items-start gap-[2.75rem] lg:gap-[1.875rem] lg:flex-row flex-col justify-center flex  px-4 bg-white ">
+			<CartList :lines="lines" />
+			<CartAside :lines="lines" :set-field-error="setFieldError" />
+		</main>
+		<main v-else class="flex items-center justify-center flex-col gap-10">
+			<div class="text-system-black-900 font-semibold text-2xl text-center px-4 text-opacity-40">В корзине ничего нет,
+				давайте это исправим!</div>
+			<UiButton @click="router.push('/catalog')" variant="dark" title="Перейти в каталог" class="w-full max-w-[22rem]"
+				title-class="!text-base" />
+		</main>
 	</div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

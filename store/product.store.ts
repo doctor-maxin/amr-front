@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
 import { IProduct } from "~/types/product";
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 type ProductState = {
     activeTab: Tabs;
@@ -85,29 +83,5 @@ export const useProductStore = defineStore('product-store', {
             this.data = data
             this.isLoading = false;
         },
-        initThreeJS() {
-            // this.scene = new THREE.Scene();
-            // this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-            // const renderer = new THREE.WebGLRenderer();
-            // renderer.setSize( window.innerWidth / 2, window.innerWidth / 2 );
-            // this.renderer = renderer
-
-            // return renderer.domElement
-        },
-        startAnimate() {
-            requestAnimationFrame(this.startAnimate);
-            this.renderer.render(this.scene, this.camera);
-        },
-        startLoadModel(path) {
-            const light = new THREE.AmbientLight(0x404040)
-            this.scene.add(light)
-
-            const loader = new GLTFLoader();
-            loader.load(path, (gltf) => {
-                this.scene.add(gltf.scene);
-            }, undefined, function (error) {
-                console.error(error);
-            });
-        }
     }
 })

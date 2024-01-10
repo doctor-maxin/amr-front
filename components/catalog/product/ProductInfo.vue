@@ -82,15 +82,17 @@ watchEffect(async () => {
           Характеристики
         </button>
       </div>
-      <Tooltip placement="bottom" title="Выберите материал под себя">
-        <button v-if="product.have3D" :class="{
-          'border-black': activeTab === Tabs.CONST
-        }" class="hidden lg:flex rounded-[5rem] border mr-auto gap-3 bg-system-gray py-3.5 px-5 items-center"
-          type="button" @click="productStore.setTab(Tabs.CONST)">
-          <svgo-const class="text-2xl" filled />
-          <span class="text-system-black-950 text-base font-semibold">Конструктор</span>
-        </button>
-      </Tooltip>
+      <ClientOnly>
+        <Tooltip placement="bottom" title="Выберите материал под себя">
+          <button v-if="product.have3D" :class="{
+            'border-black': activeTab === Tabs.CONST
+          }" class="hidden lg:flex rounded-[5rem] border mr-auto gap-3 bg-system-gray py-3.5 px-5 items-center"
+            type="button" @click="productStore.setTab(Tabs.CONST)">
+            <svgo-const class="text-2xl" filled />
+            <span class="text-system-black-950 text-base font-semibold">Конструктор</span>
+          </button>
+        </Tooltip>
+      </ClientOnly>
       <BreadCrumbs :list="breadCrumbs" class="!hidden lg:!flex" />
     </div>
     <main class="flex flex-1 flex-col max-w-[54rem]">

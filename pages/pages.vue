@@ -1,27 +1,31 @@
 <script lang="ts" setup>
-import {IBreadCrumb, ICustomerPage, ICustomerPages} from "../types/common";
+import { IBreadCrumb, ICustomerPage, ICustomerPages } from "../types/common";
 import HeaderPage from '../components/page/Header.vue'
-import {Swiper, SwiperSlide} from "swiper/vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import CallBackForm from '~/components/common/CallBackForm.vue'
 import 'swiper/css';
 import {
-  computed,
-  ref,
-  useAsyncData,
-  useDirectusItems,
-  useRoute,
-  useRouter,
-  useHead,
-  watchEffect
+	computed,
+	ref,
+	useAsyncData,
+	useDirectusItems,
+	useRoute,
+	useRouter,
+	useHead,
+	watchEffect
 } from "../.nuxt/imports";
+import fetchSeo from "~/composables/fetchSeo";
 
-const {getSingletonItem} = useDirectusItems()
+const { getSingletonItem } = useDirectusItems()
+await fetchSeo()
 
-const {data: pages} = await useAsyncData<ICustomerPages>('customerPages', () => getSingletonItem({
+const { data: pages } = await useAsyncData<ICustomerPages>('customerPages', () => getSingletonItem({
 	collection: 'customerPage',
 	params: {
-		fields: ['navBars.title', 'navBars.id', 'navBars.handle', 'title']
+		fields: ['navBars.title', 'navBars.id', 'navBars.handle', 'title', 'navBars.enableCallBackForm', 'navBars.callBackTitle']
 	}
 }))
+console.log(pages.value)
 const router = useRouter();
 const route = useRoute();
 console.log(pages.value)
@@ -31,7 +35,7 @@ const activePage = computed<ICustomerPage | null>(() => {
 	}
 	return null
 })
-const breadCrumbs = computed<IBreadCrumb[]>( () => [{
+const breadCrumbs = computed<IBreadCrumb[]>(() => [{
 	path: '/pages',
 	title: pages.value?.title ?? ''
 }, {
@@ -40,7 +44,7 @@ const breadCrumbs = computed<IBreadCrumb[]>( () => [{
 }])
 
 useHead({
-  title: activePage.value?.title ?? ''
+	title: activePage.value?.title ?? ''
 })
 
 const swiper = ref<any>(null);
@@ -53,26 +57,20 @@ const slideTo = (item: ICustomerPage, index: number) => {
 	router.push(item.handle)
 }
 watchEffect(() => {
-  if (route.path === '/pages' && activePage.value) router.push(activePage.value?.handle)
+	if (route.path === '/pages' && activePage.value) router.push(activePage.value?.handle)
 })
 </script>
 
 <template>
 	<div class="flex-1">
-		<HeaderPage :bread-crumbs="breadCrumbs" :page-name="pages?.title ?? ''"/>
+		<HeaderPage :bread-crumbs="breadCrumbs" :page-name="pages?.title ?? ''" />
 		<main class="py-10 mx-auto lg:py-[4.25rem] px-4 lg:px-0 lg:max-w-[73.5rem]">
 			<ClientOnly>
 				<Swiper class="tabs" slides-per-view="auto" @swiper="setSwiper">
-					<SwiperSlide v-for="(item, index) in pages?.navBars" :key="item.id"
-					             class="!w-fit"
-					>
-						<button
-							class="tab"
-							:class="{
+					<SwiperSlide v-for="(item, index) in pages?.navBars" :key="item.id" class="!w-fit">
+						<button class="tab" :class="{
 							'active': activePage?.id === item.id
-							}"
-							@click="slideTo(item, pages)"
-						>
+						}" @click="slideTo(item, pages)">
 							{{ item.title }}
 						</button>
 					</SwiperSlide>
@@ -80,6 +78,7 @@ watchEffect(() => {
 			</ClientOnly>
 			<nuxt-page v-if="activePage" :id="activePage?.id" />
 		</main>
+		<CallBackForm v-if="activePage?.enableCallBackForm" :title="activePage?.callBackTitle" />
 	</div>
 </template>
 
@@ -91,6 +90,7 @@ watchEffect(() => {
 
 	.tab {
 		@apply px-3 lg:px-[1.38rem] py-[0.62rem] lg:text-opacity-100 text-opacity-50 rounded-[5rem] text-system-black-900 font-semibold;
+
 		&.active {
 			@apply lg:bg-system-gray-600 text-opacity-100;
 		}

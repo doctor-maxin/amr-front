@@ -16,10 +16,13 @@ import UiPagination from "~/components/ui/UiPagination.vue";
 import IdeasBlockCard from "~/components/blocks/ideas/IdeasBlockCard.vue";
 import { useBlogStore } from "../../store/blog.store";
 import IdeaTabsFilter from "~/components/blocks/ideas/IdeaTabsFilter.vue";
+import fetchSeo from "~/composables/fetchSeo";
 
 useHead({
 	title: "Идеи и тренды",
 });
+await fetchSeo()
+
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
 		title: "Главная",
@@ -72,6 +75,7 @@ watchEffect(async () => {
 			meta: "filter_count",
 			page: Number(params.page),
 			limit: 12,
+			sort: '-date_created',
 			fields: ["*", "tags.blogTags_id.title"],
 			filter,
 		},
@@ -102,38 +106,23 @@ const onChangeTag = (id: number) => {
 <template>
 	<div class="flex-1">
 		<PageHeader :bread-crumbs="breadCrumbs" page-name="Идеи и тренды" />
-		<main
-			class="pt-[2.375rem] mx-auto max-w-[120rem] px-4 pb-[6.88rem] lg:pb-[8.75rem] lg:pt-[4.63rem]"
-		>
+		<main class="pt-[2.375rem] mx-auto max-w-[120rem] px-4 pb-[6.88rem] lg:pb-[8.75rem] lg:pt-[4.63rem]">
 			<template v-if="isLoading">
 				<UiSpinner />
 			</template>
 			<template v-else>
 				<template v-if="articles.length">
-					<IdeaTabsFilter
-						:active-tags="params.tags"
-						class="mb-5 lg:mb-11"
-						@change="onChangeTag"
-					/>
-					<div
-						class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-[1.875rem]"
-					>
+					<IdeaTabsFilter :active-tags="params.tags" class="mb-5 lg:mb-11" @change="onChangeTag" />
+					<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-[1.875rem]">
 						<template v-for="item of articles">
 							<IdeasBlockCard :item="item" />
 						</template>
 					</div>
-					<UiPagination
-						:limit="12"
-						:page="+params.page"
-						:total="totalCount"
-						class="mt-6"
-						@onPage="params.page = $event"
-					/>
+					<UiPagination :limit="12" :page="+params.page" :total="totalCount" class="mt-6"
+						@onPage="params.page = $event" />
 				</template>
-				<div
-					v-else
-					class="mt-[1rem] text-center mx-auto lg:text-2xl font-semibold lg:mt-[2.5rem] text-system-black-900 text-opacity-40"
-				>
+				<div v-else
+					class="mt-[1rem] text-center mx-auto lg:text-2xl font-semibold lg:mt-[2.5rem] text-system-black-900 text-opacity-40">
 					{{ appConfig.articles.emptyList }}
 				</div>
 			</template>

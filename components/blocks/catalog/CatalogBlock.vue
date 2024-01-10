@@ -80,7 +80,8 @@ const paginationOptions = shallowRef({
 		<div>
 			<ClientOnly>
 				<Swiper :autoplay="autoPlayOptions" :breakpoints="breakpoints" :modules="[Pagination, Autoplay]"
-					:pagination="paginationOptions" @autoplayTimeLeft="onAutoplayTimeLeft">
+					centered-slides centeredSlidesBounds :pagination="paginationOptions"
+					@autoplayTimeLeft="onAutoplayTimeLeft" class="!px-4 lg:!px-0">
 					<SwiperSlide v-for="item of mainCategories" :key="item.id">
 						<CatalogBlockCard :item="item" />
 					</SwiperSlide>
@@ -110,9 +111,7 @@ const paginationOptions = shallowRef({
 	height: 12px;
 }
 
-.catalog-block .swiper-wrapper {
-	@apply mx-4 lg:mx-0;
-}
+.catalog-block .swiper-wrapper {}
 
 .catalog-block .swiper-pagination-bullet-active {
 	background-color: hsla(220, 8%, 22%, 1);

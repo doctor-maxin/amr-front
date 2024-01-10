@@ -99,12 +99,16 @@ export type ISettings = {
 
 	telegramLink?: string;
 	vkLink?: string;
+	whatsAppLink?: string;
+	youtubeLink?: string;
 };
 
 export type ICustomerPage = {
 	title: string;
 	handle: string;
 	id: string;
+	enableCallBackForm: boolean;
+	callBackTitle?: string;
 };
 export type ICustomerPages = {
 	title: string;
@@ -221,6 +225,7 @@ export type ICustomerPageFull = ICustomerPage & {
 		blocks: IImageBlock[];
 		version: string;
 	};
+	
 };
 
 export type IStore = {
@@ -262,44 +267,44 @@ export type IOrder = IOrderPayload & {
 
 export type IOrderPayload =
 	| {
-			phone: string;
-			email: string;
-			name: string;
-			deliveryType: string;
-			city: string;
-			street: string;
-			house: string;
-			flat: string;
-			entrance?: string;
-			floor?: string;
-			paymentType: string;
-			items: any[];
-			promocodes: string[];
-			deliveryPrice: number;
-			total: number;
-			number?: number;
-	  }
+		phone: string;
+		email: string;
+		name: string;
+		deliveryType: string;
+		city: string;
+		street: string;
+		house: string;
+		flat: string;
+		entrance?: string;
+		floor?: string;
+		paymentType: string;
+		items: any[];
+		promocodes: string[];
+		deliveryPrice: number;
+		total: number;
+		number?: number;
+	}
 	| {
-			phone: string;
-			email: string;
-			name: string;
-			deliveryType: string;
-			deliveryStoreId: string;
-			paymentType: string;
-			promocodes: string[];
-			deliveryPrice: number;
-			total: number;
-	  }
+		phone: string;
+		email: string;
+		name: string;
+		deliveryType: string;
+		deliveryStoreId: string;
+		paymentType: string;
+		promocodes: string[];
+		deliveryPrice: number;
+		total: number;
+	}
 	| {
-			phone: string;
-			email: string;
-			name: string;
-			deliveryType: string;
-			paymentType: string;
-			promocodes: string[];
-			deliveryPrice: number;
-			total: number;
-	  };
+		phone: string;
+		email: string;
+		name: string;
+		deliveryType: string;
+		paymentType: string;
+		promocodes: string[];
+		deliveryPrice: number;
+		total: number;
+	};
 
 export type IHeroBlock = {
 	title: string;

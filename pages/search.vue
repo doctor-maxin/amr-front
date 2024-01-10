@@ -5,7 +5,9 @@ import { IProduct } from "~/types/product";
 import { onMounted, ref, useDirectusItems, watch, useHead } from "../.nuxt/imports";
 import { useFavoritesStore } from "~/store/favorites.store";
 import { useCartStore } from "~/store/cart.store";
+import fetchSeo from "~/composables/fetchSeo";
 
+await fetchSeo()
 const params = useUrlSearchParams<{
 	search?: string;
 }>("history");
@@ -28,10 +30,18 @@ watch(search, (val) => {
 const searchProducts = async () => {
 	try {
 		isLoading.value = true;
+		const _regex = search.value.replace(/[^a-zа-яё0-9\s]/gi, " ").trim()
+
 		const items = await getItems<IProduct>({
 			collection: "products",
 			params: {
-				search: search.value,
+				filter: {
+					_and: _regex.split(' ').map(word => ({
+						name: {
+							_icontains: word
+						}
+					})),
+				},
 				fields: [
 					'id',
 					"images.directus_files_id",

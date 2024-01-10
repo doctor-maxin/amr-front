@@ -36,14 +36,14 @@ const breakpoints = shallowRef({
 </script>
 
 <template>
-  <section class="px-4 container lg:px-[4.37rem]" v-if="list?.length">
-    <h4 v-if="subheader" class="subhead text-center lg:text-left">{{ subheader }}</h4>
-    <div class="flex items-end mb-7 lg:mb-[2.5rem] lg:justify-between justify-center">
+  <section class="container lg:px-[4.37rem]" v-if="list?.length">
+    <h4 v-if="subheader" class="px-4 subhead text-center lg:text-left">{{ subheader }}</h4>
+    <div class="flex items-end px-4 mb-7 lg:mb-[2.5rem] lg:justify-between justify-center">
       <h2 class="head xl:flex lg:px-0 max-w-[28rem] lg:text-left">{{ title }}</h2>
       <UiLink v-if="!hideBlog" class="hidden lg:flex" title="Блог" to="/blog" variant="filled" />
     </div>
     <div>
-      <Swiper :breakpoints="breakpoints">
+      <Swiper class="!px-4 lg:!px-0" centered-slides centeredSlidesBounds :breakpoints="breakpoints">
         <SwiperSlide v-for="item of list" :key="item.id">
           <IdeasBlockCard :item="item" />
         </SwiperSlide>

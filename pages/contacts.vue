@@ -12,10 +12,13 @@ import { useAppConfig, useForm, useNuxtData, useHead } from "#imports";
 import * as yup from "yup";
 import { useFetch } from "@vueuse/core/index";
 import { toast } from "vue3-toastify";
+import fetchSeo from "~/composables/fetchSeo";
 
 useHead({
 	title: 'Контакты'
 })
+await fetchSeo()
+
 
 const breadCrumbs = markRaw<IBreadCrumb[]>([
 	{
@@ -123,6 +126,12 @@ const sendForm = handleSubmit(async (values) => {
 									</a>
 									<a v-if="settings?.vkLink" :href="settings.vkLink" target="_blank">
 										<svgo-socials-vk class="text-[2.3125rem]" />
+									</a>
+									<a v-if="settings?.whatsAppLink" :href="settings.whatsAppLink" target="_blank">
+										<svgo-socials-whatsapp class="text-[2.3125rem]" />
+									</a>
+									<a v-if="settings?.youtubeLink" :href="settings.youtubeLink" target="_blank">
+										<svgo-socials-youtube filled class="text-[2.3125rem]" />
 									</a>
 								</div>
 							</div>

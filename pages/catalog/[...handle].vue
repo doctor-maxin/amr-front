@@ -24,6 +24,9 @@ import { IProduct, ICatalogProduct } from "../../types/product";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
 import { IFilterPayload } from "../../composables/useEventBus";
+import fetchSeo from "~/composables/fetchSeo";
+
+await fetchSeo()
 
 const { getItems, getItemById } = useDirectusItems();
 const { data: categories } = useNuxtData<ICategory[]>("categories");

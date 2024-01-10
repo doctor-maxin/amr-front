@@ -28,7 +28,6 @@ const { createItems } = useDirectusItems();
 const runtimeConfig = useRuntimeConfig();
 //@ts-ignore
 const baseUrl = runtimeConfig.public?.directus?.url as string;
-const { token } = useDirectusToken();
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;
@@ -95,6 +94,8 @@ const createOrder = props.validate(async () => {
 			toast.error(`${item.product.name} доступно ${item.product.count}`);
 		}
 	} else {
+		const { token } = useDirectusToken();
+
 		const data = {
 			...props.values,
 			items: payload,
@@ -132,21 +133,11 @@ const getItemImage = (item: any): string => {
 
 <template>
 	<aside
-		class="rounded-[1.25rem] lg:sticky lg:top-[5.3125rem] text-system-gray-800 bg-system-gray-500 px-[1.135rem] pt-[1.69rem] pb-[2.375rem] flex flex-col gap-3"
-	>
-		<div
-			v-for="item of lines"
-			:key="item[0]"
-			class="flex gap-5 mb-1 items-center"
-		>
-			<NuxtImg
-				:src="getItemImage(item[1])"
-				class="aspect-square w-[4.375rem] lg:w-[6.25rem] rounded-[0.635rem] object-contain"
-				provider="directus"
-			/>
-			<div
-				class="flex font-semibold text-system-black-950 flex-col gap-[2px]"
-			>
+		class="rounded-[1.25rem] lg:sticky lg:top-[5.3125rem] text-system-gray-800 bg-system-gray-500 px-[1.135rem] pt-[1.69rem] pb-[2.375rem] flex flex-col gap-3">
+		<div v-for="item of lines" :key="item[0]" class="flex gap-5 mb-1 items-center">
+			<NuxtImg :src="getItemImage(item[1])"
+				class="aspect-square w-[4.375rem] lg:w-[6.25rem] rounded-[0.635rem] object-contain" provider="directus" />
+			<div class="flex font-semibold text-system-black-950 flex-col gap-[2px]">
 				<span>{{ item[1].product.name }}</span>
 				<span>{{ toMoney(item[1].product.price) }}</span>
 				<span>{{ item[1].count }} шт.</span>
@@ -170,9 +161,7 @@ const getItemImage = (item: any): string => {
 		</div> -->
 		<div v-if="discount" class="flex justify-between gap-2 lg:text-lg">
 			<span class="font-medium">Скидка</span>
-			<span class="text-right font-bold whitespace-nowrap"
-				>-{{ toMoney(discountAmount) }}</span
-			>
+			<span class="text-right font-bold whitespace-nowrap">-{{ toMoney(discountAmount) }}</span>
 		</div>
 		<div class="flex lg:mt-4 justify-between lg:text-xl gap-2">
 			<span class="font-bold">Итого</span>
@@ -180,18 +169,10 @@ const getItemImage = (item: any): string => {
 				toMoney(total)
 			}}</span>
 		</div>
-		<UiButton
-			@click="createOrder"
-			class="fixed lg:mt-2 lg:static bottom-4 z-20 left-4 w-[calc(100%_-_2rem)] lg:w-full"
-			type="button"
-			variant="dark"
-			title="Оформить заказ"
-			title-class="!text-base"
-			:disabled="isLoading"
-			:class="{
+		<UiButton @click="createOrder" class="fixed lg:mt-2 lg:static bottom-4 z-20 left-4 w-[calc(100%_-_2rem)] lg:w-full"
+			type="button" variant="dark" title="Оформить заказ" title-class="!text-base" :disabled="isLoading" :class="{
 				'pulse cursor-progress': isLoading,
-			}"
-		/>
+			}" />
 	</aside>
 </template>
 

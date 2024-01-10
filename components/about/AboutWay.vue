@@ -54,7 +54,8 @@ onBeforeUnmount(() => {
         leave-active-class="transition duration-150 ease-in" leave-from-class="translate-y-0 opacity-100"
         leave-to-class="-translate-y-4 opacity-0">
         <figure v-if="firstVisible && secondVisible" class="flex about-way-item flex-col gap-[1.135rem] lg:gap-[1.7rem]">
-          <NuxtImg :src="list[1]?.data.file.fileId" provider="directus" class="aspect-[35/24] rounded-[0.635rem]" />
+          <NuxtImg :src="list[1]?.data.file.fileId" provider="directus"
+            class="aspect-[35/24] object-cover rounded-[0.635rem]" />
           <figcaption class="font-bold text-center">{{ list[1]?.data.caption }}</figcaption>
         </figure>
       </transition>
@@ -64,7 +65,8 @@ onBeforeUnmount(() => {
         leave-to-class="-translate-y-4 opacity-0">
         <figure v-if="firstVisible && secondVisible && thirdVisible"
           class="flex about-way-item flex-col gap-[1.135rem] lg:gap-[1.7rem]">
-          <NuxtImg :src="list[2]?.data.file.fileId" provider="directus" class="aspect-[35/24] rounded-[0.635rem]" />
+          <NuxtImg :src="list[2]?.data.file.fileId" provider="directus"
+            class="aspect-[35/24] object-cover rounded-[0.635rem]" />
           <figcaption class="font-bold text-center">{{ list[2]?.data.caption }}</figcaption>
         </figure>
       </transition>

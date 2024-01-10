@@ -50,6 +50,7 @@
     "@zag-js/tabs": "^0.16.0",
     "@zag-js/types": "^0.21.0",
     "@zag-js/vue": "^0.20.0",
+    "directus-extension-searchsync": "github:dimitrov-adrian/directus-extension-searchsync",
     "greensms": "^1.9.1",
     "jsonwebtoken": "^9.0.2",
     "maska": "^2.1.10",

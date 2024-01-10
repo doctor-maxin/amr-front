@@ -10,10 +10,13 @@ import ListBlock from "~/components/blocks/ListBlock.vue";
 import HeaderBlock from "~/components/blocks/HeaderBlock.vue";
 import ArticlesSeems from "~/components/blocks/ideas/IdeiasBlock.vue";
 import { IIdeaItem } from "~/types/ideas";
+import fetchSeo from "~/composables/fetchSeo";
 
 const { getItems } = useDirectusItems();
 const route = useRoute();
 const router = useRouter();
+
+await fetchSeo()
 
 const { data } = await useAsyncData(() =>
     getItems<ICareer>({

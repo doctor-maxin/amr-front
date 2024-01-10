@@ -15,11 +15,13 @@ import {
 } from "../../.nuxt/imports";
 import { IProductWithCategory, IVariant } from "../../types/product";
 import { IBreadCrumb, ICategory } from "../../types/common";
+import fetchSeo from "~/composables/fetchSeo";
 
 const route = useRoute();
 const handle = computed(() => route.params.handle);
 const { getItems } = useDirectusItems();
 const { getParentId, getCategoryChildIds } = useCategoriesHelper()
+await fetchSeo()
 
 const { data } = await useAsyncData(() =>
 	getItems<IProductWithCategory>({

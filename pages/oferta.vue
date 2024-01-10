@@ -1,6 +1,6 @@
 <template>
 	<div class="flex-1">
-		<PageHeader page-name="Политика конфиденциальности" :bread-crumbs="breadCrumbs" />
+		<PageHeader page-name="Договор оферты" :bread-crumbs="breadCrumbs" />
 		<main>
 			<div class="py-8 lg:py-[3.25rem] page">
 				<template v-for="block of data?.content?.blocks" :key="block.id">
@@ -32,7 +32,7 @@ import ListBlock from "~/components/blocks/ListBlock.vue";
 import fetchSeo from "~/composables/fetchSeo";
 
 useHead({
-	title: 'Политика конфиденциальности'
+	title: 'Договор оферты'
 })
 await fetchSeo()
 
@@ -43,8 +43,8 @@ const breadCrumbs = markRaw<IBreadCrumb[]>([
 		title: "Главная",
 	},
 	{
-		path: "/policy",
-		title: "Политика конфиденциальности",
+		path: "/oferta",
+		title: "Договор оферты",
 	},
 ]);
 
@@ -52,7 +52,7 @@ const { getSingletonItem } = useDirectusItems();
 
 const { data } = useAsyncData(() =>
 	getSingletonItem({
-		collection: "policy",
+		collection: "oferta",
 	})
 );
 </script>

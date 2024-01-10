@@ -13,13 +13,16 @@ import {
 import * as yup from "yup";
 import { DirectusUser } from "nuxt-directus/dist/runtime/types";
 import { toast } from "vue3-toastify";
+import fetchSeo from "~/composables/fetchSeo";
 
 useHead({
 	title: "Личный кабинет",
 });
+await fetchSeo()
+
 const isEditing = ref<boolean>(false);
 const user = useDirectusUser();
-const { updateUser } = useDirectusUsers();
+const { updateUser, getUserById } = useDirectusUsers();
 const firstNameRef = ref<{
 	input?: null | HTMLInputElement;
 }>(null);
@@ -44,7 +47,7 @@ const { handleSubmit, resetForm } = useForm({
 
 const save = handleSubmit(async (values) => {
 	try {
-		const newUser = await updateUser<DirectusUser>({
+		await updateUser<DirectusUser>({
 			id: user.value?.id ?? "",
 			user: {
 				first_name: values.firstName,
@@ -54,7 +57,11 @@ const save = handleSubmit(async (values) => {
 				city: values.city,
 			},
 		});
-		setUser(newUser);
+		const me = await getUserById({
+			id: user.value?.id
+		})
+		console.log('Me', me)
+		setUser(me);
 		toast.success("Данные успешно обновлены");
 		isEditing.value = false;
 	} catch (err: any) {
@@ -82,66 +89,23 @@ const stopEdit = () => {
 	<div class="card flex flex-col gap-[1.125rem] lg:gap-[1.56rem]">
 		<h2 class="font-semibold lg:text-2xl">Мои данные</h2>
 		<div class="grid lg:grid-cols-2 gap-[1.125rem] lg:gap-[1.56rem]">
-			<UiInput
-				ref="firstNameRef"
-				class-name="w-full"
-				:readonly="!isEditing"
-				name="firstName"
-				autocomplete="given-name"
-				placeholder="Имя"
-			/>
-			<UiInput
-				class-name="w-full"
-				name="lastName"
-				autocomplete="family-name"
-				:readonly="!isEditing"
-				placeholder="Фамилия"
-			/>
+			<UiInput ref="firstNameRef" class-name="w-full" :readonly="!isEditing" name="firstName"
+				autocomplete="given-name" placeholder="Имя" />
+			<UiInput class-name="w-full" name="lastName" autocomplete="family-name" :readonly="!isEditing"
+				placeholder="Фамилия" />
 		</div>
-		<UiInput
-			class-name="w-full"
-			type="email"
-			name="email"
-			autocomplete="email"
-			:readonly="!isEditing"
-			placeholder="Почта"
-		/>
-		<UiInput
-			class-name="w-full"
-			type="tel"
-			autocomplete="tel"
-			name="phone"
-			:readonly="!isEditing"
-			placeholder="Телефон"
-		/>
-		<UiInput
-			class-name="w-full"
-			name="city"
-			:readonly="!isEditing"
-			placeholder="Город"
-		/>
+		<UiInput class-name="w-full" type="email" name="email" autocomplete="email" :readonly="!isEditing"
+			placeholder="Почта" />
+		<UiInput class-name="w-full" type="tel" autocomplete="tel" name="phone" :readonly="!isEditing"
+			placeholder="Телефон" />
+		<UiInput class-name="w-full" name="city" :readonly="!isEditing" placeholder="Город" />
 		<div class="ml-auto flex gap-1.5 lg:gap-[1.12rem] overflow-x-clip">
-			<UiButton
-				v-if="!isEditing"
-				@click="startEdit"
-				variant="default"
-				title="Редактировать"
-				title-class="font-normal text-sm lg:text-base"
-			/>
-			<UiButton
-				v-else
-				@click="stopEdit"
-				variant="default"
-				title="Отменить"
-				title-class="font-normal text-sm lg:text-base"
-			/>
-			<UiButton
-				variant="dark"
-				@click="save"
-				:disabled="!isEditing"
-				title="Сохранить"
-				title-class="font-normal text-sm lg:text-base"
-			/>
+			<UiButton v-if="!isEditing" @click="startEdit" variant="default" title="Редактировать"
+				title-class="font-normal text-sm lg:text-base" />
+			<UiButton v-else @click="stopEdit" variant="default" title="Отменить"
+				title-class="font-normal text-sm lg:text-base" />
+			<UiButton variant="dark" @click="save" :disabled="!isEditing" title="Сохранить"
+				title-class="font-normal text-sm lg:text-base" />
 		</div>
 	</div>
 </template>
