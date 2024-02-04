@@ -60,17 +60,29 @@ const breadCrumbs = computed<IBreadCrumb[]>(() => {
 	];
 	if (product.value) {
 		const paths = product.value.categoryId.handle.split("/");
-		for (const path of paths) {
+		for (let i = 0; i < paths.length; i++) {
+			let path = paths[i];
 			if (!path) continue;
-
-			const category = categories.value.find(
-				(item) => item.handle?.endsWith(path),
-			);
-			if (!category) continue;
-			array.push({
-				title: category.name,
-				path: "/catalog" + category.handle,
-			});
+			if (i >= 1) {
+				console.log('Paths ', paths[i-1] + path)
+				const category = categories.value.find(
+					(item) => item.handle?.endsWith(paths[i-1] + '/' + path),
+				);
+				if (!category) continue;
+				array.push({
+					title: category.name,
+					path: "/catalog" + category.handle,
+				});
+			} else {
+				const category = categories.value.find(
+					(item) => item.handle?.endsWith(path),
+				);
+				if (!category) continue;
+				array.push({
+					title: category.name,
+					path: "/catalog" + category.handle,
+				});
+			}
 		}
 	}
 	return array;
