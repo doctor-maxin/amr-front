@@ -10,6 +10,7 @@ export type IFilterPayload = {
 type ApplicationEvents = {
 	"on-filter": IFilterPayload[];
 	"on-sort": void;
+	'reset-filters': void;
 	'toFeedBack': boolean | undefined;
 	"open-map": void;
 	"open:product-form": IProduct;

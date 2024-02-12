@@ -23,7 +23,7 @@ const isLoading = ref<boolean>(false);
 const { client } = useCartFetch();
 const runtimeConfig = useRuntimeConfig();
 //@ts-ignore
-const baseUrl = runtimeConfig.public?.directus?.url as string;
+const baseUrl = process.dev ? '' : runtimeConfig.public?.directus?.url as string;
 
 const props = defineProps<{
 	lines: Map<string, CartPopulatedItem>;

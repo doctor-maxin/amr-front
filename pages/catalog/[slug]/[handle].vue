@@ -5,7 +5,7 @@ import {
 	useListen,
 	useNuxtData,
 	useRoute,
-} from "~/.nuxt/imports";
+} from "#imports";
 import {
 	computed,
 	ref,
@@ -13,17 +13,17 @@ import {
 	useHead,
 	watch,
 	shallowRef,
-} from "~/.nuxt/imports";
-import { IBreadCrumb, ICategory, IFilters } from "../../types/common";
-import PageHeader from "../../components/page/Header.vue";
-import CatalogCategories from "../../components/catalog/CatalogCategories.vue";
-import UiPagination from "../../components/ui/UiPagination.vue";
-import CatalogFilters from "../../components/catalog/CatalogFilters.vue";
-import CatalogProducts from "../../components/catalog/CatalogProducts.vue";
-import { IProduct, ICatalogProduct } from "../../types/product";
+} from "#imports";
+import { IBreadCrumb, ICategory, IFilters } from "../../../types/common";
+import PageHeader from "../../../components/page/Header.vue";
+import CatalogCategories from "../../../components/catalog/CatalogCategories.vue";
+import UiPagination from "../../../components/ui/UiPagination.vue";
+import CatalogFilters from "../../../components/catalog/CatalogFilters.vue";
+import CatalogProducts from "../../../components/catalog/CatalogProducts.vue";
+import { IProduct, ICatalogProduct } from "../../../types/product";
 import { useUrlSearchParams } from "@vueuse/core/index";
 import UiSpinner from "~/components/ui/UiSpinner.vue";
-import { IFilterPayload } from "../../composables/useEventBus";
+import { IFilterPayload } from "../../../composables/useEventBus";
 import fetchSeo from "~/composables/fetchSeo";
 
 await fetchSeo()

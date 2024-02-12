@@ -31,6 +31,7 @@ const filterApi = computed(() =>
 
 defineProps<{
 	items: IFilter[];
+	hideSort?: boolean
 }>();
 
 const resetFilters = () => {
@@ -75,6 +76,7 @@ useListen("on-filter", (values) => {
 					>
 				</button>
 				<button
+					v-if="!hideSort"
 					v-bind="sortApi.triggerProps"
 					:class="{
 						'bg-accent-300 text-white lg:text-inherit':
@@ -93,7 +95,9 @@ useListen("on-filter", (values) => {
 						>Сортировка</span
 					>
 				</button>
-				<CatalogFiltersSort :api="sortApi" />
+				<CatalogFiltersSort
+					v-if="!hideSort"
+					:api="sortApi" />
 				<CatalogFiltersAll :items="items" :api="filterApi" />
 			</div>
 		</teleport>

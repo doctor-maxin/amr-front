@@ -2,6 +2,7 @@
 import FooterLogo from "~/components/footer/FooterLogo.vue";
 import FooterMenu from "~/components/footer/FooterMenu.vue";
 import FooterInfo from "~/components/footer/FooterInfo.vue";
+import GeekFlow from '~/components/GeekFlow.vue'
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import FooterInfo from "~/components/footer/FooterInfo.vue";
 	<FooterMenu />
 	<FooterInfo />
 </footer>
+<GeekFlow  />
 </template>
 
 <style scoped>
