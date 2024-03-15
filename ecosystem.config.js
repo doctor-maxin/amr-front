@@ -16,7 +16,7 @@ module.exports = {
 				NUXT_PUBLIC_FRONT_HOST: "https://avtorm.ru",
 				NUXT_PUBLIC_YANDEX_KEY: "cc97cb86-1ceb-44ef-9890-0c2211bf66e1",
 				NUXT_BITRIX_URL:
-					"https://obraztsovo.bitrix24.ru/rest/657/pqm67mkyiob30tg8",
+					"https://obraztsovo.bitrix24.ru/rest/657/jvmr9fwum46vnb80",
 				NITRO_HOST: '127.0.0.1',
 				NITRO_PRESET: 'node_cluster',
 				GREEN_SMS_USER: 'avtor',

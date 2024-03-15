@@ -11,7 +11,7 @@ import GeekFlow from '~/components/GeekFlow.vue'
 	<FooterMenu />
 	<FooterInfo />
 </footer>
-<GeekFlow  />
+<GeekFlow />
 </template>
 
 <style scoped>

@@ -3,7 +3,7 @@ import { IFilterPayload } from "~/composables/useEventBus";
 
 export function useFiltersHelpers() {
 	const getFiltersFromQuery = () => {
-		if (!window) return;
+		if (process.server || !window) return;
 		const activeFilters: IFilterPayload[] = [];
 		const queries = window.location.search.split("&");
 		let filters: any = queries.find(

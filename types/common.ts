@@ -354,3 +354,13 @@ export type ICareerShort = Pick<
 	ICareer,
 	"id" | "name" | "handle" | "description"
 >;
+
+export interface IMainPageFeedBackBlock {
+	id: number
+	title: string
+	content: string
+	buttonTitle: string
+	buttonType: boolean
+	buttonLink: string | null
+	image: string
+}

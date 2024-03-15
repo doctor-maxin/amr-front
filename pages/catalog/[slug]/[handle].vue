@@ -32,11 +32,7 @@ const { getItems, getItemById } = useDirectusItems();
 const { data: categories } = useNuxtData<ICategory[]>("categories");
 const route = useRoute();
 const isLoading = ref<boolean>(true);
-const pageHandle = computed(() =>
-	Array.isArray(route.params.handle)
-		? "/" + route.params.handle.join("/")
-		: route.params.handle
-);
+const pageHandle = computed(() => `/${route.params.slug}/${route.params.handle}`);
 const activeCategory = computed<ICategory | undefined>(() =>
 	categories.value?.find((item) => item.handle?.endsWith(pageHandle.value))
 );
@@ -77,7 +73,6 @@ const reFetchData = async (withFilterCheck = true) => {
 		},
 	};
 	const queryFilters = getFiltersFromQuery();
-	console.log("queryFilters", queryFilters);
 	if (withFilterCheck && queryFilters?.length) {
 		filter["_and"] = [];
 
@@ -106,7 +101,6 @@ const reFetchData = async (withFilterCheck = true) => {
 			},
 		});
 	} else {
-		console.log("Fetch Catalog Products with", filter);
 		const result = await getItems<ICatalogProduct>({
 			collection: "products",
 			params: {
@@ -153,7 +147,6 @@ const reFetchData = async (withFilterCheck = true) => {
 };
 
 const getFilters = async () => {
-	console.log(activeCategory.value);
 	if (!activeCategory.value) return;
 	const response = await getItemById<IFilters>({
 		collection: "category",
@@ -222,20 +215,16 @@ useListen("on-filter", (activeFilters: IFilterPayload[]) => {
 			Array.isArray(item.values) ? item.values.join(",") : item.values
 		);
 	}
-	console.log(activeFilters);
 	params.filters = query.toString();
-	console.log("[on-filter] fire");
 	nextTick(() => {
 		reFetchData(true);
 	});
 });
 useListen("reset-filters", () => {
 	params.filters = "";
-	console.log("[reset-filters] fire");
 	reFetchData(false);
 });
 useListen("on-sort", (sort) => {
-	console.log("[on-sort] fire");
 	params.sort = sort;
 	reFetchData();
 });

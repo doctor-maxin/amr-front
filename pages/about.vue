@@ -16,7 +16,7 @@ import CallBackForm from "../components/common/CallBackForm.vue";
 import fetchSeo from "~/composables/fetchSeo";
 
 const { getSingletonItem } = useDirectusItems();
-const data = await getSingletonItem<{
+const {data} = await useAsyncData('about', () => getSingletonItem<{
 	header: string;
 	pageImages: ICustomerPageFull["blocks"];
 	partnersLogos: ICustomerPageFull["blocks"];
@@ -27,11 +27,11 @@ const data = await getSingletonItem<{
 	textCloseTitle: string;
 }>({
 	collection: "aboutPage",
-})
+}))
 console.log(data)
 
 useHead({
-	title: data.value?.header ?? "",
+	title: data.value?.header ?? "О нас",
 });
 await fetchSeo()
 
